@@ -1,0 +1,29 @@
+[gd_scene load_steps=4 format=3 uid="uid://c6fhcls1wqh8"]
+
+[ext_resource type="PackedScene" uid="uid://0n2ppdjdgm7e" path="res://scenes/player.tscn" id="1_errlg"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ij1v8"]
+size = Vector3(20, 0.5, 20)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ij1v8"]
+size = Vector3(20, 0.5, 20)
+
+[node name="Plataforma" type="Node3D"]
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+shape = SubResource("BoxShape3D_ij1v8")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D"]
+mesh = SubResource("BoxMesh_ij1v8")
+
+[node name="Player" parent="." instance=ExtResource("1_errlg")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.3564858, 0)
+
+[node name="PlayerSpotLight3D" type="SpotLight3D" parent="."]
+light_energy = 1.3
+shadow_enabled = true
+spot_range = 30.0
+spot_angle = 22.49
+spot_angle_attenuation = 9.84
