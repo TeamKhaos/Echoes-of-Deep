@@ -3,6 +3,8 @@
 .nomedia
 
 # Godot-specific ignores
+*.import
+/android/
 .import/
 export.cfg
 export_credentials.cfg
