@@ -16,21 +16,24 @@ func interact():
 	if interaction_ray:
 		var collider = interaction_ray.collider
 		if collider.is_in_group("interactable") and can_interact:
-				collider.mouse_interaction()
-				if current_object != collider: leave_interaction() #In case we see at other collider
+			# ✅ Solo si el jugador presiona "E"
+			if Input.is_action_just_pressed("Interact"):
+				collider.mouse_interaction(get_parent())
 				current_object = collider
 				already_interacted = true
+			elif current_object != collider:
+				leave_interaction()
 		elif already_interacted:
 			leave_interaction()
 	elif already_interacted:
 		leave_interaction()
 
 func leave_interaction():
-	Cursor.decrese_cursor()
-	if current_object != null and current_object.is_in_group("interactable"):
-		current_object.on_mouse_exited()
+	#Cursor.decrese_cursor()
+	#if current_object != null and current_object.is_in_group("interactable"):
+	#	current_object.on_mouse_exited()
 	current_object = null
-	already_interacted = false
+	#already_interacted = false
 
 
 func check_if_looking():

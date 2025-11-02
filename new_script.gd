@@ -1,74 +1,71 @@
 extends CharacterBody3D
-#
+
+# --- NODOS ---
 @onready var Pivote = $Pivot
 @onready var Camera = $Pivot/Camera3D
 @onready var MouseRayCast = $Pivot/Camera3D/MouseRayCast
-@onready var collision_shape = $CollisionShape3D
+@onready var PlayerSpotLight : SpotLight3D = $"../PlayerSpotLight3D"
 
 
-# --- INVENTARIO GLOOT ---
-@onready var inventory_scene = preload("res://scenes/inventario.tscn")
-var inventory_instance: Node = null
-
-#FLAGS
+# --- FLAGS ---
 var can_move : bool = true
+var can_jump : bool = true
+var is_jumping : bool = false
 var on_debug := false
-var is_crouching : bool = false
 
-#MOVE
+# --- MOVE ---
 var max_speed = 2
-var crouch_speed = 1.0
+var sprint_speed = 2.5
 var acceleration = 0.5
 var desaceleration = 0.5
 var can_footstep : bool = true
+
+# --- JUMP ---
+var max_height = 0.7
+var jump_strength : float = 2
+var reference_jump_height : float
 var gravity = 25 #25
 
-#CROUCH
-var standing_height = 2.0
-var crouching_height = 1.0
-
-#STAIRS
+# --- STAIRS ---
 const MAX_STEP_HEIGHT = 0.2
 var _snaped_to_stairs_last_frame := false
 var _last_frame_was_on_floor = -INF
 
+
 func _ready():
-		# --- Instanciar inventario de Gloot ---
+	# --- Instanciar inventario de Gloot ---
 	inventory_instance = inventory_scene.instantiate()
-
-	if inventory_instance is Control:
-		# Añadimos diferido al root
-		get_tree().get_root().call_deferred("add_child", inventory_instance)
-		inventory_instance.visible = false
-	else:
-		# Añadimos diferido al jugador
-		call_deferred("add_child", inventory_instance)
-
-	print("Inventario instanciado:", inventory_instance.name)
-
 	
+	# Si es UI, lo agregamos al root para que esté siempre visible
+	if inventory_instance is Control:
+		get_tree().get_root().add_child(inventory_instance)
+		inventory_instance.visible = false  # Oculto al inicio
+	else:
+		add_child(inventory_instance)
+	
+	print("Inventario instanciado:", inventory_instance.name)
 
 
 func _physics_process(delta):
-	if is_on_floor(): _last_frame_was_on_floor = Engine.get_physics_frames()
-	crouch()
+	if is_on_floor(): 
+		_last_frame_was_on_floor = Engine.get_physics_frames()
+	sprint()
 	move(delta, get_input())
+	flashlight_delay()
+
 
 func _process(_delta):
-	if Input.is_action_just_pressed("Inventory"):
+	# Mostrar u ocultar inventario con tecla I
+	if Input.is_action_just_pressed("inventario"):
 		if inventory_instance and inventory_instance is Control:
 			inventory_instance.visible = !inventory_instance.visible
 
+			# Bloquear movimiento y cámara al abrir inventario
 			can_move = not inventory_instance.visible
-			Pivote.cameraLock = inventory_instance.visible  # ✅ cámara bloqueada solo si inventario visible
-
-			# --- Mostrar u ocultar el mouse ---
-			if inventory_instance.visible:
-				Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
-			else:
-				Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+			Pivote.cameraLock = not inventory_instance.visible
 
 
+# --- FUNCIONES DE MOVIMIENTO ---
 func _snap_down_to_stairs_check() -> void:
 	var did_snap := false
 	%StairsBelowRaycast.force_raycast_update()
@@ -83,6 +80,7 @@ func _snap_down_to_stairs_check() -> void:
 			apply_floor_snap()
 			did_snap = true
 	_snaped_to_stairs_last_frame = did_snap
+
 
 func _snap_up_stairs_check(delta) -> bool:
 	if not is_on_floor() and not _snaped_to_stairs_last_frame: return false
@@ -104,15 +102,22 @@ func _snap_up_stairs_check(delta) -> bool:
 			return true
 	return false
 
+
 func is_surface_too_step(normal : Vector3):
 	return normal.angle_to(Vector3.UP) > self.floor_max_angle
-	
+
+
 func _run_body_test_motion(from: Transform3D, motion : Vector3, result = null):
 	if not result: result = PhysicsTestMotionResult3D.new()
 	var params = PhysicsTestMotionParameters3D.new()
 	params.from = from
 	params.motion = motion
 	return PhysicsServer3D.body_test_motion(self.get_rid(), params, result)
+
+
+func flashlight_delay():
+	var tween2 : Tween = get_tree().create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	tween2.tween_property(PlayerSpotLight, "global_transform", Camera.global_transform, 0.24)
 
 
 func move(delta, input):
@@ -134,30 +139,31 @@ func move(delta, input):
 		move_and_slide()
 		_snap_down_to_stairs_check()
 
-func crouch():
-	if Input.is_action_pressed("Crouch"):
-		is_crouching = true
-		max_speed = crouch_speed
-		collision_shape.shape.height = crouching_height
-		Pivote.position.y = lerp(Pivote.position.y, 1.2, 0.1)
-	else:
-		is_crouching = false
+
+func sprint():
+	if(Input.is_action_pressed("Shift")):
+		max_speed = sprint_speed
+	else :
 		max_speed = 2
-		collision_shape.shape.height = standing_height
-		Pivote.position.y = lerp(Pivote.position.y, 1.6, 0.1)
+
 
 func get_input():
 	var input = Vector3()
 	if can_move:
-		if Input.is_action_pressed("Up"):
+		if Input.is_action_pressed("W"):
 			input.z += 1
-		if Input.is_action_pressed("Down"):
+		if Input.is_action_pressed("S"):
 			input.z -= 1
-		if Input.is_action_pressed("Left"):
+		if Input.is_action_pressed("A"):
 			input.x += 1
-		if Input.is_action_pressed("Right"):
+		if Input.is_action_pressed("D"):
 			input.x -= 1
+		if Input.is_action_pressed("Space"):
+			input.y += 1
+		if Input.is_action_pressed("Shift"):
+			input.y -= 1
 	return input
+
 
 func play_footsteps():
 	if can_footstep:
@@ -184,48 +190,32 @@ func play_footsteps():
 		can_footstep = false
 		$FootstepsTimer.start()
 
+
 func desactivate():
 	can_move = false
 	Pivote.cameraLock = true
+
 
 func activate():
 	can_move = true
 	Pivote.cameraLock = false
 
+
 func _on_footsteps_timer_timeout():
 	can_footstep = true
+
 
 func _on_area_3d_body_entered(body: Node3D) -> void:
 	if(body.is_in_group("player")):
 		$"../AudioStreamPlayer3D".play()
 		$"../Area3D".queue_free()
-		
+
+
+# --- AGREGAR ÍTEMS AL INVENTARIO ---
 func add_to_inventory(item_id: String):
-	if not inventory_instance:
-		print("⚠️ Inventario no instanciado")
-		return
-
-	# Buscar el nodo InventoryPlayer dentro del inventario instanciado
-	var inv_node = inventory_instance.get_node_or_null("Inventory")
-	if not inv_node:
-		print("⚠️ No se encontró el nodo InventoryPlayer dentro del inventario")
-		return
-
-	# Cargar el archivo de protoset (JSON/TRES con los ítems del juego)
-	var protoset = load("res://resources/json/inventario.json")  # Cambia esto si usas .json u otro nombre
-	if not protoset:
-		print("⚠️ No se pudo cargar el protoset de ítems")
-		return
-
-	# Crear el item de tipo Gloot (InventoryItem)
-	var new_item := InventoryItem.new(protoset, item_id)
-
-	# Agregarlo al inventario
-	if inv_node.has_method("add_item"):
-		var success = inv_node.add_item(new_item)
-		if success:
-			print("📦 Añadido al inventario:", item_id)
-		else:
-			print("⚠️ No se pudo añadir el ítem (inventario lleno o inválido)")
-	else:
-		print("⚠️ El nodo InventoryPlayer no tiene el método add_item()")
+	if inventory_instance:
+		var item_proto = preload("res://piedra.tres")  # ejemplo de ítem Gloot
+		var inv_node = inventory_instance.get_node("Inventory") if inventory_instance.has_node("Inventory") else null
+		if inv_node and inv_node.has_method("get_inventory"):
+			inv_node.get_inventory().add_item(item_proto)
+			print("🪨 Item agregado:", item_id)

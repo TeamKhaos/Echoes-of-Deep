@@ -1,6 +1,20 @@
-[gd_scene load_steps=4 format=3 uid="uid://c6fhcls1wqh8"]
+[gd_scene load_steps=10 format=3 uid="uid://c6fhcls1wqh8"]
 
-[ext_resource type="PackedScene" uid="uid://0n2ppdjdgm7e" path="res://scenes/player.tscn" id="1_errlg"]
+[ext_resource type="PackedScene" uid="uid://0n2ppdjdgm7e" path="res://scenes/player.tscn" id="1_rkcww"]
+[ext_resource type="Script" uid="uid://c1dkhfq0n65ba" path="res://scripts/object.gd" id="2_4jb62"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_rkcww"]
+sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+ground_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+
+[sub_resource type="Sky" id="Sky_4jb62"]
+sky_material = SubResource("ProceduralSkyMaterial_rkcww")
+
+[sub_resource type="Environment" id="Environment_ke8ey"]
+background_mode = 2
+sky = SubResource("Sky_4jb62")
+tonemap_mode = 2
+glow_enabled = true
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ij1v8"]
 size = Vector3(20, 0.5, 20)
@@ -8,7 +22,19 @@ size = Vector3(20, 0.5, 20)
 [sub_resource type="BoxMesh" id="BoxMesh_ij1v8"]
 size = Vector3(20, 0.5, 20)
 
+[sub_resource type="BoxMesh" id="BoxMesh_rkcww"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_4jb62"]
+
 [node name="Plataforma" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_ke8ey")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 0, 0)
+light_color = Color(1, 1, 0.93333334, 1)
+shadow_enabled = true
 
 [node name="StaticBody3D" type="StaticBody3D" parent="."]
 
@@ -18,12 +44,16 @@ shape = SubResource("BoxShape3D_ij1v8")
 [node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D"]
 mesh = SubResource("BoxMesh_ij1v8")
 
-[node name="Player" parent="." instance=ExtResource("1_errlg")]
+[node name="Player" parent="." instance=ExtResource("1_rkcww")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.3564858, 0)
 
-[node name="PlayerSpotLight3D" type="SpotLight3D" parent="."]
-light_energy = 1.3
-shadow_enabled = true
-spot_range = 30.0
-spot_angle = 22.49
-spot_angle_attenuation = 9.84
+[node name="Object" type="StaticBody3D" parent="." groups=["interactable"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.791856, 1.5014632, 0)
+script = ExtResource("2_4jb62")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Object"]
+mesh = SubResource("BoxMesh_rkcww")
+skeleton = NodePath("../CollisionShape3D")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Object"]
+shape = SubResource("BoxShape3D_4jb62")

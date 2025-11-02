@@ -1,0 +1,7 @@
+{
+	"piedra": {
+		"image": "res://resources/images/item_book_blue.png",
+		"size": "Vector2i(1, 1)"
+	},
+
+}
