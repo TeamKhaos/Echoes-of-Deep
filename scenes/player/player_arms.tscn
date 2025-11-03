@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://qqki4f1idp4p"]
+
+[ext_resource type="ArrayMesh" uid="uid://cxdhttr4i7ulo" path="res://resources/models/player_arms_knife.tres" id="1_23ssb"]
+
+[node name="Player_Arms" type="Node3D"]
+
+[node name="Arms_Mesh" type="MeshInstance3D" parent="."]
+layers = 2
+mesh = ExtResource("1_23ssb")
+skeleton = NodePath("")

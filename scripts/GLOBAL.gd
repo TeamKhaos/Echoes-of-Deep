@@ -1,6 +1,8 @@
 extends Node
 var look_sensitivity : float = 0.1
 var events_on_story : Array[String]
+var PlayerRef : CharacterBody3D
+var WorldRef : Node3D
 
 func add_event_on_story(event : String, callable : Callable = func(): pass):
 	events_on_story.append(event)
@@ -12,3 +14,14 @@ func change_master_volume(new_vol : float, interpolation_time : float = 0):
 	
 func set_volume(new_volume : float):
 	AudioServer.set_bus_volume_db(3, new_volume)
+
+
+var PauseRef : Control
+
+signal update_hud
+
+func check_menus():
+	if PauseRef.is_open == true:
+		return true
+	else:
+		return false

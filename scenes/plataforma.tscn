@@ -1,6 +1,6 @@
 [gd_scene load_steps=19 format=3 uid="uid://c6fhcls1wqh8"]
 
-[ext_resource type="PackedScene" uid="uid://0n2ppdjdgm7e" path="res://scenes/player.tscn" id="1_rkcww"]
+[ext_resource type="PackedScene" uid="uid://0n2ppdjdgm7e" path="res://scenes/player/player.tscn" id="1_bc5n3"]
 [ext_resource type="Script" uid="uid://c1dkhfq0n65ba" path="res://scripts/object.gd" id="2_4jb62"]
 [ext_resource type="PackedScene" uid="uid://cn80xtdyj0y4j" path="res://resources/models/water.blend" id="3_lxy4y"]
 [ext_resource type="PackedScene" uid="uid://nity4w5wv3wb" path="res://resources/models/torch.blend" id="4_m7nr4"]
@@ -58,8 +58,7 @@ shape = SubResource("BoxShape3D_ij1v8")
 [node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D"]
 mesh = SubResource("BoxMesh_ij1v8")
 
-[node name="Player" parent="." instance=ExtResource("1_rkcww")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.894963, 1.8867549, 1.1113305)
+[node name="Player" parent="." instance=ExtResource("1_bc5n3")]
 
 [node name="torch" type="StaticBody3D" parent="." groups=["interactable"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.791856, 1.4211392, -5.3405175)

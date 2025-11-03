@@ -1,10 +1,12 @@
-[gd_scene load_steps=7 format=3 uid="uid://0n2ppdjdgm7e"]
+[gd_scene load_steps=9 format=3 uid="uid://0n2ppdjdgm7e"]
 
 [ext_resource type="Script" uid="uid://bn6v4om706bah" path="res://scripts/player/player.gd" id="1_3vyb7"]
 [ext_resource type="Script" uid="uid://dxyjryo76ydaf" path="res://scripts/player/pivot.gd" id="2_g2els"]
 [ext_resource type="Script" uid="uid://v5yco4th2db3" path="res://scripts/player/mouse_ray_cast.gd" id="3_dqkch"]
 [ext_resource type="Script" uid="uid://bylygc04apr34" path="res://scripts/player/interaction_handler.gd" id="3_qhqgy"]
 [ext_resource type="Script" uid="uid://du2cmouich2u" path="res://scripts/player/camera_3d.gd" id="3_qlg0r"]
+[ext_resource type="PackedScene" uid="uid://qqki4f1idp4p" path="res://scenes/player/player_arms.tscn" id="4_75vfm"]
+[ext_resource type="PackedScene" uid="uid://c1118cqtdm1xd" path="res://scenes/player/hud/hud.tscn" id="7_0owmy"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_u8vuu"]
 radius = 0.2
@@ -20,6 +22,9 @@ script = ExtResource("2_g2els")
 
 [node name="Camera3D" type="Camera3D" parent="Pivot"]
 script = ExtResource("3_qlg0r")
+
+[node name="Player_Arms" parent="Pivot/Camera3D" instance=ExtResource("4_75vfm")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.002142099, -3.0066643, 0.3105793)
 
 [node name="MouseRayCast" type="Node3D" parent="Pivot/Camera3D"]
 script = ExtResource("3_dqkch")
@@ -46,5 +51,9 @@ unique_name_in_owner = true
 
 [node name="StairsBelowRaycast" type="RayCast3D" parent="."]
 unique_name_in_owner = true
+
+[node name="PlayerHUD" type="CanvasLayer" parent="."]
+
+[node name="hud" parent="PlayerHUD" instance=ExtResource("7_0owmy")]
 
 [connection signal="timeout" from="FootstepsTimer" to="." method="_on_footsteps_timer_timeout"]

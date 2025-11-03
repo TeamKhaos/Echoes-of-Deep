@@ -4,10 +4,10 @@ extends CharacterBody3D
 @onready var Camera = $Pivot/Camera3D
 @onready var MouseRayCast = $Pivot/Camera3D/MouseRayCast
 @onready var collision_shape = $CollisionShape3D
-
+@onready var player_hud = $PlayerHUD
 
 # --- INVENTARIO GLOOT ---
-@onready var inventory_scene = preload("res://scenes/inventario.tscn")
+@onready var inventory_scene = preload("res://scenes/player/inventario.tscn")
 var inventory_instance: Node = null
 
 #FLAGS
@@ -16,7 +16,7 @@ var on_debug := false
 var is_crouching : bool = false
 
 #MOVE
-var max_speed = 2
+var max_speed = 5
 var crouch_speed = 1.0
 var acceleration = 0.5
 var desaceleration = 0.5
@@ -44,7 +44,19 @@ func _ready():
 		# Añadimos diferido al jugador
 		call_deferred("add_child", inventory_instance)
 
-	print("Inventario instanciado:", inventory_instance.name)
+		#Send global referenve
+	GLOBAL.PlayerRef = self
+	
+	#Set Camera and Ears
+	Camera.current = true
+
+	
+	#Allow Player to move and capture mouse to game window
+	can_move = true
+	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	
+	#Update and Connect Player UI
+	GLOBAL.update_hud.emit()
 
 	
 
@@ -60,13 +72,20 @@ func _process(_delta):
 			inventory_instance.visible = !inventory_instance.visible
 
 			can_move = not inventory_instance.visible
-			Pivote.cameraLock = inventory_instance.visible  # ✅ cámara bloqueada solo si inventario visible
+			Pivote.cameraLock = inventory_instance.visible
 
 			# --- Mostrar u ocultar el mouse ---
 			if inventory_instance.visible:
 				Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+				# 🔻 Ocultar el HUD mientras el inventario esté abierto
+				if player_hud:
+					player_hud.visible = false
 			else:
 				Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+				# 🔺 Mostrar el HUD nuevamente
+				if player_hud:
+					player_hud.visible = true
+
 
 
 func _snap_down_to_stairs_check() -> void:
