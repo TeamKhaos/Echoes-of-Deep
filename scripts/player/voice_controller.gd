@@ -9,6 +9,7 @@ func _ready():
 	var mic_stream = AudioStreamMicrophone.new()
 	mic_player.stream = mic_stream
 	mic_player.unit_size = 2.0
+	mic_player.bus = "VoiceBus" 
 	mic_player.stop()
 	print("🎤 Dispositivo de entrada actual:", AudioServer.input_device)
 	# Conectar detección de zonas

@@ -12,5 +12,4 @@ script = ExtResource("1_46j6e")
 [node name="Area3D" type="Area3D" parent="AudioStreamPlayer3D"]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="AudioStreamPlayer3D/Area3D"]
-transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0, 0)
 shape = SubResource("SphereShape3D_rx1sy")

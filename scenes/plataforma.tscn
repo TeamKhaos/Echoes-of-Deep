@@ -61,6 +61,7 @@ shape = SubResource("BoxShape3D_ij1v8")
 mesh = SubResource("BoxMesh_ij1v8")
 
 [node name="Player" parent="." instance=ExtResource("1_bc5n3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8527156, 5.840806)
 
 [node name="torch" type="StaticBody3D" parent="." groups=["interactable"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.791856, 1.4211392, -5.3405175)
