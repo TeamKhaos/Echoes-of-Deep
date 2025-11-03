@@ -1,7 +1,24 @@
 {
 	"piedra": {
-		"image": "res://resources/images/item_book_blue.png",
+		"image": "res://resources/images/item_key.png",
 		"size": "Vector2i(1, 1)"
 	},
+	"water": {
+		"image": "res://resources/images/water.png",
+		"size": "Vector2i(1, 1)"
+	},
+	"food": {
+		"image": "res://resources/images/food.png",
+		"size": "Vector2i(1, 1)"
+	},
+	"torch": {
+		"image": "res://resources/images/torch.png",
+		"size": "Vector2i(1, 1)"
+	},
+	"bandage": {
+		"image": "res://resources/images/bandage.png",
+		"size": "Vector2i(1, 1)"
+	},
+
 
 }

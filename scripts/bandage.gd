@@ -1,6 +1,6 @@
 extends StaticBody3D
 
-@export var item_id: String = "torch"
+@export var item_id: String = "bandage"
 
 func mouse_interaction(player):
 	print("✅ Recogiste:", item_id)

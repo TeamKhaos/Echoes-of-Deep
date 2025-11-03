@@ -1,7 +1,14 @@
-[gd_scene load_steps=10 format=3 uid="uid://c6fhcls1wqh8"]
+[gd_scene load_steps=19 format=3 uid="uid://c6fhcls1wqh8"]
 
 [ext_resource type="PackedScene" uid="uid://0n2ppdjdgm7e" path="res://scenes/player.tscn" id="1_rkcww"]
 [ext_resource type="Script" uid="uid://c1dkhfq0n65ba" path="res://scripts/object.gd" id="2_4jb62"]
+[ext_resource type="PackedScene" uid="uid://cn80xtdyj0y4j" path="res://resources/models/water.blend" id="3_lxy4y"]
+[ext_resource type="PackedScene" uid="uid://nity4w5wv3wb" path="res://resources/models/torch.blend" id="4_m7nr4"]
+[ext_resource type="Script" uid="uid://c6837lka4amh4" path="res://scripts/water.gd" id="4_yqmvt"]
+[ext_resource type="PackedScene" uid="uid://by4r2psp03qfq" path="res://resources/models/pizza.blend" id="5_o8nxa"]
+[ext_resource type="PackedScene" uid="uid://cfm1yd8t1k8og" path="res://resources/models/bandage.blend" id="6_bc5n3"]
+[ext_resource type="Script" uid="uid://cpie1k2taq0id" path="res://scripts/food.gd" id="8_2kgci"]
+[ext_resource type="Script" uid="uid://dm3cailr70cr7" path="res://scripts/bandage.gd" id="10_mxmwd"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_rkcww"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -22,9 +29,16 @@ size = Vector3(20, 0.5, 20)
 [sub_resource type="BoxMesh" id="BoxMesh_ij1v8"]
 size = Vector3(20, 0.5, 20)
 
-[sub_resource type="BoxMesh" id="BoxMesh_rkcww"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_g8lxm"]
+size = Vector3(2.1964111, 2.6777954, 0.8339844)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_4jb62"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_bc5n3"]
+size = Vector3(1, 3.2920532, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_yqmvt"]
+size = Vector3(3.2875977, 1.2426758, 4.720825)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_o8nxa"]
 
 [node name="Plataforma" type="Node3D"]
 
@@ -45,15 +59,45 @@ shape = SubResource("BoxShape3D_ij1v8")
 mesh = SubResource("BoxMesh_ij1v8")
 
 [node name="Player" parent="." instance=ExtResource("1_rkcww")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.3564858, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.894963, 1.8867549, 1.1113305)
 
-[node name="Object" type="StaticBody3D" parent="." groups=["interactable"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.791856, 1.5014632, 0)
+[node name="torch" type="StaticBody3D" parent="." groups=["interactable"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.791856, 1.4211392, -5.3405175)
 script = ExtResource("2_4jb62")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Object"]
-mesh = SubResource("BoxMesh_rkcww")
-skeleton = NodePath("../CollisionShape3D")
+[node name="torch" parent="torch" instance=ExtResource("4_m7nr4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1861548, 0)
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Object"]
-shape = SubResource("BoxShape3D_4jb62")
+[node name="CollisionShape3D" type="CollisionShape3D" parent="torch"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.59820557, 0.4336853, 0.08300781)
+shape = SubResource("BoxShape3D_g8lxm")
+
+[node name="water" type="StaticBody3D" parent="." groups=["interactable"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.8133693, 0.37248302, -5.820587)
+script = ExtResource("4_yqmvt")
+
+[node name="water" parent="water" instance=ExtResource("3_lxy4y")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="water"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1460266, 0)
+shape = SubResource("BoxShape3D_bc5n3")
+
+[node name="pizza" type="StaticBody3D" parent="." groups=["interactable"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.9464087, 0.4886676, 5.06882)
+script = ExtResource("8_2kgci")
+
+[node name="pizza" parent="pizza" instance=ExtResource("5_o8nxa")]
+transform = Transform3D(1, 0, 0, 0, 0.9999999, 0, 0, 0, 1, 0, 0, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="pizza"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.09301758, 0.12133789, 1.8604126)
+shape = SubResource("BoxShape3D_yqmvt")
+
+[node name="bandage" type="StaticBody3D" parent="." groups=["interactable"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5710967, 2.038125, 6.821288)
+script = ExtResource("10_mxmwd")
+
+[node name="bandage" parent="bandage" instance=ExtResource("6_bc5n3")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="bandage"]
+shape = SubResource("BoxShape3D_o8nxa")
