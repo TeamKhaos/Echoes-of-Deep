@@ -5,6 +5,7 @@ extends CharacterBody3D
 @onready var MouseRayCast = $Pivot/Camera3D/MouseRayCast
 @onready var collision_shape = $CollisionShape3D
 @onready var player_hud = $PlayerHUD
+@onready var voice_controller = $Voice
 
 # --- INVENTARIO GLOOT ---
 @onready var inventory_scene = preload("res://scenes/player/inventario.tscn")
@@ -67,6 +68,10 @@ func _physics_process(delta):
 	move(delta, get_input())
 
 func _process(_delta):
+	#Change to an action in Project -> Project Settings -> Input Map
+	if Input.is_action_just_pressed("Microphone"):
+		voice_controller.toggle_microphone()
+
 	if Input.is_action_just_pressed("Inventory"):
 		if inventory_instance and inventory_instance is Control:
 			inventory_instance.visible = !inventory_instance.visible
