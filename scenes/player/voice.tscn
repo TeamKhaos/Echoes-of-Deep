@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=3 uid="uid://cu3maytsanx4s"]
+
+[ext_resource type="Script" uid="uid://wuplt3g72rq7" path="res://scripts/player/voice_controller.gd" id="1_46j6e"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_rx1sy"]
+
+[node name="Voice" type="Node3D"]
+script = ExtResource("1_46j6e")
+
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="."]
+
+[node name="Area3D" type="Area3D" parent="AudioStreamPlayer3D"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="AudioStreamPlayer3D/Area3D"]
+transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 0, 0, 0)
+shape = SubResource("SphereShape3D_rx1sy")

@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://0n2ppdjdgm7e"]
+[gd_scene load_steps=10 format=3 uid="uid://0n2ppdjdgm7e"]
 
 [ext_resource type="Script" uid="uid://bn6v4om706bah" path="res://scripts/player/player.gd" id="1_3vyb7"]
 [ext_resource type="Script" uid="uid://dxyjryo76ydaf" path="res://scripts/player/pivot.gd" id="2_g2els"]
@@ -6,6 +6,7 @@
 [ext_resource type="Script" uid="uid://bylygc04apr34" path="res://scripts/player/interaction_handler.gd" id="3_qhqgy"]
 [ext_resource type="Script" uid="uid://du2cmouich2u" path="res://scripts/player/camera_3d.gd" id="3_qlg0r"]
 [ext_resource type="PackedScene" uid="uid://qqki4f1idp4p" path="res://scenes/player/player_arms.tscn" id="4_75vfm"]
+[ext_resource type="PackedScene" uid="uid://cu3maytsanx4s" path="res://scenes/player/voice.tscn" id="6_qek5x"]
 [ext_resource type="PackedScene" uid="uid://c1118cqtdm1xd" path="res://scenes/player/hud/hud.tscn" id="7_0owmy"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_u8vuu"]
@@ -32,6 +33,8 @@ script = ExtResource("3_dqkch")
 [node name="LeftBackAudio" type="AudioStreamPlayer3D" parent="Pivot/Camera3D" groups=["right_back_audio_player"]]
 
 [node name="RightBackAudio" type="AudioStreamPlayer3D" parent="Pivot/Camera3D" groups=["right_back_audio_player"]]
+
+[node name="Voice" parent="." instance=ExtResource("6_qek5x")]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("CapsuleShape3D_u8vuu")
