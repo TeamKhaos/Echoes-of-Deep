@@ -1,5 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://c1118cqtdm1xd"]
+[gd_scene load_steps=3 format=3 uid="uid://c1118cqtdm1xd"]
 
+[ext_resource type="Script" uid="uid://ykhba45yyquk" path="res://scripts/player/hud.gd" id="1_rp8h0"]
 [ext_resource type="Texture2D" uid="uid://bpmdtgysdm2tp" path="res://resources/images/field_background.png" id="1_xcx7v"]
 
 [node name="hud" type="Control"]
@@ -9,6 +10,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_rp8h0")
 
 [node name="Reticle" type="TextureRect" parent="."]
 layout_mode = 1
@@ -49,18 +51,50 @@ offset_right = 369.0
 offset_bottom = 629.0
 
 [node name="Item1" type="Panel" parent="."]
+clip_contents = true
 layout_mode = 0
 offset_left = 821.0
 offset_top = 547.0
 offset_right = 909.0
 offset_bottom = 629.0
 
+[node name="Icon" type="TextureRect" parent="Item1"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+expand_mode = 3
+
 [node name="Item2" type="Panel" parent="."]
+clip_contents = true
 layout_mode = 0
 offset_left = 933.0
 offset_top = 547.0
 offset_right = 1021.0
 offset_bottom = 629.0
+
+[node name="Icon" type="TextureRect" parent="Item2"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+expand_mode = 3
 
 [node name="mochila" type="Panel" parent="."]
 layout_mode = 0

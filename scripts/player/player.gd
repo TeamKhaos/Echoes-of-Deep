@@ -6,7 +6,7 @@ extends CharacterBody3D
 @onready var collision_shape = $CollisionShape3D
 @onready var player_hud = $PlayerHUD
 @onready var voice_controller = $Voice
-
+@onready var hud = $PlayerHUD/hud
 # --- INVENTARIO GLOOT ---
 @onready var inventory_scene = preload("res://scenes/player/inventario.tscn")
 var inventory_instance: Node = null
@@ -34,24 +34,28 @@ var _snaped_to_stairs_last_frame := false
 var _last_frame_was_on_floor = -INF
 
 func _ready():
-		# --- Instanciar inventario de Gloot ---
+	# --- Instanciar inventario de Gloot ---
 	inventory_instance = inventory_scene.instantiate()
-
 	if inventory_instance is Control:
-		# Añadimos diferido al root
 		get_tree().get_root().call_deferred("add_child", inventory_instance)
 		inventory_instance.visible = false
 	else:
-		# Añadimos diferido al jugador
 		call_deferred("add_child", inventory_instance)
-
-		#Send global referenve
+	# ✅ Ahora que ya existe, asignarlo al HUD
+	var inv_node = inventory_instance.get_node_or_null("Inventory") 
+	
+	#funcion items
+	var items = inv_node.get_items()
+	print("🔹 Total de ítems en inventario: funcion de player ", items)
+	#funcion items
+	
+	hud.set_inventory(inv_node)
+	# --- Resto de tu configuración ---
 	GLOBAL.PlayerRef = self
-	
-	#Set Camera and Ears
 	Camera.current = true
-
-	
+	can_move = true
+	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	GLOBAL.update_hud.emit()
 	#Allow Player to move and capture mouse to game window
 	can_move = true
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
@@ -229,26 +233,26 @@ func add_to_inventory(item_id: String):
 		print("⚠️ Inventario no instanciado")
 		return
 
-	# Buscar el nodo InventoryPlayer dentro del inventario instanciado
 	var inv_node = inventory_instance.get_node_or_null("Inventory")
 	if not inv_node:
 		print("⚠️ No se encontró el nodo InventoryPlayer dentro del inventario")
 		return
 
-	# Cargar el archivo de protoset (JSON/TRES con los ítems del juego)
-	var protoset = load("res://resources/json/inventario.json")  # Cambia esto si usas .json u otro nombre
+	var protoset = load("res://resources/json/inventario.json")
 	if not protoset:
 		print("⚠️ No se pudo cargar el protoset de ítems")
 		return
 
-	# Crear el item de tipo Gloot (InventoryItem)
 	var new_item := InventoryItem.new(protoset, item_id)
 
-	# Agregarlo al inventario
 	if inv_node.has_method("add_item"):
 		var success = inv_node.add_item(new_item)
 		if success:
 			print("📦 Añadido al inventario:", item_id)
+			# 🔹 Actualizar HUD solo después de añadir el ítem
+			if hud:
+				hud.set_inventory(inv_node)
+				print("🖼️ HUD actualizado tras añadir:", item_id)
 		else:
 			print("⚠️ No se pudo añadir el ítem (inventario lleno o inválido)")
 	else:

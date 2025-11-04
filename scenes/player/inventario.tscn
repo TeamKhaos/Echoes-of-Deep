@@ -32,7 +32,19 @@ grow_vertical = 2
 [node name="Inventory" type="Node" parent="."]
 script = ExtResource("4_t2sse")
 protoset = ExtResource("2_ai134")
-_serialized_format = {}
+_serialized_format = {
+"constraints": {
+"res://addons/gloot/core/constraints/grid_constraint.gd": {
+"data": {
+"item_positions": {},
+"size": "Vector2i(5, 2)"
+},
+"name": &"GridConstraint"
+}
+},
+"node_name": "Inventory",
+"protoset": "res://resources/json/inventario.json"
+}
 metadata/_custom_type_script = "uid://5hfig5q3x8it"
 
 [node name="GridConstraint" type="Node" parent="Inventory"]
