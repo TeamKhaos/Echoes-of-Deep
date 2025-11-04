@@ -4,77 +4,71 @@ extends Control
 @onready var hud_slot_2 = $Item2/Icon
 @export var default_icon: Texture2D = preload("res://resources/images/food.png")
 
-func _ready():
-	hud_slot_1.texture = default_icon
-	hud_slot_2.texture = null
+var inventory_ref: Node = null
 
-func set_inventory(inv: Inventory):
+func set_inventory(inv: Node):
 	if not inv:
 		push_warning("⚠️ Inventario inválido recibido en HUD")
 		return
 
-	var items = inv.get_items()
+	inventory_ref = inv
+	if not inv.has_method("get_items"):
+		push_error("❌ El nodo de inventario no tiene el método get_items()")
+		return
+
+	# 🔌 Conectamos señales del inventario Gloot
+	_connect_signal_safe(inv, "item_added", "_on_item_changed")
+	_connect_signal_safe(inv, "item_removed", "_on_item_changed")
+	_connect_signal_safe(inv, "item_moved", "_on_item_changed")
+	_connect_signal_safe(inv, "item_property_changed", "_on_item_changed")
+
+	# 🔄 Actualizamos el HUD inicialmente
+	_refresh_hud()
+
+
+func _connect_signal_safe(target: Object, signal_name: String, method_name: String):
+	if not target.is_connected(signal_name, Callable(self, method_name)):
+		target.connect(signal_name, Callable(self, method_name))
+
+
+func _on_item_changed(_item = null, _extra = null):
+	_refresh_hud()
+
+
+func _refresh_hud():
+	if not inventory_ref:
+		return
+
+	var items = inventory_ref.get_items()
 	print("🔹 Total de ítems en inventario (HUD):", items.size())
 
-	# SLOT 1
-	if items.size() > 0:
-		var proto = items[0].get_prototype()
-		var icon_path = ""
-
-		if proto:
-			print("🧩 Prototype detectado:", proto)
-
-			# Intentamos acceder directamente a _properties
-			var props = null
-			if "_properties" in proto:
-				props = proto["_properties"]
-			elif proto.has_method("get") and proto.get("_properties") != null:
-				props = proto.get("_properties")
-
-			if typeof(props) == TYPE_DICTIONARY:
-				print("📦 _properties encontrados:", props)
-				if props.has("image"):
-					icon_path = props["image"]
-					print("🎨 Icon path encontrado:", icon_path)
-				else:
-					print("⚠️ _properties no contiene 'image'")
-			else:
-				print("⚠️ _properties no accesible o no es diccionario:", props)
-		else:
-			print("⚠️ No se obtuvo prototype del ítem")
-
-		hud_slot_1.texture = load(icon_path) if icon_path != "" else default_icon
-	else:
-		hud_slot_1.texture = null
+	hud_slot_1.texture = _get_item_icon(items, 0)
+	hud_slot_2.texture = _get_item_icon(items, 1)
 
 
-	# SLOT 2
-	if items.size() > 1:
-		var proto = items[1].get_prototype()
-		var icon_path = ""
+func _get_item_icon(items: Array, index: int) -> Texture2D:
+	if items.size() <= index:
+		return null
 
-		if proto:
-			print("🧩 Prototype detectado:", proto)
+	var item = items[index]
+	if not item or not item.has_method("get_prototype"):
+		return default_icon
 
-			# Intentamos acceder directamente a _properties
-			var props = null
-			if "_properties" in proto:
-				props = proto["_properties"]
-			elif proto.has_method("get") and proto.get("_properties") != null:
-				props = proto.get("_properties")
+	var proto = item.get_prototype()
+	if not proto:
+		return default_icon
 
-			if typeof(props) == TYPE_DICTIONARY:
-				print("📦 _properties encontrados:", props)
-				if props.has("image"):
-					icon_path = props["image"]
-					print("🎨 Icon path encontrado:", icon_path)
-				else:
-					print("⚠️ _properties no contiene 'image'")
-			else:
-				print("⚠️ _properties no accesible o no es diccionario:", props)
-		else:
-			print("⚠️ No se obtuvo prototype del ítem")
+	var props = null
+	if proto.has_method("get"):
+		var candidate = proto.get("_properties")
+		if typeof(candidate) == TYPE_DICTIONARY:
+			props = candidate
+	elif "_properties" in proto:
+		props = proto["_properties"]
 
-		hud_slot_2.texture = load(icon_path) if icon_path != "" else default_icon
-	else:
-		hud_slot_2.texture = null
+	if typeof(props) == TYPE_DICTIONARY and props.has("image"):
+		var icon_path = props["image"]
+		if icon_path != "":
+			return load(icon_path)
+
+	return default_icon
