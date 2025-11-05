@@ -38,6 +38,9 @@ func interact():
 				collider.mouse_interaction(get_parent())
 				current_object = collider
 				already_interacted = true
+				
+				hud.set_crosshair_interact(false)
+				last_interactable = null
 		else:
 			if last_interactable != null:
 				hud.set_crosshair_interact(false)
