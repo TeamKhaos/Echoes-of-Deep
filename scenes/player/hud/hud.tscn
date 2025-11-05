@@ -1,6 +1,7 @@
-[gd_scene load_steps=3 format=3 uid="uid://c1118cqtdm1xd"]
+[gd_scene load_steps=4 format=3 uid="uid://c1118cqtdm1xd"]
 
 [ext_resource type="Script" uid="uid://ykhba45yyquk" path="res://scripts/player/hud.gd" id="1_rp8h0"]
+[ext_resource type="Texture2D" uid="uid://p7gn2q5mwd6b" path="res://resources/images/tecla.png" id="2_ko8bi"]
 [ext_resource type="Texture2D" uid="uid://qoygyn25bjo2" path="res://resources/images/Cruz.png" id="2_rp8h0"]
 
 [node name="hud" type="Control"]
@@ -11,6 +12,21 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_rp8h0")
+
+[node name="InteractLabel" type="HBoxContainer" parent="."]
+visible = false
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Label" type="Label" parent="InteractLabel"]
+layout_mode = 2
+text = "para interactuar"
+
+[node name="KeyIcon" type="TextureRect" parent="InteractLabel"]
+layout_mode = 2
+texture = ExtResource("2_ko8bi")
+stretch_mode = 5
 
 [node name="Crosshair" type="TextureRect" parent="."]
 layout_mode = 1

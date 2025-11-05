@@ -10,6 +10,8 @@ extends Control
 @onready var hud_slot_2 = $Item2/Icon
 @export var default_icon: Texture2D = preload("res://resources/images/food.png")
 
+@onready var interact_label = $InteractLabel
+
 var inventory_ref: Node = null
 var _is_interact_mode = false
 var _tween: Tween
@@ -106,4 +108,22 @@ func _get_item_icon(items: Array, index: int) -> Texture2D:
 
 	return default_icon
 	
-	
+
+func show_interact_prompt(active: bool):
+	if _tween:
+		_tween.kill()
+
+	_tween = create_tween()
+	_tween.set_trans(Tween.TRANS_SINE)
+	_tween.set_ease(Tween.EASE_OUT)
+
+	if active:
+		interact_label.visible = true
+		interact_label.modulate.a = 0
+		_tween.tween_property(interact_label, "modulate:a", 1.0, 0.2)
+	else:
+		_tween.tween_property(interact_label, "modulate:a", 0.0, 0.2)
+		_tween.tween_callback(Callable(self, "_hide_prompt"))
+
+func _hide_prompt():
+	interact_label.visible = false
