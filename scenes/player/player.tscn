@@ -39,9 +39,13 @@ script = ExtResource("3_dqkch")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("CapsuleShape3D_u8vuu")
 
-[node name="InteractionHandler" type="Node" parent="." node_paths=PackedStringArray("MouseRayCast") groups=["interaction_handler"]]
+[node name="InteractionHandler" type="Node" parent="." node_paths=PackedStringArray("MouseRayCast", "hud") groups=["interaction_handler"]]
 script = ExtResource("3_qhqgy")
 MouseRayCast = NodePath("../Pivot/Camera3D/MouseRayCast")
+hud = NodePath("../PlayerHUD/hud")
+
+[node name="InteractionHandler" type="Node" parent="InteractionHandler" groups=["interaction_handler"]]
+script = ExtResource("3_qhqgy")
 
 [node name="FootstepsTimer" type="Timer" parent="."]
 
