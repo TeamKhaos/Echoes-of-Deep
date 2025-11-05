@@ -7,6 +7,7 @@ extends CharacterBody3D
 @onready var player_hud = $PlayerHUD
 @onready var voice_controller = $Voice
 @onready var hud = $PlayerHUD/hud
+@onready var object_marker = $ObjectMarker
 # --- INVENTARIO GLOOT ---
 @onready var inventory_scene = preload("res://scenes/player/inventario.tscn")
 var inventory_instance: Node = null
