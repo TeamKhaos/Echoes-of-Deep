@@ -1,5 +1,6 @@
-[gd_scene load_steps=13 format=3 uid="uid://qalas2xm418v"]
+[gd_scene load_steps=14 format=3 uid="uid://qalas2xm418v"]
 
+[ext_resource type="Script" uid="uid://c6wangdtwc4m7" path="res://addons/gloot/core/item_slot.gd" id="1_8v3xu"]
 [ext_resource type="Script" uid="uid://d0pfc3q6sof8y" path="res://addons/gloot/ui/ctrl_inventory_grid.gd" id="1_t2sse"]
 [ext_resource type="JSON" path="res://resources/json/inventario.json" id="2_ai134"]
 [ext_resource type="Texture2D" uid="uid://bpmdtgysdm2tp" path="res://resources/images/field_background.png" id="2_t6213"]
@@ -35,6 +36,11 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="ItemSlot" type="Node" parent="."]
+script = ExtResource("1_8v3xu")
+protoset = ExtResource("2_ai134")
+metadata/_custom_type_script = "uid://c6wangdtwc4m7"
 
 [node name="Inventory" type="Node" parent="."]
 script = ExtResource("4_t2sse")
@@ -128,7 +134,7 @@ offset_bottom = 22.5
 text = "Drop
 "
 
-[node name="CtrlItemSlot" type="Control" parent="VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer/Profile4"]
+[node name="CtrlItemSlot" type="Control" parent="VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer/Profile4" node_paths=PackedStringArray("item_slot")]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -142,6 +148,8 @@ offset_bottom = 32.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("7_la582")
+item_slot = NodePath("../../../../../../../ItemSlot")
+icon_stretch_mode = 5
 slot_style = SubResource("StyleBoxTexture_8v3xu")
 slot_highlighted_style = SubResource("StyleBoxTexture_8fb8u")
 metadata/_custom_type_script = "uid://trghhrgo3fax"
