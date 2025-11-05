@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://c6fhcls1wqh8"]
+[gd_scene load_steps=21 format=3 uid="uid://c6fhcls1wqh8"]
 
 [ext_resource type="PackedScene" uid="uid://0n2ppdjdgm7e" path="res://scenes/player/player.tscn" id="1_bc5n3"]
 [ext_resource type="Script" uid="uid://c1dkhfq0n65ba" path="res://scripts/object.gd" id="2_4jb62"]
@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://cfm1yd8t1k8og" path="res://resources/models/bandage.blend" id="6_bc5n3"]
 [ext_resource type="Script" uid="uid://cpie1k2taq0id" path="res://scripts/food.gd" id="8_2kgci"]
 [ext_resource type="Script" uid="uid://dm3cailr70cr7" path="res://scripts/bandage.gd" id="10_mxmwd"]
+[ext_resource type="PackedScene" uid="uid://buhbplfv7uyng" path="res://scenes/palotest.tscn" id="10_yqmvt"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_rkcww"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -53,10 +54,11 @@ environment = SubResource("Environment_ke8ey")
 shape = SubResource("BoxShape3D_ij1v8")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D"]
+transform = Transform3D(1, -1.4901161e-08, 0, 1.4901161e-08, 1, 0, 0, 0, 1, 0.14665428, -0.00046317466, -0.057216644)
 mesh = SubResource("BoxMesh_ij1v8")
 
 [node name="Player" parent="." instance=ExtResource("1_bc5n3")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8527156, 5.840806)
+transform = Transform3D(0.009354769, 0, -0.99995625, 0, 1, 0, 0.99995625, 0, 0.009354769, 0, 0.8527156, 5.840806)
 
 [node name="torch" type="StaticBody3D" parent="." groups=["interactable"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.791856, 1.4211392, -5.3405175)
@@ -105,3 +107,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.35051894, -6.5081606)
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
 transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0, 0)
 shape = SubResource("SphereShape3D_bc5n3")
+
+[node name="Palo" parent="." instance=ExtResource("10_yqmvt")]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, -2.843532, 4.6056595, 5.9113994)
