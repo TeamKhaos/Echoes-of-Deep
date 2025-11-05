@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://qalas2xm418v"]
+[gd_scene load_steps=13 format=3 uid="uid://qalas2xm418v"]
 
 [ext_resource type="Script" uid="uid://d0pfc3q6sof8y" path="res://addons/gloot/ui/ctrl_inventory_grid.gd" id="1_t2sse"]
 [ext_resource type="JSON" path="res://resources/json/inventario.json" id="2_ai134"]
@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://cryy16ynshic6" path="res://resources/images/field_highlighted_background.png" id="3_ai134"]
 [ext_resource type="Script" uid="uid://5hfig5q3x8it" path="res://addons/gloot/core/inventory.gd" id="4_t2sse"]
 [ext_resource type="Script" uid="uid://b8hbvp4kl88cn" path="res://addons/gloot/core/constraints/grid_constraint.gd" id="5_6qtn5"]
+[ext_resource type="Script" uid="uid://trghhrgo3fax" path="res://addons/gloot/ui/ctrl_item_slot.gd" id="7_la582"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_q0ogx"]
 texture = ExtResource("2_t6213")
@@ -20,6 +21,12 @@ border_width_top = 1
 border_width_right = 1
 border_width_bottom = 1
 border_color = Color(1, 1, 1, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_8v3xu"]
+texture = ExtResource("2_t6213")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_8fb8u"]
+texture = ExtResource("3_ai134")
 
 [node name="Inventario" type="Control"]
 layout_mode = 3
@@ -88,7 +95,7 @@ offset_right = 20.0
 offset_bottom = 11.5
 grow_horizontal = 2
 grow_vertical = 2
-text = "Mochila"
+text = "Bag"
 
 [node name="CtrlInventoryGrid" type="Control" parent="VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer" node_paths=PackedStringArray("inventory")]
 custom_minimum_size = Vector2(320, 128)
@@ -106,6 +113,51 @@ metadata/_custom_type_script = "uid://d0pfc3q6sof8y"
 [node name="Profile4" type="Panel" parent="VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 85)
 layout_mode = 2
+
+[node name="Drop" type="Button" parent="VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer/Profile4"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.18200001
+anchor_top = 0.5
+anchor_right = 0.18200001
+anchor_bottom = 0.5
+offset_left = -39.740005
+offset_top = -22.5
+offset_right = 39.759995
+offset_bottom = 22.5
+text = "Drop
+"
+
+[node name="CtrlItemSlot" type="Control" parent="VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer/Profile4"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -32.0
+offset_top = -32.0
+offset_right = 32.0
+offset_bottom = 32.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("7_la582")
+slot_style = SubResource("StyleBoxTexture_8v3xu")
+slot_highlighted_style = SubResource("StyleBoxTexture_8fb8u")
+metadata/_custom_type_script = "uid://trghhrgo3fax"
+
+[node name="Remove" type="Button" parent="VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer/Profile4"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.80100006
+anchor_top = 0.5
+anchor_right = 0.80100006
+anchor_bottom = 0.5
+offset_left = -39.820007
+offset_top = -22.5
+offset_right = 39.679993
+offset_bottom = 22.5
+text = "Remove"
 
 [node name="Crafting" type="Panel" parent="VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer"]
 custom_minimum_size = Vector2(175, 300)
