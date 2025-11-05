@@ -15,18 +15,32 @@ script = ExtResource("1_rp8h0")
 
 [node name="InteractLabel" type="HBoxContainer" parent="."]
 visible = false
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -92.0
+offset_top = 29.0
+offset_right = 90.63306
+offset_bottom = 57.36133
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.785, 1.785)
 
-[node name="Label" type="Label" parent="InteractLabel"]
+[node name="Label2" type="Label" parent="InteractLabel"]
 layout_mode = 2
-text = "para interactuar"
+text = "Press"
 
 [node name="KeyIcon" type="TextureRect" parent="InteractLabel"]
 layout_mode = 2
 texture = ExtResource("2_ko8bi")
 stretch_mode = 5
+
+[node name="Label" type="Label" parent="InteractLabel"]
+layout_mode = 2
+text = "to interact"
 
 [node name="Crosshair" type="TextureRect" parent="."]
 layout_mode = 1

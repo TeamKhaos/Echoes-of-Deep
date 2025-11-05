@@ -42,7 +42,7 @@ func interact():
 				already_interacted = true
 				leave_interaction() # 👈 limpia todo correctamente
 		else:
-			# Si dejamos de apuntar a un objeto interactuable
+			# Si dejamos de apuntar o perdemos el objeto
 			if last_interactable != null:
 				hud.show_interact_prompt(false)
 				hud.set_crosshair_interact(false)

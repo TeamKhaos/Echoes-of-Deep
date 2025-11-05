@@ -1,25 +1,36 @@
 extends Control
 
-#agregando nueva reticula
+# 🔹 Retícula (Crosshair)
 @onready var crosshair = $Crosshair
 @export var normal_crosshair: Texture2D = preload("res://resources/images/cruz.png")
 @export var interact_crosshair: Texture2D = preload("res://resources/images/SecObj.png")
 
-
+# 🔹 Inventario
 @onready var hud_slot_1 = $Item1/Icon
 @onready var hud_slot_2 = $Item2/Icon
 @export var default_icon: Texture2D = preload("res://resources/images/food.png")
 
+# 🔹 Texto de interacción
 @onready var interact_label = $InteractLabel
 
+# 🔹 Variables internas
 var inventory_ref: Node = null
 var _is_interact_mode = false
-var _tween: Tween
+var _is_prompt_visible := false
+
+# 🔹 Tweens separados para evitar conflictos
+var _tween_crosshair: Tween
+var _tween_prompt: Tween
+
 
 func _ready():
 	print("🖼️ normal:", normal_crosshair)
 	print("🖼️ interact:", interact_crosshair)
 
+
+# ===============================
+# 🧭 INVENTARIO
+# ===============================
 func set_inventory(inv: Node):
 	if not inv:
 		push_warning("⚠️ Inventario inválido recibido en HUD")
@@ -30,13 +41,11 @@ func set_inventory(inv: Node):
 		push_error("❌ El nodo de inventario no tiene el método get_items()")
 		return
 
-	# 🔌 Conectamos señales del inventario Gloot
 	_connect_signal_safe(inv, "item_added", "_on_item_changed")
 	_connect_signal_safe(inv, "item_removed", "_on_item_changed")
 	_connect_signal_safe(inv, "item_moved", "_on_item_changed")
 	_connect_signal_safe(inv, "item_property_changed", "_on_item_changed")
 
-	# 🔄 Actualizamos el HUD inicialmente
 	_refresh_hud()
 
 
@@ -58,28 +67,7 @@ func _refresh_hud():
 
 	hud_slot_1.texture = _get_item_icon(items, 0)
 	hud_slot_2.texture = _get_item_icon(items, 1)
-	
-func set_crosshair_interact(active: bool):
-	print("🎯 Cambiando retícula:", active)
-	if _is_interact_mode == active:
-		return # Evitar animaciones repetidas
-	_is_interact_mode = active
 
-	if _tween:
-		_tween.kill()
-
-	_tween = create_tween()
-	_tween.set_trans(Tween.TRANS_SINE)
-	_tween.set_ease(Tween.EASE_OUT)
-
-	if active:
-		# Agrandar suavemente
-		_tween.tween_property(crosshair, "scale", Vector2(1.3, 1.3), 0.15)
-		crosshair.texture = interact_crosshair
-	else:
-		# Volver a tamaño normal
-		_tween.tween_property(crosshair, "scale", Vector2(1, 1), 0.15)
-		crosshair.texture = normal_crosshair
 
 func _get_item_icon(items: Array, index: int) -> Texture2D:
 	if items.size() <= index:
@@ -107,23 +95,54 @@ func _get_item_icon(items: Array, index: int) -> Texture2D:
 			return load(icon_path)
 
 	return default_icon
-	
 
+
+# ===============================
+# 🎯 CROSSHAIR (retícula)
+# ===============================
+func set_crosshair_interact(active: bool):
+	if _is_interact_mode == active:
+		return
+	_is_interact_mode = active
+
+	if _tween_crosshair:
+		_tween_crosshair.kill()
+
+	_tween_crosshair = create_tween()
+	_tween_crosshair.set_trans(Tween.TRANS_SINE)
+	_tween_crosshair.set_ease(Tween.EASE_OUT)
+
+	if active:
+		_tween_crosshair.tween_property(crosshair, "scale", Vector2(1.3, 1.3), 0.15)
+		crosshair.texture = interact_crosshair
+	else:
+		_tween_crosshair.tween_property(crosshair, "scale", Vector2(1, 1), 0.15)
+		crosshair.texture = normal_crosshair
+
+
+# ===============================
+# 💬 TEXTO DE INTERACCIÓN
+# ===============================
 func show_interact_prompt(active: bool):
-	if _tween:
-		_tween.kill()
+	if _is_prompt_visible == active:
+		return # evita reiniciar el tween si no hay cambio
+	_is_prompt_visible = active
 
-	_tween = create_tween()
-	_tween.set_trans(Tween.TRANS_SINE)
-	_tween.set_ease(Tween.EASE_OUT)
+	if _tween_prompt:
+		_tween_prompt.kill()
+
+	_tween_prompt = create_tween()
+	_tween_prompt.set_trans(Tween.TRANS_SINE)
+	_tween_prompt.set_ease(Tween.EASE_OUT)
 
 	if active:
 		interact_label.visible = true
 		interact_label.modulate.a = 0
-		_tween.tween_property(interact_label, "modulate:a", 1.0, 0.2)
+		_tween_prompt.tween_property(interact_label, "modulate:a", 1.0, 0.2)
 	else:
-		_tween.tween_property(interact_label, "modulate:a", 0.0, 0.2)
-		_tween.tween_callback(Callable(self, "_hide_prompt"))
+		_tween_prompt.tween_property(interact_label, "modulate:a", 0.0, 0.2)
+		_tween_prompt.tween_callback(Callable(self, "_hide_prompt"))
+
 
 func _hide_prompt():
 	interact_label.visible = false
