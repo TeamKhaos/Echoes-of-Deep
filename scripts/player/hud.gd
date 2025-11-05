@@ -1,10 +1,22 @@
 extends Control
 
+#agregando nueva reticula
+@onready var crosshair = $Crosshair
+@export var normal_crosshair: Texture2D = preload("res://resources/images/cruz.png")
+@export var interact_crosshair: Texture2D = preload("res://resources/images/SecObj.png")
+
+
 @onready var hud_slot_1 = $Item1/Icon
 @onready var hud_slot_2 = $Item2/Icon
 @export var default_icon: Texture2D = preload("res://resources/images/food.png")
 
 var inventory_ref: Node = null
+var _is_interact_mode = false
+var _tween: Tween
+
+func _ready():
+	print("🖼️ normal:", normal_crosshair)
+	print("🖼️ interact:", interact_crosshair)
 
 func set_inventory(inv: Node):
 	if not inv:
@@ -44,7 +56,28 @@ func _refresh_hud():
 
 	hud_slot_1.texture = _get_item_icon(items, 0)
 	hud_slot_2.texture = _get_item_icon(items, 1)
+	
+func set_crosshair_interact(active: bool):
+	print("🎯 Cambiando retícula:", active)
+	if _is_interact_mode == active:
+		return # Evitar animaciones repetidas
+	_is_interact_mode = active
 
+	if _tween:
+		_tween.kill()
+
+	_tween = create_tween()
+	_tween.set_trans(Tween.TRANS_SINE)
+	_tween.set_ease(Tween.EASE_OUT)
+
+	if active:
+		# Agrandar suavemente
+		_tween.tween_property(crosshair, "scale", Vector2(1.3, 1.3), 0.15)
+		crosshair.texture = interact_crosshair
+	else:
+		# Volver a tamaño normal
+		_tween.tween_property(crosshair, "scale", Vector2(1, 1), 0.15)
+		crosshair.texture = normal_crosshair
 
 func _get_item_icon(items: Array, index: int) -> Texture2D:
 	if items.size() <= index:
@@ -72,3 +105,5 @@ func _get_item_icon(items: Array, index: int) -> Texture2D:
 			return load(icon_path)
 
 	return default_icon
+	
+	

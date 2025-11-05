@@ -2,10 +2,10 @@
 
 [ext_resource type="PackedScene" uid="uid://0n2ppdjdgm7e" path="res://scenes/player/player.tscn" id="1_bc5n3"]
 [ext_resource type="Script" uid="uid://c1dkhfq0n65ba" path="res://scripts/object.gd" id="2_4jb62"]
-[ext_resource type="PackedScene" uid="uid://cn80xtdyj0y4j" path="res://resources/models/water.blend" id="3_lxy4y"]
-[ext_resource type="PackedScene" uid="uid://nity4w5wv3wb" path="res://resources/models/torch.blend" id="4_m7nr4"]
+[ext_resource type="PackedScene" uid="uid://dnvyhvuyetf0s" path="res://resources/models/water.blend" id="3_lxy4y"]
+[ext_resource type="PackedScene" uid="uid://7rj7dw4ohnwr" path="res://resources/models/torch.blend" id="4_m7nr4"]
 [ext_resource type="Script" uid="uid://c6837lka4amh4" path="res://scripts/water.gd" id="4_yqmvt"]
-[ext_resource type="PackedScene" uid="uid://by4r2psp03qfq" path="res://resources/models/pizza.blend" id="5_o8nxa"]
+[ext_resource type="PackedScene" uid="uid://tburt5dwpqgd" path="res://resources/models/pizza.blend" id="5_o8nxa"]
 [ext_resource type="PackedScene" uid="uid://cfm1yd8t1k8og" path="res://resources/models/bandage.blend" id="6_bc5n3"]
 [ext_resource type="Script" uid="uid://cpie1k2taq0id" path="res://scripts/food.gd" id="8_2kgci"]
 [ext_resource type="Script" uid="uid://dm3cailr70cr7" path="res://scripts/bandage.gd" id="10_mxmwd"]

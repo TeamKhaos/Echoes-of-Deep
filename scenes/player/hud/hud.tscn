@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://c1118cqtdm1xd"]
 
 [ext_resource type="Script" uid="uid://ykhba45yyquk" path="res://scripts/player/hud.gd" id="1_rp8h0"]
-[ext_resource type="Texture2D" uid="uid://bpmdtgysdm2tp" path="res://resources/images/field_background.png" id="1_xcx7v"]
+[ext_resource type="Texture2D" uid="uid://qoygyn25bjo2" path="res://resources/images/Cruz.png" id="2_rp8h0"]
 
 [node name="hud" type="Control"]
 layout_mode = 3
@@ -11,23 +11,21 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_rp8h0")
-default_icon = null
 
-[node name="Reticle" type="TextureRect" parent="."]
+[node name="Crosshair" type="TextureRect" parent="."]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -1.0
-offset_top = -1.0
-offset_right = 1.0
-offset_bottom = 1.0
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("1_xcx7v")
-expand_mode = 1
+texture = ExtResource("2_rp8h0")
 stretch_mode = 5
 
 [node name="Grito" type="Panel" parent="."]
