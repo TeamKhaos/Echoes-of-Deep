@@ -29,30 +29,33 @@ func interact():
 		var collider = interaction_ray.collider
 
 		if collider.is_in_group("interactable") and can_interact:
-			# Si cambiamos de objeto, actualizamos HUD
+			# Si cambiamos de objeto
 			if last_interactable != collider:
+
 				hud.set_crosshair_interact(true)
 				hud.show_interact_prompt(true)
 				last_interactable = collider
 
-			# Si presionamos E
+			# Presionar E
 			if Input.is_action_just_pressed("Interact"):
 				collider.mouse_interaction(get_parent())
 				current_object = collider
 				already_interacted = true
-				leave_interaction() # 👈 limpia todo correctamente
+				leave_interaction()
 		else:
 			# Si dejamos de apuntar o perdemos el objeto
 			if last_interactable != null:
+
 				hud.show_interact_prompt(false)
 				hud.set_crosshair_interact(false)
 				last_interactable = null
 	else:
-		# Si el rayo no golpea nada
+		# Si no hay colisión, limpiar todo
 		if last_interactable != null:
 			hud.show_interact_prompt(false)
 			hud.set_crosshair_interact(false)
 			last_interactable = null
+
 
 
 func leave_interaction():

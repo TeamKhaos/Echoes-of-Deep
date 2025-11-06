@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://ykhba45yyquk" path="res://scripts/player/hud.gd" id="1_rp8h0"]
 [ext_resource type="Texture2D" uid="uid://p7gn2q5mwd6b" path="res://resources/images/tecla.png" id="2_ko8bi"]
-[ext_resource type="Texture2D" uid="uid://dpyylgd0fvodl" path="res://resources/images/Cruz.png" id="2_rp8h0"]
+[ext_resource type="Texture2D" uid="uid://qoygyn25bjo2" path="res://resources/images/Cruz.png" id="2_rp8h0"]
 
 [node name="hud" type="Control"]
 layout_mode = 3
@@ -43,6 +43,7 @@ layout_mode = 2
 text = "to interact"
 
 [node name="Crosshair" type="TextureRect" parent="."]
+texture_filter = 1
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
