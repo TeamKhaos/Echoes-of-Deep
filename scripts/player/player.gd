@@ -77,6 +77,12 @@ func _process(_delta):
 	if Input.is_action_just_pressed("Microphone"):
 		voice_controller.toggle_microphone()
 
+	if Input.is_action_just_pressed("Drop"):
+		if object_marker.get_child_count() > 0:
+			var held_item = object_marker.get_child(0)
+			if held_item.has_method("drop"):
+				held_item.drop(object_marker.global_transform)
+
 	if Input.is_action_just_pressed("Inventory"):
 		if inventory_instance and inventory_instance is Control:
 			inventory_instance.visible = !inventory_instance.visible
