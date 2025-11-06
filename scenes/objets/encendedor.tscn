@@ -1,0 +1,19 @@
+[gd_scene load_steps=4 format=3 uid="uid://cn162rpmf17fu"]
+
+[ext_resource type="PackedScene" uid="uid://di5ayn7xo0dio" path="res://resources/models/Encendedor.glb" id="1_a75rn"]
+[ext_resource type="Script" uid="uid://d3avq6q02l2iq" path="res://scripts/objects/encendedor.gd" id="1_huw0o"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_huw0o"]
+size = Vector3(0.16925049, 0.8706436, 0.3465271)
+
+[node name="encendedor" type="Node3D"]
+
+[node name="RigidBody3D" type="RigidBody3D" parent="." groups=["interactable"]]
+script = ExtResource("1_huw0o")
+
+[node name="Encendedor" parent="RigidBody3D" instance=ExtResource("1_a75rn")]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, -0.2140235, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="RigidBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00881958, 0.3074913, 0.003768921)
+shape = SubResource("BoxShape3D_huw0o")

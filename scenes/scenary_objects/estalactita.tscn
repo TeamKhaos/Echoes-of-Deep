@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=3 uid="uid://o0py5hpe8wr7"]
+
+[ext_resource type="PackedScene" uid="uid://btnntk4vvotpl" path="res://resources/models/Estalactita_mita.glb" id="1_2enht"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_lu11b"]
+radius = 0.4658203
+height = 3.7894287
+
+[node name="estalactita" type="Node3D"]
+
+[node name="RigidBody3D" type="RigidBody3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="RigidBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.8035712, 0)
+shape = SubResource("CapsuleShape3D_lu11b")
+
+[node name="Estalactita_mita" parent="RigidBody3D" instance=ExtResource("1_2enht")]
+transform = Transform3D(1, 0, 0, 0, -1, 8.742278e-08, 0, -8.742278e-08, -1, 0, 0, 0)
