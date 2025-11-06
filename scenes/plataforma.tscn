@@ -108,5 +108,14 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.35051894, -6.5081606)
 transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0, 0)
 shape = SubResource("SphereShape3D_bc5n3")
 
+[node name="Palo4" parent="." instance=ExtResource("10_yqmvt")]
+transform = Transform3D(1, 0, 0, 0, 1, -1.7484555e-07, 0, 1.7484555e-07, 1, -8.27295, 1.9217651, 0)
+
+[node name="Palo3" parent="." instance=ExtResource("10_yqmvt")]
+transform = Transform3D(1, 0, 0, 0, 1.3113416e-07, 1, 0, -1, 1.3113416e-07, -8.530596, 1.9850957, 4.6056585)
+
+[node name="Palo2" parent="." instance=ExtResource("10_yqmvt")]
+transform = Transform3D(1, 0, 0, 0, -1, 8.742278e-08, 0, -8.742278e-08, -1, -5.687064, 3.9911609, 4.44409)
+
 [node name="Palo" parent="." instance=ExtResource("10_yqmvt")]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, -2.843532, 4.6056595, 5.9113994)

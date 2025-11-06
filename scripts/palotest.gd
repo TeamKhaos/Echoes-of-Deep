@@ -7,6 +7,7 @@ func _ready():
 	original_scale = scale
 
 func mouse_interaction(player):
+	player.add_to_inventory(item_id)
 	var object_marker = player.object_marker
 	if object_marker:
 		get_parent().remove_child(self)

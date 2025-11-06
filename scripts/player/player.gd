@@ -81,6 +81,8 @@ func _process(_delta):
 		if object_marker.get_child_count() > 0:
 			var held_item = object_marker.get_child(0)
 			if held_item.has_method("drop"):
+				if "item_id" in held_item:
+					remove_from_inventory(held_item.item_id)
 				held_item.drop(object_marker.global_transform)
 
 	if Input.is_action_just_pressed("Inventory"):
@@ -234,6 +236,7 @@ func _on_area_3d_body_entered(body: Node3D) -> void:
 	if(body.is_in_group("player")):
 		$"../AudioStreamPlayer3D".play()
 		$"../Area3D".queue_free()
+
 		
 func add_to_inventory(item_id: String):
 	if not inventory_instance:
@@ -264,3 +267,28 @@ func add_to_inventory(item_id: String):
 			print("⚠️ No se pudo añadir el ítem (inventario lleno o inválido)")
 	else:
 		print("⚠️ El nodo InventoryPlayer no tiene el método add_item()")
+
+
+func remove_from_inventory(item_id: String):
+	if not inventory_instance:
+		print("⚠️ Inventario no instanciado")
+		return
+
+	var inv_node = inventory_instance.get_node_or_null("Inventory")
+	if not inv_node:
+		print("⚠️ No se encontró el nodo InventoryPlayer dentro del inventario")
+		return
+
+	if inv_node.has_method("get_items") and inv_node.has_method("remove_item"):
+		var items = inv_node.get_items()
+		for item in items:
+			if "_prototype" in item and item._prototype != null and "_id" in item._prototype and item._prototype._id == item_id:
+				inv_node.remove_item(item)
+				print("📦 Removido del inventario:", item_id)
+				if hud:
+					hud.set_inventory(inv_node)
+					print("🖼️ HUD actualizado tras remover:", item_id)
+				return # Exit after removing the first match
+		print("⚠️ No se encontró el ítem con id:", item_id, " en el inventario")
+	else:
+		print("⚠️ El nodo InventoryPlayer no tiene los métodos get_items() o remove_item()")
