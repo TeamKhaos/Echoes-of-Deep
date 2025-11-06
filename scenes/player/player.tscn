@@ -24,6 +24,9 @@ script = ExtResource("2_g2els")
 [node name="Camera3D" type="Camera3D" parent="Pivot"]
 script = ExtResource("3_qlg0r")
 
+[node name="ObjectMarker" type="Marker3D" parent="Pivot/Camera3D"]
+transform = Transform3D(-0.7488284, 0, 0.6627639, 0, 1, 0, -0.6627639, 0, -0.7488284, -0.59632236, -0.26711285, -0.7878452)
+
 [node name="Player_Arms" parent="Pivot/Camera3D" instance=ExtResource("4_75vfm")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.002142099, -3.0066643, 0.3105793)
 
@@ -59,8 +62,5 @@ unique_name_in_owner = true
 [node name="PlayerHUD" type="CanvasLayer" parent="."]
 
 [node name="hud" parent="PlayerHUD" instance=ExtResource("7_0owmy")]
-
-[node name="ObjectMarker" type="Marker3D" parent="."]
-transform = Transform3D(0.7488285, 0, -0.66276383, 0, 1, 0, 0.66276383, 0, 0.7488285, 0.5963224, 0.26954544, 0.78784513)
 
 [connection signal="timeout" from="FootstepsTimer" to="." method="_on_footsteps_timer_timeout"]
