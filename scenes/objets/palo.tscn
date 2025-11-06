@@ -1,21 +1,20 @@
 [gd_scene load_steps=4 format=3 uid="uid://buhbplfv7uyng"]
 
-[ext_resource type="Script" uid="uid://x7tmd3kspdjx" path="res://scripts/palotest.gd" id="1_lpqll"]
-[ext_resource type="PackedScene" uid="uid://ltkhffy3se6e" path="res://resources/models/palo.glb" id="1_tc6fa"]
+[ext_resource type="Script" uid="uid://x7tmd3kspdjx" path="res://scripts/objects/palo.gd" id="1_ovgbd"]
+[ext_resource type="PackedScene" uid="uid://cyjp3jcan8tti" path="res://resources/models/Palo.glb" id="2_ovgbd"]
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_tc6fa"]
 height = 2.2355957
 radius = 0.20458984
 
 [node name="Palo" type="Node3D"]
-transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
 
 [node name="RigidBody3D" type="RigidBody3D" parent="." groups=["interactable"]]
-script = ExtResource("1_lpqll")
+script = ExtResource("1_ovgbd")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="RigidBody3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5665284, 0)
 shape = SubResource("CylinderShape3D_tc6fa")
 
-[node name="palo" parent="RigidBody3D" instance=ExtResource("1_tc6fa")]
+[node name="PaloTexture" parent="RigidBody3D" instance=ExtResource("2_ovgbd")]
 transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, 0, 0, 0)

@@ -1,7 +1,8 @@
 [gd_scene load_steps=5 format=3 uid="uid://qqki4f1idp4p"]
 
-[ext_resource type="PackedScene" uid="uid://byybtuo3feceh" path="res://resources/hand.glb" id="2_kfp8m"]
-[ext_resource type="PackedScene" uid="uid://dr7q0pw8deaw2" path="res://resources/hand_grab.glb" id="2_mykxk"]
+[ext_resource type="PackedScene" uid="uid://byybtuo3feceh" path="res://resources/models/hand.glb" id="2_kfp8m"]
+[ext_resource type="PackedScene" uid="uid://uynxwqabkkt7" path="res://resources/models/hand_grab.glb" id="2_mykxk"]
+
 
 [sub_resource type="Animation" id="Animation_ttgbh"]
 resource_name = "new_animation"
