@@ -1,0 +1,20 @@
+[gd_scene load_steps=4 format=3 uid="uid://cktf40cbudpbf"]
+
+[ext_resource type="PackedScene" uid="uid://sdppnlo6ds21" path="res://resources/models/Botella.glb" id="1_acbhi"]
+[ext_resource type="Script" uid="uid://0ivriyllatbm" path="res://scripts/objects/botella.gd" id="1_mc2ye"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_mc2ye"]
+height = 1.170929
+radius = 0.3408203
+
+[node name="Botella" type="Node3D"]
+
+[node name="RigidBody3D" type="RigidBody3D" parent="." groups=["interactable"]]
+script = ExtResource("1_mc2ye")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="RigidBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00022888184, 0.23376465, -0.042251587)
+shape = SubResource("CylinderShape3D_mc2ye")
+
+[node name="Botella" parent="RigidBody3D" instance=ExtResource("1_acbhi")]
+transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, -0.0004197359, -0.37546784, -0.016194582)

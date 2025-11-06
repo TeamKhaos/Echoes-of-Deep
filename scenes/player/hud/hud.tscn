@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://ykhba45yyquk" path="res://scripts/player/hud.gd" id="1_rp8h0"]
 [ext_resource type="Texture2D" uid="uid://p7gn2q5mwd6b" path="res://resources/images/tecla.png" id="2_ko8bi"]
-[ext_resource type="Texture2D" path="res://resources/images/Cruz.png" id="2_rp8h0"]
+[ext_resource type="Texture2D" uid="uid://dpyylgd0fvodl" path="res://resources/images/Cruz.png" id="2_rp8h0"]
 
 [node name="hud" type="Control"]
 layout_mode = 3
@@ -59,33 +59,53 @@ texture = ExtResource("2_rp8h0")
 stretch_mode = 5
 
 [node name="Grito" type="Panel" parent="."]
-layout_mode = 0
-offset_left = 28.0
-offset_top = 520.0
-offset_right = 370.0
-offset_bottom = 550.0
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.024
+anchor_top = 0.80200005
+anchor_right = 0.321
+anchor_bottom = 0.84900004
+offset_left = 0.35199928
+offset_top = 0.30395508
+offset_right = 0.2079773
+offset_bottom = -0.15203857
 
 [node name="Hambre_Vida" type="Panel" parent="."]
-layout_mode = 0
-offset_left = 28.0
-offset_top = 560.0
-offset_right = 370.0
-offset_bottom = 590.0
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.024
+anchor_top = 0.864
+anchor_right = 0.321
+anchor_bottom = 0.91
+offset_left = 0.35199928
+offset_top = 0.12799072
+offset_right = 0.2079773
+offset_bottom = 0.32000732
 
 [node name="Cordura" type="Panel" parent="."]
-layout_mode = 0
-offset_left = 27.0
-offset_top = 599.0
-offset_right = 369.0
-offset_bottom = 629.0
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.023000002
+anchor_top = 0.924
+anchor_right = 0.32000002
+anchor_bottom = 0.9710001
+offset_left = 0.5039978
+offset_top = 0.24798584
+offset_right = 0.35998535
+offset_bottom = -0.20806885
 
 [node name="Item1" type="Panel" parent="."]
 clip_contents = true
-layout_mode = 0
-offset_left = 821.0
-offset_top = 547.0
-offset_right = 909.0
-offset_bottom = 629.0
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.71300006
+anchor_top = 0.84400004
+anchor_right = 0.78900003
+anchor_bottom = 0.9710001
+offset_left = -0.37609863
+offset_top = 0.08795166
+offset_right = 0.07196045
+offset_bottom = -0.20806885
 
 [node name="Icon" type="TextureRect" parent="Item1"]
 layout_mode = 1
@@ -104,11 +124,16 @@ expand_mode = 3
 
 [node name="Item2" type="Panel" parent="."]
 clip_contents = true
-layout_mode = 0
-offset_left = 933.0
-offset_top = 547.0
-offset_right = 1021.0
-offset_bottom = 629.0
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.81000006
+anchor_top = 0.84400004
+anchor_right = 0.88600004
+anchor_bottom = 0.9710001
+offset_left = -0.12005615
+offset_top = 0.08795166
+offset_right = 0.3279419
+offset_bottom = -0.20806885
 
 [node name="Icon" type="TextureRect" parent="Item2"]
 layout_mode = 1
@@ -126,11 +151,16 @@ grow_vertical = 2
 expand_mode = 3
 
 [node name="Mochila" type="Panel" parent="."]
-layout_mode = 0
-offset_left = 1042.0
-offset_top = 547.0
-offset_right = 1130.0
-offset_bottom = 629.0
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.90500003
+anchor_top = 0.84400004
+anchor_right = 0.98100007
+anchor_bottom = 0.9710001
+offset_left = -0.5600586
+offset_top = 0.08795166
+offset_right = -0.11206055
+offset_bottom = -0.20806885
 
 [node name="Headphone" type="Panel" parent="."]
 layout_mode = 1

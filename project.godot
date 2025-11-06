@@ -22,6 +22,10 @@ driver/enable_input=true
 
 GLOBAL="*res://scripts/GLOBAL.gd"
 
+[display]
+
+window/size/mode=3
+
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/gloot/plugin.cfg")

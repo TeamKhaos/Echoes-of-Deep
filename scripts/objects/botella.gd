@@ -1,6 +1,6 @@
 extends RigidBody3D
 
-@export var item_id: String = "torch"
+@export var item_id: String = "water"
 var original_scale: Vector3
 
 func _ready():
@@ -13,7 +13,7 @@ func mouse_interaction(player):
 		get_parent().remove_child(self)
 		object_marker.add_child(self)
 		transform = Transform3D.IDENTITY
-		scale *= 0.3
+		scale *= 0.4
 		freeze = true
 
 func drop(drop_transform: Transform3D):

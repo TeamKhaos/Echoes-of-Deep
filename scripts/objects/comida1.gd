@@ -1,6 +1,6 @@
 extends RigidBody3D
 
-@export var item_id: String = "torch"
+@export var item_id: String = "food"
 var original_scale: Vector3
 
 func _ready():
@@ -13,7 +13,10 @@ func mouse_interaction(player):
 		get_parent().remove_child(self)
 		object_marker.add_child(self)
 		transform = Transform3D.IDENTITY
-		scale *= 0.3
+		scale *= 0.5
+		# Rotar 90 grados en Y
+
+		rotation.z = deg_to_rad(-90)
 		freeze = true
 
 func drop(drop_transform: Transform3D):
@@ -23,5 +26,5 @@ func drop(drop_transform: Transform3D):
 	global_transform = drop_transform
 	scale = original_scale
 	freeze = false
-	# Apply a small forward impulse
+	# Aplicar impulso hacia adelante
 	apply_central_impulse(-global_transform.basis.z.normalized() * 2)

@@ -1,0 +1,19 @@
+[gd_scene load_steps=4 format=3 uid="uid://ci0tkyqdlb68j"]
+
+[ext_resource type="Script" uid="uid://cq4a7r8v05vj7" path="res://scripts/objects/comida1.gd" id="1_ciyhr"]
+[ext_resource type="PackedScene" uid="uid://gylwuyspcx3e" path="res://resources/models/BarraEnergetica.glb" id="1_xyg5k"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ciyhr"]
+size = Vector3(0.93777466, 0.15441895, 0.37805557)
+
+[node name="Comida1" type="Node3D"]
+
+[node name="RigidBody3D" type="RigidBody3D" parent="." groups=["interactable"]]
+script = ExtResource("1_ciyhr")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="RigidBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00044250488, -0.0065307617, 0.012861252)
+shape = SubResource("BoxShape3D_ciyhr")
+
+[node name="BarraEnergetica" parent="RigidBody3D" instance=ExtResource("1_xyg5k")]
+transform = Transform3D(0.03, 0, 0, 0, 0.03, 0, 0, 0, 0.03, 0, 0, 0)
