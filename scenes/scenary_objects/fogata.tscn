@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://ck2jw8uvvaghg"]
+
+[ext_resource type="PackedScene" uid="uid://djxh01a1yw5rw" path="res://resources/models/Fogata.glb" id="1_120bh"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_120bh"]
+size = Vector3(3.3892899, 2.3814087, 3.5925903)
+
+[node name="fogata" type="Node3D"]
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+
+[node name="Fogata" parent="StaticBody3D" instance=ExtResource("1_120bh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.000995338, 0.0069241524, -0.0041931868)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.021595001, 0.5999924, 0.12838745)
+shape = SubResource("BoxShape3D_120bh")
