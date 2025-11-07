@@ -14,7 +14,7 @@ grow_vertical = 2
 script = ExtResource("1_rp8h0")
 
 [node name="InteractLabel" type="HBoxContainer" parent="."]
-texture_filter = 1
+visible = false
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -34,7 +34,6 @@ layout_mode = 2
 text = "Press"
 
 [node name="KeyIcon" type="TextureRect" parent="InteractLabel"]
-texture_filter = 1
 layout_mode = 2
 texture = ExtResource("2_ko8bi")
 stretch_mode = 5
