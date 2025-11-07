@@ -25,36 +25,32 @@ func _process(_delta):
 
 func interact():
 	var interaction_ray = MouseRayCast.calc_3D_interactions(interact_layer, 3)
+	var new_interactable = null
 	if interaction_ray:
 		var collider = interaction_ray.collider
-
 		if collider.is_in_group("interactable") and can_interact:
-			# Si cambiamos de objeto
-			if last_interactable != collider:
+			new_interactable = collider
 
-				hud.set_crosshair_interact(true)
-				hud.show_interact_prompt(true)
-				last_interactable = collider
-
-			# Presionar E
-			if Input.is_action_just_pressed("Interact"):
-				collider.mouse_interaction(get_parent())
-				current_object = collider
-				already_interacted = true
-				leave_interaction()
-		else:
-			# Si dejamos de apuntar o perdemos el objeto
-			if last_interactable != null:
-
-				hud.show_interact_prompt(false)
-				hud.set_crosshair_interact(false)
-				last_interactable = null
-	else:
-		# Si no hay colisión, limpiar todo
-		if last_interactable != null:
+	if new_interactable != last_interactable:
+		if last_interactable:
+			if last_interactable.has_method("set_highlight"):
+				last_interactable.set_highlight(false)
 			hud.show_interact_prompt(false)
 			hud.set_crosshair_interact(false)
-			last_interactable = null
+		
+		if new_interactable:
+			if new_interactable.has_method("set_highlight"):
+				new_interactable.set_highlight(true)
+			hud.set_crosshair_interact(true)
+			hud.show_interact_prompt(true)
+		
+		last_interactable = new_interactable
+
+	if last_interactable and Input.is_action_just_pressed("Interact"):
+		last_interactable.mouse_interaction(get_parent())
+		current_object = last_interactable
+		already_interacted = true
+		leave_interaction()
 
 
 

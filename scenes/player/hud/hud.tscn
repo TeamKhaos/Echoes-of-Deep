@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://ykhba45yyquk" path="res://scripts/player/hud.gd" id="1_rp8h0"]
 [ext_resource type="Texture2D" uid="uid://p7gn2q5mwd6b" path="res://resources/images/tecla.png" id="2_ko8bi"]
-[ext_resource type="Texture2D" uid="uid://qoygyn25bjo2" path="res://resources/images/Cruz.png" id="2_rp8h0"]
+[ext_resource type="Texture2D" uid="uid://dpyylgd0fvodl" path="res://resources/images/Cruz.png" id="2_rp8h0"]
 
 [node name="hud" type="Control"]
 layout_mode = 3
@@ -110,15 +110,15 @@ offset_bottom = -0.20806885
 
 [node name="Icon" type="TextureRect" parent="Item1"]
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -20.0
-offset_top = -20.0
-offset_right = 20.0
-offset_bottom = 20.0
+anchors_preset = -1
+anchor_left = 0.273
+anchor_top = 0.256
+anchor_right = 0.72700006
+anchor_bottom = 0.744
+offset_left = -0.024000168
+offset_top = 0.00799942
+offset_right = 0.023994446
+offset_bottom = -0.008003235
 grow_horizontal = 2
 grow_vertical = 2
 expand_mode = 3
@@ -138,15 +138,15 @@ offset_bottom = -0.20806885
 
 [node name="Icon" type="TextureRect" parent="Item2"]
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -20.0
-offset_top = -20.0
-offset_right = 20.0
-offset_bottom = 20.0
+anchors_preset = -1
+anchor_left = 0.273
+anchor_top = 0.256
+anchor_right = 0.72700006
+anchor_bottom = 0.744
+offset_left = -0.024000168
+offset_top = 0.00799942
+offset_right = 0.023994446
+offset_bottom = -0.008003235
 grow_horizontal = 2
 grow_vertical = 2
 expand_mode = 3
