@@ -10,6 +10,9 @@ var base_materials := []
 func _ready():
 	original_scale = scale
 
+	if mesh.mesh:
+		mesh.mesh = mesh.mesh.duplicate()
+
 	var mesh_res = mesh.mesh  # el recurso Mesh interno
 
 	if mesh_res:
@@ -41,11 +44,22 @@ func mouse_interaction(player):
 	player.add_to_inventory(item_id)
 	var object_marker = player.object_marker
 	if object_marker:
+		# If the player is already holding an object, destroy it.
+		if object_marker.get_child_count() > 0:
+			for child in object_marker.get_children():
+				child.queue_free()
+
+		# Now, pick up the new object.
 		get_parent().remove_child(self)
 		object_marker.add_child(self)
-		transform = Transform3D.IDENTITY
-		scale *= 0.4
+		set_held_transform()
 		freeze = true
+
+
+func set_held_transform():
+	# Esta función define la apariencia del objeto en la mano del jugador
+	transform = Transform3D.IDENTITY
+	scale *= 0.4
 
 
 func drop(drop_transform: Transform3D):
@@ -55,4 +69,9 @@ func drop(drop_transform: Transform3D):
 	global_transform = drop_transform
 	scale = original_scale
 	freeze = false
+	
+	# Re-enable collision so it doesn't fall through the world
+	set_collision_layer_value(1, true)
+	set_collision_mask_value(1, true)
+	
 	apply_central_impulse(-global_transform.basis.z.normalized() * 2)

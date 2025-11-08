@@ -28,6 +28,7 @@ func _ready():
 	print("🖼️ interact:", interact_crosshair)
 
 
+
 # ===============================
 # 🧭 INVENTARIO
 # ===============================

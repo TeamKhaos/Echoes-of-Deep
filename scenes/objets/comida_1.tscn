@@ -6,14 +6,14 @@
 [sub_resource type="BoxShape3D" id="BoxShape3D_ciyhr"]
 size = Vector3(0.93777466, 0.15441895, 0.37805557)
 
-[node name="Comida1" type="Node3D"]
-
-[node name="RigidBody3D" type="RigidBody3D" parent="." groups=["interactable"]]
+[node name="RigidBody3D" type="RigidBody3D" groups=["interactable"]]
 script = ExtResource("1_ciyhr")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="RigidBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00044250488, -0.0065307617, 0.012861252)
 shape = SubResource("BoxShape3D_ciyhr")
 
-[node name="BarraEnergetica" parent="RigidBody3D" instance=ExtResource("1_xyg5k")]
+[node name="BarraEnergetica" parent="." instance=ExtResource("1_xyg5k")]
 transform = Transform3D(0.03, 0, 0, 0, 0.03, 0, 0, 0, 0.03, 0, 0, 0)
+
+[node name="Comida1" type="Node3D" parent="."]
