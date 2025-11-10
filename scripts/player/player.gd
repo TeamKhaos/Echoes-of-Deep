@@ -12,6 +12,11 @@ extends CharacterBody3D
 @onready var inventory_scene = preload("res://scenes/player/inventario.tscn")
 var inventory_instance: Node = null
 
+#---VIDA----
+@export var max_health: int = 100
+var current_health: int = 100
+
+
 #FLAGS
 var can_move : bool = true
 var on_debug := false
@@ -57,6 +62,7 @@ func _ready():
 	can_move = true
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	GLOBAL.update_hud.emit()
+
 	#Allow Player to move and capture mouse to game window
 	can_move = true
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
@@ -371,4 +377,20 @@ func remove_from_inventory(item_id: String):
 		print("⚠️ No se encontró el ítem con id:", item_id, " en el inventario")
 	else:
 		print("⚠️ El nodo InventoryPlayer no tiene los métodos get_items() o remove_item()")
+
+#------- SALUD -----
+func take_damage(amount: int):
+	current_health -= amount
+	current_health = clamp(current_health, 0, max_health)
+	update_health_bar()
+
+	if current_health <= 0:
+		die()
+
+func update_health_bar():
+	if hud and hud.has_node("Vida"):
+		hud.get_node("Vida").value = current_health
 		
+func die():
+	print("💀 El jugador ha muerto")
+	# Aquí podrías reiniciar nivel, mostrar menú, etc.

@@ -1,0 +1,21 @@
+[gd_scene load_steps=5 format=3 uid="uid://b0o2h1nf4516m"]
+
+[ext_resource type="Script" uid="uid://bew0ofkcqqurp" path="res://scripts/enemy_test.gd" id="1_t0qpu"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_t0qpu"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_t0qpu"]
+albedo_color = Color(1, 0, 0.15294118, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_j4xq8"]
+material = SubResource("StandardMaterial3D_t0qpu")
+
+[node name="EnemyTest" type="Area3D"]
+script = ExtResource("1_t0qpu")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00987044, 0, 0)
+shape = SubResource("SphereShape3D_t0qpu")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("SphereMesh_j4xq8")

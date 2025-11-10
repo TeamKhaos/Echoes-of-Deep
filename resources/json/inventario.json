@@ -12,7 +12,6 @@
 		"image": "res://resources/images/food.png",
 		"size": "Vector2i(1, 1)",
 		"scene": "res://scenes/objets/comida_1.tscn"
-		
 	},
 	"palo": {
 		"image": "res://resources/images/torch.png",
@@ -23,7 +22,5 @@
 		"image": "res://resources/images/bandage.png",
 		"size": "Vector2i(1, 1)",
 		"scene": "res://scenes/objets/encendedor.tscn"
-		
-	},
-	
+	}
 }
