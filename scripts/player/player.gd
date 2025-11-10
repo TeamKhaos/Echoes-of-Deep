@@ -67,12 +67,91 @@ func _ready():
 	
 
 
+func equip_item_from_slot(slot_index: int):
+	print("--- equip_item_from_slot called for slot: ", slot_index, " ---")
+	var inv_node = inventory_instance.get_node_or_null("Inventory")
+	if not inv_node:
+		print("DEBUG: ⚠️ Inventory node not found.")
+		return
+	print("DEBUG: Inventory node found.")
+
+	var items = inv_node.get_items()
+	if slot_index >= items.size():
+		print("DEBUG: ⚠️ Slot ", slot_index, " is empty or out of bounds. Items in inventory: ", items.size())
+		return
+	print("DEBUG: Item found in slot ", slot_index, ". Total items: ", items.size())
+
+	var item_to_equip_from_inventory = items[slot_index]
+	var item_id_to_equip = ""
+	if item_to_equip_from_inventory and item_to_equip_from_inventory.has_method("get_prototype"):
+		item_id_to_equip = item_to_equip_from_inventory.get_prototype().get("_id")
+	print("DEBUG: Item to equip ID: ", item_id_to_equip)
+
+	# 1. If an item is already in hand, just remove it.
+	if object_marker.get_child_count() > 0:
+		print("DEBUG: Object marker has children. Clearing held item.")
+		for child in object_marker.get_children():
+			child.queue_free()
+	else:
+		print("DEBUG: Object marker is empty. No item in hand.")
+
+	# 2. Get item data from inventory and prepare to instantiate
+	var proto = item_to_equip_from_inventory.get_prototype()
+	if not proto or not proto.has_method("get"):
+		print("DEBUG: ⚠️ Item prototype not found or missing 'get' method.")
+		return
+	print("DEBUG: Item prototype found.")
+
+	var props = proto.get("_properties")
+	if typeof(props) != TYPE_DICTIONARY or not props.has("scene"):
+		print("DEBUG: ⚠️ Item prototype is missing 'scene' property for item: ", item_id_to_equip)
+		return
+	print("DEBUG: Item properties and 'scene' property found.")
+
+	var scene_path = props["scene"]
+	print("DEBUG: Scene path for item: ", scene_path)
+	var item_scene = load(scene_path)
+	if not item_scene:
+		print("DEBUG: ⚠️ Failed to load item scene: ", scene_path)
+		return
+	print("DEBUG: Item scene loaded successfully.")
+
+	# 3. Instantiate the new item and place it in the player's hand.
+	print("DEBUG: Instantiating new item.")
+	var new_item_instance = item_scene.instantiate()
+	object_marker.add_child(new_item_instance)
+	print("DEBUG: New item instantiated and added to object marker.")
+
+	# 4. Configure the item's state
+	print("DEBUG: Configuring new item's state.")
+	# Let the item set its own held transform, or use a default
+	if new_item_instance.has_method("set_held_transform"):
+		new_item_instance.set_held_transform()
+	else:
+		new_item_instance.transform = Transform3D.IDENTITY
+		new_item_instance.scale *= 0.4
+	
+	# More robustly disable physics
+	if new_item_instance is RigidBody3D:
+		new_item_instance.freeze = true
+		new_item_instance.set_collision_layer_value(1, false)
+		new_item_instance.set_collision_mask_value(1, false)
+		print("DEBUG: Item is RigidBody3D. Freeze set and collision disabled.")
+	
+	print("DEBUG: New item state configured. --- End equip_item_from_slot ---")
+
+
 func _physics_process(delta):
 	if is_on_floor(): _last_frame_was_on_floor = Engine.get_physics_frames()
 	crouch()
 	move(delta, get_input())
 
 func _process(_delta):
+	if Input.is_action_just_pressed("inventory1H"):
+		equip_item_from_slot(0)
+	if Input.is_action_just_pressed("inventory2H"):
+		equip_item_from_slot(1)
+
 	#Change to an action in Project -> Project Settings -> Input Map
 	if Input.is_action_just_pressed("Microphone"):
 		voice_controller.toggle_microphone()
