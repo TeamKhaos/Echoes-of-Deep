@@ -292,3 +292,4 @@ func remove_from_inventory(item_id: String):
 		print("⚠️ No se encontró el ítem con id:", item_id, " en el inventario")
 	else:
 		print("⚠️ El nodo InventoryPlayer no tiene los métodos get_items() o remove_item()")
+		

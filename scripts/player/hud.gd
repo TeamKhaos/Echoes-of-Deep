@@ -146,3 +146,13 @@ func show_interact_prompt(active: bool):
 
 func _hide_prompt():
 	interact_label.visible = false
+	
+# ===============================
+# ❤️ Barra de Vida
+# ===============================
+
+@onready var health_bar = $HealthBar  # o el path correcto dentro del HUD
+
+func set_health(value: float):
+	if health_bar:
+		health_bar.value = clamp(value, 0, health_bar.max_value)
