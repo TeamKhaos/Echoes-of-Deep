@@ -3,7 +3,8 @@ extends RigidBody3D
 @export var item_id: String = "palo" # Changed item_id to "palo"
 var original_scale: Vector3
 # --- NOTA: Puede que necesites actualizar esta ruta al nodo de tu malla (Mesh) ---
-@onready var mesh = $MeshInstance3D 
+
+#@onready var mesh = $MeshInstance3D 
 
 # --- LÓGICA DE ILUMINACIÓN (COMENTADA) ---
 # var outlined_material: Material
