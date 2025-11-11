@@ -1,6 +1,7 @@
-[gd_scene load_steps=7 format=3 uid="uid://bcu48jnv386ea"]
+[gd_scene load_steps=8 format=3 uid="uid://bcu48jnv386ea"]
 
 [ext_resource type="Texture2D" uid="uid://dfb6qb6xfdsvo" path="res://resources/images/bg-circulo.png" id="1_m16tm"]
+[ext_resource type="Script" uid="uid://bl2gxq4ige58v" path="res://scripts/player/voice_particles.gd" id="1_o8itk"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_o8itk"]
 transparency = 1
@@ -31,6 +32,7 @@ collision_use_scale = true
 [sub_resource type="QuadMesh" id="QuadMesh_bpaxn"]
 
 [node name="VoiceWave" type="Node3D"]
+script = ExtResource("1_o8itk")
 
 [node name="VoiceParticles" type="GPUParticles3D" parent="."]
 material_override = SubResource("StandardMaterial3D_o8itk")

@@ -6,6 +6,8 @@ extends CharacterBody3D
 @onready var collision_shape = $CollisionShape3D
 @onready var player_hud = $PlayerHUD
 @onready var voice_controller = $Voice
+@onready var voice_particles = $Pivot/Camera3D/VoiceParticle
+
 @onready var hud = $PlayerHUD/hud
 @onready var object_marker = $Pivot/Camera3D/ObjectMarker
 # --- INVENTARIO GLOOT ---
@@ -157,10 +159,14 @@ func _process(_delta):
 		equip_item_from_slot(0)
 	if Input.is_action_just_pressed("inventory2H"):
 		equip_item_from_slot(1)
-
 	#Change to an action in Project -> Project Settings -> Input Map
 	if Input.is_action_just_pressed("Microphone"):
 		voice_controller.toggle_microphone()
+	if voice_controller.is_active():
+		voice_particles.update_emission((Camera.global_transform.basis.z))
+	else:
+		voice_particles.stop_emission()
+		
 
 	if Input.is_action_just_pressed("Drop"):
 		if object_marker.get_child_count() > 0:
