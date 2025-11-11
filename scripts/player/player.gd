@@ -163,7 +163,7 @@ func _process(_delta):
 	if Input.is_action_just_pressed("Microphone"):
 		voice_controller.toggle_microphone()
 	if voice_controller.is_active():
-		voice_particles.update_emission((Camera.global_transform.basis.z))
+		voice_particles.update_emission(-Camera.global_transform.basis.z)
 	else:
 		voice_particles.stop_emission()
 		

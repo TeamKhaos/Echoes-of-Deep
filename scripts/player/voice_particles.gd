@@ -16,20 +16,27 @@ func _on_microphone_toggled(active: bool):
 		print("💨 Partículas desactivadas por voz")
 
 func _process(delta: float) -> void:
-	# Si está activo, hacer que sigan la dirección de la cámara
 	if particles.emitting:
 		var camera = get_parent()
 		if camera and camera is Camera3D:
-			global_transform.basis = Basis.looking_at(global_transform.origin + camera.global_transform.basis.z, Vector3.UP)
+			var dir = -camera.global_transform.basis.z.normalized()
+			update_emission(dir)
 
 
-func update_emission(direction: Vector3):
-	# Habilita emisión si no está activa
+func update_emission(direction: Vector3): 
 	if not particles.emitting:
-		particles.emitting = true
-
-	# Ajusta dirección para que salga frente a la cámara
-	particles.process_material.direction = direction.normalized()
+		particles.emitting = true 
+	var material := particles.process_material 
+	if material is ParticleProcessMaterial: 
+		material.direction = direction.normalized() 
+		material.spread = 0.0 # recto 
+		material.gravity = Vector3.ZERO # evita que caigan 
+		material.initial_velocity_min = 10 # más fuerza inicial 
+		material.initial_velocity_max = 10 # más fuerza inicial 
+		material.angle_min = 0.0 
+		material.angle_max = 0.0 
+		material.angular_velocity_min = 0.0 
+		material.angular_velocity_max = 0.0
 
 func stop_emission():
 	if particles.emitting:
