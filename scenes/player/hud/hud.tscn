@@ -100,38 +100,8 @@ offset_top = 0.24798584
 offset_right = 0.35998535
 offset_bottom = -0.20806885
 
-[node name="Item1" type="Panel" parent="."]
-clip_contents = true
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.71300006
-anchor_top = 0.84400004
-anchor_right = 0.78900003
-anchor_bottom = 0.9710001
-offset_left = -0.37609863
-offset_top = 0.08795166
-offset_right = 0.07196045
-offset_bottom = -0.20806885
-
-[node name="Icon" type="TextureRect" parent="Item1"]
+[node name="Item2" type="TextureRect" parent="."]
 texture_filter = 1
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -44.0
-offset_top = -41.0
-offset_right = 43.0
-offset_bottom = 40.0
-grow_horizontal = 2
-grow_vertical = 2
-texture = ExtResource("4_vo6io")
-expand_mode = 3
-
-[node name="Item2" type="Panel" parent="."]
-clip_contents = true
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.81000006
@@ -142,22 +112,50 @@ offset_left = -0.12005615
 offset_top = 0.08795166
 offset_right = 0.3279419
 offset_bottom = -0.20806885
+texture = ExtResource("4_vo6io")
 
-[node name="Icon2" type="TextureRect" parent="Item2"]
-texture_filter = 1
+[node name="Icon" type="TextureRect" parent="Item2"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -44.0
-offset_top = -41.0
-offset_right = 43.0
-offset_bottom = 40.0
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
 grow_horizontal = 2
 grow_vertical = 2
+expand_mode = 3
+
+[node name="Item1" type="TextureRect" parent="."]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.71300006
+anchor_top = 0.84400004
+anchor_right = 0.78900003
+anchor_bottom = 0.9710001
+offset_left = -0.37609863
+offset_top = 0.08795166
+offset_right = 0.07196045
+offset_bottom = -0.20806885
 texture = ExtResource("4_vo6io")
+
+[node name="Icon" type="TextureRect" parent="Item1"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
 expand_mode = 3
 
 [node name="Mochila" type="Panel" parent="."]
@@ -172,34 +170,17 @@ offset_top = 0.08795166
 offset_right = -0.11206055
 offset_bottom = -0.20806885
 
-[node name="Icon3" type="TextureRect" parent="Mochila"]
-texture_filter = 1
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -44.0
-offset_top = -40.0
-offset_right = 43.0
-offset_bottom = 41.0
-grow_horizontal = 2
-grow_vertical = 2
-texture = ExtResource("4_vo6io")
-expand_mode = 3
-
 [node name="Headphone" type="Panel" parent="."]
 layout_mode = 1
 anchors_preset = -1
-anchor_left = 0.5
-anchor_top = 0.90700006
-anchor_right = 0.5
-anchor_bottom = 0.90700006
-offset_left = -44.0
-offset_top = -40.736023
-offset_right = 44.0
-offset_bottom = 41.263977
+anchor_left = 0.462
+anchor_top = 0.84400004
+anchor_right = 0.53800005
+anchor_bottom = 0.9710001
+offset_left = -0.22399902
+offset_top = 0.08795166
+offset_right = 0.22393799
+offset_bottom = -0.20806885
 grow_horizontal = 2
 grow_vertical = 2
 
