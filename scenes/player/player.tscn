@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://0n2ppdjdgm7e"]
+[gd_scene load_steps=18 format=3 uid="uid://0n2ppdjdgm7e"]
 
 [ext_resource type="Script" uid="uid://bn6v4om706bah" path="res://scripts/player/player.gd" id="1_3vyb7"]
 [ext_resource type="Script" uid="uid://dxyjryo76ydaf" path="res://scripts/player/pivot.gd" id="2_g2els"]
@@ -10,6 +10,7 @@
 [ext_resource type="PackedScene" uid="uid://cu3maytsanx4s" path="res://scenes/player/voice.tscn" id="6_qek5x"]
 [ext_resource type="PackedScene" uid="uid://c1118cqtdm1xd" path="res://scenes/player/hud/hud.tscn" id="7_0owmy"]
 [ext_resource type="Script" uid="uid://bl2gxq4ige58v" path="res://scripts/player/voice_particles.gd" id="7_je7p5"]
+[ext_resource type="PackedScene" uid="uid://bcu48jnv386ea" path="res://scenes/scenary_objects/voz prueba.tscn" id="10_je7p5"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fm80t"]
 transparency = 1
@@ -96,6 +97,9 @@ hud = NodePath("../PlayerHUD/hud")
 
 [node name="StairsRaycast" type="RayCast3D" parent="."]
 unique_name_in_owner = true
+
+[node name="VoiceWave" parent="." instance=ExtResource("10_je7p5")]
+script = null
 
 [node name="StairsBelowRaycast" type="RayCast3D" parent="."]
 unique_name_in_owner = true

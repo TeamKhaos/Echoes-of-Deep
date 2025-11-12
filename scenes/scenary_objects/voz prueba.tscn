@@ -1,42 +1,30 @@
-[gd_scene load_steps=8 format=3 uid="uid://bcu48jnv386ea"]
+[gd_scene load_steps=6 format=3 uid="uid://bcu48jnv386ea"]
 
 [ext_resource type="Texture2D" uid="uid://dfb6qb6xfdsvo" path="res://resources/images/bg-circulo.png" id="1_m16tm"]
 [ext_resource type="Script" uid="uid://bl2gxq4ige58v" path="res://scripts/player/voice_particles.gd" id="1_o8itk"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_o8itk"]
-transparency = 1
 vertex_color_use_as_albedo = true
+vertex_color_is_srgb = true
 albedo_texture = ExtResource("1_m16tm")
-emission_enabled = true
-emission = Color(0.3882353, 0.79607844, 0.79607844, 1)
-emission_energy_multiplier = 2.5
-billboard_mode = 1
-billboard_keep_scale = true
 
-[sub_resource type="Curve" id="Curve_rypns"]
-_limits = [0.0, 2.0, 0.0, 1.0]
-_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.51051044, 0.28947353), 0.0, 0.0, 0, 0, Vector2(1, 2), 0.0, 0.0, 0, 0]
-point_count = 3
+[sub_resource type="TorusMesh" id="TorusMesh_rypns"]
+inner_radius = 2.1
+outer_radius = 2.045
 
-[sub_resource type="CurveTexture" id="CurveTexture_ougmn"]
-curve = SubResource("Curve_rypns")
-
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_h075l"]
-gravity = Vector3(0, 0, 0)
-scale_curve = SubResource("CurveTexture_ougmn")
-collision_mode = 1
-collision_friction = 1.0
-collision_bounce = 1.0
-collision_use_scale = true
-
-[sub_resource type="QuadMesh" id="QuadMesh_bpaxn"]
+[sub_resource type="Curve" id="Curve_ougmn"]
+_data = [Vector2(0, 0.016179562), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
 
 [node name="VoiceWave" type="Node3D"]
 script = ExtResource("1_o8itk")
 
-[node name="VoiceParticles" type="GPUParticles3D" parent="."]
+[node name="CPUParticles3D" type="CPUParticles3D" parent="."]
 material_override = SubResource("StandardMaterial3D_o8itk")
-emitting = false
-speed_scale = 0.7
-process_material = SubResource("ParticleProcessMaterial_h075l")
-draw_pass_1 = SubResource("QuadMesh_bpaxn")
+transparency = 0.5
+amount = 3
+speed_scale = 0.3
+mesh = SubResource("TorusMesh_rypns")
+direction = Vector3(0, 1, 0)
+gravity = Vector3(0, 0, 0)
+scale_amount_curve = SubResource("Curve_ougmn")
