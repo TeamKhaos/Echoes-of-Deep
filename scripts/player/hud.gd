@@ -152,7 +152,7 @@ func _hide_prompt():
 # ❤️ Barra de Vida
 # ===============================
 
-@onready var health_bar = $Vida
+@onready var health_bar = $VidaTexture/Vida
 
 func set_health(value: float):
 	if health_bar:

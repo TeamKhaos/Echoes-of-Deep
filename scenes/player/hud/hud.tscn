@@ -1,15 +1,19 @@
-[gd_scene load_steps=9 format=3 uid="uid://c1118cqtdm1xd"]
+[gd_scene load_steps=15 format=3 uid="uid://c1118cqtdm1xd"]
 
 [ext_resource type="Script" uid="uid://ykhba45yyquk" path="res://scripts/player/hud.gd" id="1_rp8h0"]
 [ext_resource type="Texture2D" uid="uid://p7gn2q5mwd6b" path="res://resources/images/tecla.png" id="2_ko8bi"]
-[ext_resource type="Texture2D" uid="uid://qoygyn25bjo2" path="res://resources/images/Cruz.png" id="2_rp8h0"]
+[ext_resource type="Texture2D" uid="uid://dpyylgd0fvodl" path="res://resources/images/Cruz.png" id="2_rp8h0"]
 [ext_resource type="Texture2D" uid="uid://b2mkwc4uddcq" path="res://resources/images/Mic_OFF.png" id="4_qu37h"]
 [ext_resource type="Texture2D" uid="uid://b6g5y8ynjyd08" path="res://resources/images/marco.png" id="4_vo6io"]
+[ext_resource type="Texture2D" uid="uid://c8nyjicw8gwom" path="res://resources/images/hambre.png" id="5_kj5w4"]
 [ext_resource type="Texture2D" uid="uid://u80t665wa76r" path="res://resources/images/Mic_ON.png" id="5_vo6io"]
-[ext_resource type="Texture2D" uid="uid://bxegdokyvxcox" path="res://resources/images/Vida.png" id="7_nq0si"]
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_nq0si"]
-texture = ExtResource("7_nq0si")
+[ext_resource type="Texture2D" uid="uid://e5nntlvhewuq" path="res://resources/images/under.png" id="6_340kx"]
+[ext_resource type="Texture2D" uid="uid://ul1jptlu2ojt" path="res://resources/images/hover-bar.png" id="7_5qf0n"]
+[ext_resource type="Texture2D" uid="uid://dde484whybsoh" path="res://resources/images/hambre_progress.png" id="8_2imlo"]
+[ext_resource type="Texture2D" uid="uid://cf6x7npwnruys" path="res://resources/images/vida.png" id="9_mxcgi"]
+[ext_resource type="Texture2D" uid="uid://b1q27bg2x10ta" path="res://resources/images/vida_progress.png" id="10_wnypu"]
+[ext_resource type="Texture2D" uid="uid://n07o0aypnre0" path="res://resources/images/sanidad.png" id="11_n1yms"]
+[ext_resource type="Texture2D" uid="uid://dbjh3fji2udyt" path="res://resources/images/sanidad_progress.png" id="11_qyxei"]
 
 [node name="hud" type="Control"]
 texture_filter = 1
@@ -69,41 +73,93 @@ grow_vertical = 2
 texture = ExtResource("2_rp8h0")
 stretch_mode = 5
 
-[node name="Grito" type="Panel" parent="."]
+[node name="HambreTexture" type="TextureRect" parent="."]
+modulate = Color(1, 1, 1, 0.54901963)
+texture_filter = 1
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.024
-anchor_top = 0.80200005
+anchor_top = 0.818
 anchor_right = 0.321
-anchor_bottom = 0.84900004
+anchor_bottom = 0.864
 offset_left = 0.35199928
-offset_top = 0.30395508
+offset_top = -0.06402588
 offset_right = 0.2079773
-offset_bottom = -0.15203857
+offset_bottom = 0.12799072
+texture = ExtResource("5_kj5w4")
 
-[node name="Hambre_Vida" type="Panel" parent="."]
+[node name="Hambre" type="TextureProgressBar" parent="HambreTexture"]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.16081871
+anchor_right = 0.98245615
+anchor_bottom = 1.0
+value = 100.0
+nine_patch_stretch = true
+texture_under = ExtResource("6_340kx")
+texture_over = ExtResource("7_5qf0n")
+texture_progress = ExtResource("8_2imlo")
+metadata/_edit_use_anchors_ = true
+
+[node name="VidaTexture" type="TextureRect" parent="."]
+modulate = Color(1, 1, 1, 0.54901963)
+texture_filter = 1
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.024
-anchor_top = 0.864
+anchor_top = 0.87200004
 anchor_right = 0.321
-anchor_bottom = 0.91
+anchor_bottom = 0.91800004
 offset_left = 0.35199928
-offset_top = 0.12799072
+offset_top = -0.056030273
 offset_right = 0.2079773
-offset_bottom = 0.32000732
+offset_bottom = 0.13598633
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("9_mxcgi")
 
-[node name="Cordura" type="Panel" parent="."]
+[node name="Vida" type="TextureProgressBar" parent="VidaTexture"]
+texture_filter = 1
 layout_mode = 1
 anchors_preset = -1
-anchor_left = 0.023000002
-anchor_top = 0.924
-anchor_right = 0.32000002
-anchor_bottom = 0.9710001
-offset_left = 0.5039978
-offset_top = 0.24798584
-offset_right = 0.35998535
-offset_bottom = -0.20806885
+anchor_left = 0.16081871
+anchor_right = 0.98245615
+anchor_bottom = 1.0
+value = 100.0
+nine_patch_stretch = true
+texture_under = ExtResource("6_340kx")
+texture_over = ExtResource("7_5qf0n")
+texture_progress = ExtResource("10_wnypu")
+metadata/_edit_use_anchors_ = true
+
+[node name="CorduraTexture" type="TextureRect" parent="."]
+modulate = Color(1, 1, 1, 0.54901963)
+texture_filter = 1
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.024
+anchor_top = 0.92600006
+anchor_right = 0.321
+anchor_bottom = 0.97200006
+offset_left = 0.35199928
+offset_top = -0.048034668
+offset_right = 0.2079773
+offset_bottom = 0.14398193
+texture = ExtResource("11_n1yms")
+
+[node name="Cordura" type="TextureProgressBar" parent="CorduraTexture"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.16081871
+anchor_right = 0.98245615
+anchor_bottom = 1.0
+value = 100.0
+nine_patch_stretch = true
+texture_under = ExtResource("6_340kx")
+texture_over = ExtResource("7_5qf0n")
+texture_progress = ExtResource("11_qyxei")
+metadata/_edit_use_anchors_ = true
 
 [node name="Item2" type="TextureRect" parent="."]
 texture_filter = 1
@@ -121,18 +177,15 @@ texture = ExtResource("4_vo6io")
 
 [node name="Icon" type="TextureRect" parent="Item2"]
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -20.0
-offset_top = -20.0
-offset_right = 20.0
-offset_bottom = 20.0
+anchors_preset = -1
+anchor_left = 0.13636364
+anchor_top = 0.13414635
+anchor_right = 0.8636364
+anchor_bottom = 0.86585367
 grow_horizontal = 2
 grow_vertical = 2
 expand_mode = 3
+metadata/_edit_use_anchors_ = true
 
 [node name="Item1" type="TextureRect" parent="."]
 texture_filter = 1
@@ -150,84 +203,60 @@ texture = ExtResource("4_vo6io")
 
 [node name="Icon" type="TextureRect" parent="Item1"]
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -20.0
-offset_top = -20.0
-offset_right = 20.0
-offset_bottom = 20.0
+anchors_preset = -1
+anchor_left = 0.13636364
+anchor_top = 0.12195122
+anchor_right = 0.8636364
+anchor_bottom = 0.85365856
+offset_top = 1.0
+offset_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 expand_mode = 3
+metadata/_edit_use_anchors_ = true
 
-[node name="Mochila" type="Panel" parent="."]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.90500003
-anchor_top = 0.84400004
-anchor_right = 0.98100007
-anchor_bottom = 0.9710001
-offset_left = -0.5600586
-offset_top = 0.08795166
-offset_right = -0.11206055
-offset_bottom = -0.20806885
+[node name="Mochila" type="TextureRect" parent="."]
+texture_filter = 1
+layout_mode = 0
+anchor_left = 0.9045139
+anchor_top = 0.8441358
+anchor_right = 0.9809028
+anchor_bottom = 0.970679
+texture = ExtResource("4_vo6io")
+metadata/_edit_use_anchors_ = true
 
-[node name="Headphone" type="Panel" parent="."]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.462
-anchor_top = 0.84400004
-anchor_right = 0.53800005
-anchor_bottom = 0.9710001
-offset_left = -0.22399902
-offset_top = 0.08795166
-offset_right = 0.22393799
-offset_bottom = -0.20806885
-grow_horizontal = 2
-grow_vertical = 2
+[node name="Microphone" type="TextureRect" parent="."]
+layout_mode = 0
+anchor_left = 0.46180555
+anchor_top = 0.8441358
+anchor_right = 0.5381944
+anchor_bottom = 0.970679
+texture = ExtResource("4_vo6io")
+metadata/_edit_use_anchors_ = true
 
-[node name="Microphone OFF" type="TextureRect" parent="Headphone"]
+[node name="Microphone OFF" type="TextureRect" parent="Microphone"]
 texture_filter = 1
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -44.0
-offset_top = -41.0
-offset_right = 44.0
-offset_bottom = 41.0
+anchors_preset = -1
+anchor_left = 0.13636364
+anchor_top = 0.13414635
+anchor_right = 0.8636364
+anchor_bottom = 0.86585367
 grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("4_qu37h")
+metadata/_edit_use_anchors_ = true
 
-[node name="Microphone ON" type="TextureRect" parent="Headphone"]
+[node name="Microphone ON" type="TextureRect" parent="Microphone"]
 visible = false
 texture_filter = 1
 layout_mode = 1
 anchors_preset = -1
-anchor_top = 0.117000006
-anchor_right = 1.0
-anchor_bottom = 0.915
-offset_top = -9.594001
-offset_bottom = 6.970001
+anchor_left = 0.13636364
+anchor_top = 0.13414635
+anchor_right = 0.8636364
+anchor_bottom = 0.86585367
 grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("5_vo6io")
-
-[node name="Vida" type="ProgressBar" parent="."]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.05
-anchor_top = 0.75
-anchor_right = 0.35
-anchor_bottom = 0.78
-offset_right = 4.0
-offset_bottom = 27.0
-theme_override_styles/fill = SubResource("StyleBoxTexture_nq0si")
-step = 1.0
-value = 100.0
+metadata/_edit_use_anchors_ = true
