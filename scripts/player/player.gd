@@ -393,10 +393,14 @@ func take_damage(amount: int):
 	if current_health <= 0:
 		die()
 
+func heal(amount: int):
+	current_health += amount
+	current_health = clamp(current_health, 0, max_health)
+	update_health_bar()
+
 func update_health_bar():
-	if hud and hud.has_node("Vida"):
-		hud.get_node("Vida").value = current_health
-		
+	if hud and hud.has_method("set_health"):
+		hud.set_health(current_health)
+
 func die():
 	print("💀 El jugador ha muerto")
-	# Aquí podrías reiniciar nivel, mostrar menú, etc.

@@ -152,7 +152,7 @@ func _hide_prompt():
 # ❤️ Barra de Vida
 # ===============================
 
-@onready var health_bar = $HealthBar  # o el path correcto dentro del HUD
+@onready var health_bar = $Vida
 
 func set_health(value: float):
 	if health_bar:

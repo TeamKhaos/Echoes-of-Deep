@@ -54,43 +54,37 @@ size = Vector2i(5, 2)
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 1
-anchors_preset = -1
+anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -488.5
-offset_top = -233.0
-offset_right = 493.5
-offset_bottom = 238.0
+offset_left = -491.0
+offset_top = -235.5
+offset_right = 491.0
+offset_bottom = 235.5
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="Profile" type="Panel" parent="VBoxContainer/HBoxContainer"]
-custom_minimum_size = Vector2(300, 300)
-layout_mode = 2
-
-[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/HBoxContainer"]
-layout_mode = 2
-
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/HBoxContainer/VBoxContainer"]
-layout_mode = 2
-
-[node name="Recipes" type="Panel" parent="VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer"]
+[node name="Recipes" type="Panel" parent="VBoxContainer/VBoxContainer/HBoxContainer"]
 custom_minimum_size = Vector2(175, 300)
 layout_mode = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 
-[node name="Profile3" type="Panel" parent="VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer"]
+[node name="Profile3" type="Panel" parent="VBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 80)
 layout_mode = 2
 
-[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer/Profile3"]
+[node name="Label" type="Label" parent="VBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer/Profile3"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -105,24 +99,24 @@ grow_horizontal = 2
 grow_vertical = 2
 text = "Bag"
 
-[node name="CtrlInventoryGrid" type="Control" parent="VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer" node_paths=PackedStringArray("inventory")]
+[node name="CtrlInventoryGrid" type="Control" parent="VBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer" node_paths=PackedStringArray("inventory")]
 custom_minimum_size = Vector2(320, 128)
 layout_mode = 2
 size_flags_horizontal = 8
 size_flags_vertical = 4
 script = ExtResource("1_t2sse")
-inventory = NodePath("../../../../../../Inventory")
+inventory = NodePath("../../../../../Inventory")
 field_dimensions = Vector2(64, 64)
 field_style = SubResource("StyleBoxTexture_q0ogx")
 field_highlighted_style = SubResource("StyleBoxTexture_dwpwl")
 selection_style = SubResource("StyleBoxFlat_oefha")
 metadata/_custom_type_script = "uid://d0pfc3q6sof8y"
 
-[node name="Profile4" type="Panel" parent="VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer"]
+[node name="Profile4" type="Panel" parent="VBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 85)
 layout_mode = 2
 
-[node name="Drop" type="Button" parent="VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer/Profile4"]
+[node name="Drop" type="Button" parent="VBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer/Profile4"]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.18200001
@@ -136,7 +130,7 @@ offset_bottom = 22.5
 text = "Drop
 "
 
-[node name="CtrlItemSlot" type="Control" parent="VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer/Profile4" node_paths=PackedStringArray("item_slot")]
+[node name="CtrlItemSlot" type="Control" parent="VBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer/Profile4" node_paths=PackedStringArray("item_slot")]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -150,13 +144,13 @@ offset_bottom = 32.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("7_la582")
-item_slot = NodePath("../../../../../../../ItemSlot")
+item_slot = NodePath("../../../../../../ItemSlot")
 icon_stretch_mode = 5
 slot_style = SubResource("StyleBoxTexture_8v3xu")
 slot_highlighted_style = SubResource("StyleBoxTexture_8fb8u")
 metadata/_custom_type_script = "uid://trghhrgo3fax"
 
-[node name="Remove" type="Button" parent="VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer/Profile4"]
+[node name="Remove" type="Button" parent="VBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer/Profile4"]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.80100006
@@ -169,18 +163,18 @@ offset_right = 39.679993
 offset_bottom = 22.5
 text = "Remove"
 
-[node name="Crafting" type="Panel" parent="VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer"]
+[node name="Crafting" type="Panel" parent="VBoxContainer/VBoxContainer/HBoxContainer"]
 custom_minimum_size = Vector2(175, 300)
 layout_mode = 2
 
-[node name="Hambre" type="Panel" parent="VBoxContainer/HBoxContainer/VBoxContainer"]
+[node name="Hambre" type="Panel" parent="VBoxContainer/VBoxContainer"]
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
 
-[node name="Cordura" type="Panel" parent="VBoxContainer/HBoxContainer/VBoxContainer"]
+[node name="Cordura" type="Panel" parent="VBoxContainer/VBoxContainer"]
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
 
-[node name="Sed" type="Panel" parent="VBoxContainer/HBoxContainer/VBoxContainer"]
+[node name="Sed" type="Panel" parent="VBoxContainer/VBoxContainer"]
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2

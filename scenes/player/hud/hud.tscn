@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://c1118cqtdm1xd"]
+[gd_scene load_steps=9 format=3 uid="uid://c1118cqtdm1xd"]
 
 [ext_resource type="Script" uid="uid://ykhba45yyquk" path="res://scripts/player/hud.gd" id="1_rp8h0"]
 [ext_resource type="Texture2D" uid="uid://p7gn2q5mwd6b" path="res://resources/images/tecla.png" id="2_ko8bi"]
@@ -6,8 +6,13 @@
 [ext_resource type="Texture2D" uid="uid://b2mkwc4uddcq" path="res://resources/images/Mic_OFF.png" id="4_qu37h"]
 [ext_resource type="Texture2D" uid="uid://b6g5y8ynjyd08" path="res://resources/images/marco.png" id="4_vo6io"]
 [ext_resource type="Texture2D" uid="uid://u80t665wa76r" path="res://resources/images/Mic_ON.png" id="5_vo6io"]
+[ext_resource type="Texture2D" uid="uid://bxegdokyvxcox" path="res://resources/images/Vida.png" id="7_nq0si"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_nq0si"]
+texture = ExtResource("7_nq0si")
 
 [node name="hud" type="Control"]
+texture_filter = 1
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -215,12 +220,14 @@ grow_vertical = 2
 texture = ExtResource("5_vo6io")
 
 [node name="Vida" type="ProgressBar" parent="."]
-layout_mode = 0
+layout_mode = 1
+anchors_preset = -1
 anchor_left = 0.05
 anchor_top = 0.75
 anchor_right = 0.35
 anchor_bottom = 0.78
 offset_right = 4.0
 offset_bottom = 27.0
+theme_override_styles/fill = SubResource("StyleBoxTexture_nq0si")
 step = 1.0
 value = 100.0
