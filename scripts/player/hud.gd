@@ -22,11 +22,14 @@ var _is_prompt_visible := false
 var _tween_crosshair: Tween
 var _tween_prompt: Tween
 
+# 🔥 Overlay de bajo hambre
+@onready var low_hunger_overlay = $CanvasLayer/ColorRect
 
 func _ready():
-	_create_low_hunger_overlay()
-
-
+	# Inicializar el overlay invisible al inicio
+	if low_hunger_overlay:
+		low_hunger_overlay.modulate = Color(1, 1, 1, 0)  # Totalmente transparente
+		low_hunger_overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
 
 # ===============================
 # 🧭 INVENTARIO
@@ -184,82 +187,38 @@ func _update_hunger(delta: float):
 
 	if hunger_bar:
 		hunger_bar.value = hunger_value
-
-	# 🔥 activar o desactivar efecto visual según hambre
+	
+	# 🔥 activar o desactivar efecto visual según hambre (ESTA ERA LA LÍNEA FALTANTE)
 	_update_hunger_warning(hunger_value <= hunger_warning_threshold)
-
-	# ❌ DESACTIVAMOS EL DAÑO POR HAMBRE (por ahora)
-	# if hunger_value <= 0:
-	#     set_health(health_bar.value - health_damage_rate_when_starving * delta)
-
-
-@export var health_damage_rate_when_starving: float = 2.0  # daño por segundo
-
-func restore_hunger(amount: float):
-	hunger_value = clamp(hunger_value + amount, hunger_min, hunger_max)
-	if hunger_bar:
-		hunger_bar.value = hunger_value
-
-	_update_hunger_warning(hunger_value <= hunger_warning_threshold)
-
-# 🔥 Overlay de bajo hambre
-@onready var low_hunger_overlay = $CanvasLayer/ColorRect
 
 
 func _update_hunger_warning(is_low: bool):
 	if hunger_warning_active == is_low:
 		return
-
+	
 	hunger_warning_active = is_low
-
+	
 	if _low_hunger_tween:
 		_low_hunger_tween.kill()
-
+	
 	if is_low:
-		# Aseguramos que empiece transparente
-		low_hunger_overlay.modulate = Color(1, 0, 0, 0)
-
+		print("🔴 ACTIVANDO PARPADEO ROJO - Hambre:", hunger_value)
 		_low_hunger_tween = create_tween()
 		_low_hunger_tween.set_loops(-1)  # Loop infinito
-
 		_low_hunger_tween.tween_property(low_hunger_overlay,
 			"modulate:a", 0.25, 0.7)
 		_low_hunger_tween.tween_property(low_hunger_overlay,
 			"modulate:a", 0.05, 0.7)
-
 	else:
+		print("✅ DESACTIVANDO PARPADEO - Hambre:", hunger_value)
 		_low_hunger_tween = create_tween()
 		_low_hunger_tween.tween_property(low_hunger_overlay,
 			"modulate:a", 0.0, 0.4)
-			
-#--------------------NODOS VISUALES--------------------------------
-func _create_low_hunger_overlay():
-	# Crear canvas layer
-	var layer := CanvasLayer.new()
-	layer.name = "LowHungerLayer"
-	layer.layer = 10  # más alto que el HUD normal
 
-	# Crear overlay rojo
-	var rect := ColorRect.new()
-	rect.name = "LowHungerOverlay"
-	rect.color = Color(1, 0, 0, 0)  # Rojo totalmente transparente
 
-	# Hacerlo pantalla completa
-	rect.anchor_left = 0.0
-	rect.anchor_top = 0.0
-	rect.anchor_right = 1.0
-	rect.anchor_bottom = 1.0
-	rect.offset_left = 0
-	rect.offset_top = 0
-	rect.offset_right = 0
-	rect.offset_bottom = 0
-
-	# No bloquear mouse
-	rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
-
-	# Agregar nodos
-	layer.add_child(rect)
-	add_child(layer)
-
-	# Guardamos referencia para usarlo después
-	low_hunger_overlay = rect
+# Función para restaurar hambre (llamada desde otros scripts, ej: al comer)
+func restore_hunger(amount: float):
+	hunger_value = clamp(hunger_value + amount, hunger_min, hunger_max)
+	if hunger_bar:
+		hunger_bar.value = hunger_value
+	_update_hunger_warning(hunger_value <= hunger_warning_threshold)

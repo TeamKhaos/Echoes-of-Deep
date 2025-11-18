@@ -10,7 +10,7 @@
 [ext_resource type="Texture2D" uid="uid://chbvlmpwieccd" path="res://resources/images/under.png" id="6_340kx"]
 [ext_resource type="Texture2D" uid="uid://c53mfwfprhg12" path="res://resources/images/hover-bar.png" id="7_5qf0n"]
 [ext_resource type="Texture2D" uid="uid://dde484whybsoh" path="res://resources/images/hambre_progress.png" id="8_2imlo"]
-[ext_resource type="Texture2D" uid="uid://bxegdokyvxcox" path="res://resources/images/vida.png" id="9_mxcgi"]
+[ext_resource type="Texture2D" uid="uid://bxegdokyvxcox" path="res://resources/images/Vida.png" id="9_mxcgi"]
 [ext_resource type="Texture2D" uid="uid://bb0e833u0ciql" path="res://resources/images/vida_progress.png" id="10_wnypu"]
 [ext_resource type="Texture2D" uid="uid://n07o0aypnre0" path="res://resources/images/sanidad.png" id="11_n1yms"]
 [ext_resource type="Texture2D" uid="uid://dbjh3fji2udyt" path="res://resources/images/sanidad_progress.png" id="11_qyxei"]
@@ -270,4 +270,5 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.89411765, 0, 0, 0.29411766)
+mouse_filter = 2
+color = Color(1, 0.060000002, 0.060000002, 1)
