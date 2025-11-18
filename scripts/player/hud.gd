@@ -180,6 +180,7 @@ var hunger_warning_active := false
 
 func _process(delta: float):
 	_update_hunger(delta)
+	_process_sanity(delta)  # ✅ Agregar procesamiento de cordura
 
 func _update_hunger(delta: float):
 	hunger_value -= hunger_decay_rate * delta
@@ -232,3 +233,65 @@ func restore_health(amount: float):
 	var new_value = clamp(health_bar.value + amount, 0, health_bar.max_value)
 	health_bar.value = new_value
 	print("❤️ Vida restaurada a:", new_value)
+
+
+# ===============================
+# 🧠 CORDURA / SANIDAD MENTAL
+# ===============================
+
+@onready var sanity_bar = $CorduraTexture/Cordura
+
+var sanity_value: float = 100.0
+var sanity_min: float = 0.0
+var sanity_max: float = 100.0
+
+# Velocidades de cambio
+@export var sanity_decay_rate_dark: float = 2.0     # Baja 2 puntos/seg en oscuridad
+@export var sanity_restore_rate_light: float = 5.0  # Sube 5 puntos/seg cerca de luz
+@export var sanity_warning_threshold: float = 30.0  # Umbral de advertencia
+
+var is_near_light: bool = false
+var _sanity_warning_active: bool = false
+var _sanity_tween: Tween = null
+
+func _process_sanity(delta: float):
+	if is_near_light:
+		# Restaurar cordura cerca de luz
+		sanity_value += sanity_restore_rate_light * delta
+	else:
+		# Perder cordura en oscuridad
+		sanity_value -= sanity_decay_rate_dark * delta
+	
+	sanity_value = clamp(sanity_value, sanity_min, sanity_max)
+	
+	if sanity_bar:
+		sanity_bar.value = sanity_value
+	
+	# Activar efectos visuales si cordura es baja
+	_update_sanity_warning(sanity_value <= sanity_warning_threshold)
+
+func set_near_light(near_light: bool):
+	is_near_light = near_light
+	if near_light:
+		print("☀️ Cerca de luz - Restaurando cordura")
+	else:
+		print("🌑 En oscuridad - Perdiendo cordura")
+
+func _update_sanity_warning(is_low: bool):
+	if _sanity_warning_active == is_low:
+		return
+	
+	_sanity_warning_active = is_low
+	
+	# Aquí puedes agregar efectos visuales para cordura baja
+	# Por ejemplo, distorsión de pantalla, viñeta, etc.
+	if is_low:
+		print("🧠 ⚠️ CORDURA BAJA:", sanity_value)
+	else:
+		print("🧠 ✅ Cordura estable:", sanity_value)
+
+func restore_sanity(amount: float):
+	sanity_value = clamp(sanity_value + amount, sanity_min, sanity_max)
+	if sanity_bar:
+		sanity_bar.value = sanity_value
+	print("🧠 Cordura restaurada a:", sanity_value)

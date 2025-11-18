@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://ck2jw8uvvaghg"]
+[gd_scene load_steps=6 format=3 uid="uid://be5kkjfpgt3sy"]
 
 [ext_resource type="Script" uid="uid://d21pdgh0l5rjn" path="res://scripts/objects/fogata.gd" id="1_6upew"]
 [ext_resource type="PackedScene" uid="uid://djxh01a1yw5rw" path="res://resources/models/Fogata.glb" id="1_120bh"]
@@ -6,6 +6,9 @@
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_120bh"]
 size = Vector3(3.3892899, 2.3814087, 3.5925903)
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_6upew"]
+radius = 5.0
 
 [node name="fogata" type="Node3D"]
 script = ExtResource("1_6upew")
@@ -20,3 +23,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.000995338, 0.0069241524, -0
 [node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.021595001, 0.5999924, 0.12838745)
 shape = SubResource("BoxShape3D_120bh")
+
+[node name="LightArea" type="Area3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="LightArea"]
+shape = SubResource("SphereShape3D_6upew")
