@@ -1,5 +1,5 @@
 extends CharacterBody3D
-#
+
 @onready var Pivote = $Pivot
 @onready var Camera = $Pivot/Camera3D
 @onready var MouseRayCast = $Pivot/Camera3D/MouseRayCast
@@ -10,6 +10,7 @@ extends CharacterBody3D
 
 @onready var hud = $PlayerHUD/hud
 @onready var object_marker = $Pivot/Camera3D/ObjectMarker
+
 # --- INVENTARIO GLOOT ---
 @onready var inventory_scene = preload("res://scenes/player/inventario.tscn")
 var inventory_instance: Node = null
@@ -17,7 +18,6 @@ var inventory_instance: Node = null
 #---VIDA----
 @export var max_health: int = 100
 var current_health: int = 100
-
 
 #FLAGS
 var can_move : bool = true
@@ -30,7 +30,7 @@ var crouch_speed = 1.0
 var acceleration = 0.5
 var desaceleration = 0.5
 var can_footstep : bool = true
-var gravity = 25 #25
+var gravity = 25
 
 #CROUCH
 var standing_height = 2.0
@@ -49,31 +49,22 @@ func _ready():
 		inventory_instance.visible = false
 	else:
 		call_deferred("add_child", inventory_instance)
+	
 	# ✅ Ahora que ya existe, asignarlo al HUD
 	var inv_node = inventory_instance.get_node_or_null("Inventory") 
 	
 	#funcion items
 	var items = inv_node.get_items()
 	print("🔹 Total de ítems en inventario: funcion de player ", items)
-	#funcion items
 	
 	hud.set_inventory(inv_node)
+	
 	# --- Resto de tu configuración ---
 	GLOBAL.PlayerRef = self
 	Camera.current = true
 	can_move = true
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	GLOBAL.update_hud.emit()
-
-	#Allow Player to move and capture mouse to game window
-	can_move = true
-	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
-	
-	#Update and Connect Player UI
-	GLOBAL.update_hud.emit()
-
-	
-
 
 func equip_item_from_slot(slot_index: int):
 	print("--- equip_item_from_slot called for slot: ", slot_index, " ---")
@@ -132,14 +123,12 @@ func equip_item_from_slot(slot_index: int):
 
 	# 4. Configure the item's state
 	print("DEBUG: Configuring new item's state.")
-	# Let the item set its own held transform, or use a default
 	if new_item_instance.has_method("set_held_transform"):
 		new_item_instance.set_held_transform()
 	else:
 		new_item_instance.transform = Transform3D.IDENTITY
 		new_item_instance.scale *= 0.4
 	
-	# More robustly disable physics
 	if new_item_instance is RigidBody3D:
 		new_item_instance.freeze = true
 		new_item_instance.set_collision_layer_value(1, false)
@@ -155,19 +144,26 @@ func _physics_process(delta):
 	move(delta, get_input())
 
 func _process(_delta):
+	# Equipar ítems de inventario
 	if Input.is_action_just_pressed("inventory1H"):
 		equip_item_from_slot(0)
 	if Input.is_action_just_pressed("inventory2H"):
 		equip_item_from_slot(1)
-	#Change to an action in Project -> Project Settings -> Input Map
+	
+	# Micrófono
 	if Input.is_action_just_pressed("Microphone"):
 		voice_controller.toggle_microphone()
 	if voice_controller.is_active():
 		voice_particles.update_emission(-Camera.global_transform.basis.z)
 	else:
 		voice_particles.stop_emission()
-		
-
+	
+	# 🍗 CONSUMIR ÍTEM CON TECLA R
+	if Input.is_key_pressed(KEY_R):  # Tecla R
+		print("🔑 Tecla R presionada")
+		_try_consume_held_item()
+	
+	# Soltar ítem
 	if Input.is_action_just_pressed("Drop"):
 		if object_marker.get_child_count() > 0:
 			var held_item = object_marker.get_child(0)
@@ -176,26 +172,73 @@ func _process(_delta):
 					remove_from_inventory(held_item.item_id)
 				held_item.drop(object_marker.global_transform)
 
+	# Abrir inventario
 	if Input.is_action_just_pressed("Inventory"):
 		if inventory_instance and inventory_instance is Control:
 			inventory_instance.visible = !inventory_instance.visible
-
 			can_move = not inventory_instance.visible
 			Pivote.cameraLock = inventory_instance.visible
 
-			# --- Mostrar u ocultar el mouse ---
 			if inventory_instance.visible:
 				Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
-				# 🔻 Ocultar el HUD mientras el inventario esté abierto
 				if player_hud:
 					player_hud.visible = false
 			else:
 				Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
-				# 🔺 Mostrar el HUD nuevamente
 				if player_hud:
 					player_hud.visible = true
 
 
+# ===============================
+# 🍗 SISTEMA DE CONSUMO DE ÍTEMS
+# ===============================
+
+func _try_consume_held_item():
+	print("🔍 _try_consume_held_item() llamada")
+	
+	if not object_marker:
+		print("❌ No hay object_marker")
+		return
+	
+	print("✅ Object marker existe. Hijos:", object_marker.get_child_count())
+	
+	# Verificar si hay algo en la mano
+	if object_marker.get_child_count() == 0:
+		print("⚠️ No tienes nada en la mano para consumir")
+		return
+	
+	var held_item = object_marker.get_child(0)
+	print("📦 Item en mano:", held_item.name)
+	
+	# Verificar si el ítem tiene el método consume
+	if not held_item.has_method("consume"):
+		print("⚠️ Este ítem NO tiene el método consume()")
+		return
+	
+	print("✅ El ítem tiene método consume()")
+	
+	# Verificar si el ítem es consumible
+	if "is_consumable" in held_item:  # ✅ CAMBIO AQUÍ
+		print("   is_consumable =", held_item.is_consumable)
+		if not held_item.is_consumable:
+			print("⚠️ Este ítem no es consumible")
+			return
+	
+	# Consumir el ítem
+	print("🍽️ Intentando consumir ítem...")
+	var success = held_item.consume(self)
+	
+	if success:
+		print("✅ Ítem consumido exitosamente")
+		# Remover el ítem del inventario
+		if "item_id" in held_item:  # ✅ TAMBIÉN AQUÍ
+			remove_from_inventory(held_item.item_id)
+	else:
+		print("❌ No se pudo consumir el ítem")
+
+# ===============================
+# MOVIMIENTO Y FÍSICA
+# ===============================
 
 func _snap_down_to_stairs_check() -> void:
 	var did_snap := false
@@ -241,7 +284,6 @@ func _run_body_test_motion(from: Transform3D, motion : Vector3, result = null):
 	params.from = from
 	params.motion = motion
 	return PhysicsServer3D.body_test_motion(self.get_rid(), params, result)
-
 
 func move(delta, input):
 	var impulse = Vector3(
@@ -328,7 +370,10 @@ func _on_area_3d_body_entered(body: Node3D) -> void:
 		$"../AudioStreamPlayer3D".play()
 		$"../Area3D".queue_free()
 
-		
+# ===============================
+# GESTIÓN DE INVENTARIO
+# ===============================
+
 func add_to_inventory(item_id: String):
 	if not inventory_instance:
 		print("⚠️ Inventario no instanciado")
@@ -350,7 +395,6 @@ func add_to_inventory(item_id: String):
 		var success = inv_node.add_item(new_item)
 		if success:
 			print("📦 Añadido al inventario:", item_id)
-			# 🔹 Actualizar HUD solo después de añadir el ítem
 			if hud:
 				hud.set_inventory(inv_node)
 				print("🖼️ HUD actualizado tras añadir:", item_id)
@@ -358,7 +402,6 @@ func add_to_inventory(item_id: String):
 			print("⚠️ No se pudo añadir el ítem (inventario lleno o inválido)")
 	else:
 		print("⚠️ El nodo InventoryPlayer no tiene el método add_item()")
-
 
 func remove_from_inventory(item_id: String):
 	if not inventory_instance:
@@ -379,12 +422,15 @@ func remove_from_inventory(item_id: String):
 				if hud:
 					hud.set_inventory(inv_node)
 					print("🖼️ HUD actualizado tras remover:", item_id)
-				return # Exit after removing the first match
+				return
 		print("⚠️ No se encontró el ítem con id:", item_id, " en el inventario")
 	else:
 		print("⚠️ El nodo InventoryPlayer no tiene los métodos get_items() o remove_item()")
 
-#------- SALUD -----
+# ===============================
+# SISTEMA DE SALUD
+# ===============================
+
 func take_damage(amount: int):
 	current_health -= amount
 	current_health = clamp(current_health, 0, max_health)

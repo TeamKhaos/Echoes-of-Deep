@@ -10,7 +10,7 @@
 [ext_resource type="PackedScene" uid="uid://cu3maytsanx4s" path="res://scenes/player/voice.tscn" id="6_qek5x"]
 [ext_resource type="PackedScene" uid="uid://c1118cqtdm1xd" path="res://scenes/player/hud/hud.tscn" id="7_0owmy"]
 [ext_resource type="Script" uid="uid://bl2gxq4ige58v" path="res://scripts/player/voice_particles.gd" id="7_je7p5"]
-[ext_resource type="PackedScene" uid="uid://bcu48jnv386ea" path="res://scenes/scenary_objects/voz prueba.tscn" id="10_je7p5"]
+[ext_resource type="PackedScene" path="res://scenes/scenary_objects/voz prueba.tscn" id="10_je7p5"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fm80t"]
 transparency = 1

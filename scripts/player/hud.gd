@@ -222,3 +222,13 @@ func restore_hunger(amount: float):
 	if hunger_bar:
 		hunger_bar.value = hunger_value
 	_update_hunger_warning(hunger_value <= hunger_warning_threshold)
+
+
+# ❤️ Restaurar vida
+func restore_health(amount: float):
+	if not health_bar:
+		return
+	
+	var new_value = clamp(health_bar.value + amount, 0, health_bar.max_value)
+	health_bar.value = new_value
+	print("❤️ Vida restaurada a:", new_value)
