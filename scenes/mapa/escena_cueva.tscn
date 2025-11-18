@@ -1,33 +1,17 @@
-[gd_scene load_steps=6 format=3 uid="uid://den6qcnh6lsy1"]
+[gd_scene load_steps=3 format=3 uid="uid://den6qcnh6lsy1"]
 
 [ext_resource type="PackedScene" uid="uid://dbhe6fonddd0" path="res://maps_glb/escena-cueva.gltf" id="1_730hn"]
 [ext_resource type="PackedScene" uid="uid://0n2ppdjdgm7e" path="res://scenes/player/player.tscn" id="2_atque"]
 
-[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_atque"]
-sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
-ground_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
-
-[sub_resource type="Sky" id="Sky_xhvsr"]
-sky_material = SubResource("ProceduralSkyMaterial_atque")
-
-[sub_resource type="Environment" id="Environment_bo27o"]
-background_mode = 2
-sky = SubResource("Sky_xhvsr")
-tonemap_mode = 2
-glow_enabled = true
-
 [node name="escena-cueva" instance=ExtResource("1_730hn")]
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="." index="0"]
-environment = SubResource("Environment_bo27o")
-
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." index="1"]
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." index="0"]
 transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 0, 0)
 shadow_enabled = true
 directional_shadow_max_distance = 1.0
 
-[node name="Cilindro_001" parent="." index="8"]
+[node name="Cilindro_001" parent="." index="7"]
 transform = Transform3D(0, 10.663507, 0, -1, 0, 0, 0, 0, 1, 19.21057, 1.2582216, 0)
 
-[node name="Player" parent="." index="9" instance=ExtResource("2_atque")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8568771, 0)
+[node name="Player" parent="." index="8" instance=ExtResource("2_atque")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7244954, 0)
