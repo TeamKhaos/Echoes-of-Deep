@@ -1,7 +1,6 @@
-[gd_scene load_steps=3 format=3 uid="uid://dekijuvls0hde"]
+[gd_scene load_steps=2 format=3 uid="uid://dekijuvls0hde"]
 
 [ext_resource type="PackedScene" uid="uid://cvbem7y1qw545" path="res://maps_glb/nuevo_mapa.gltf" id="1_rxwug"]
-[ext_resource type="PackedScene" uid="uid://0n2ppdjdgm7e" path="res://scenes/player/player.tscn" id="2_bcq6a"]
 
 [node name="nuevo_mapa" instance=ExtResource("1_rxwug")]
 
@@ -10,5 +9,8 @@ transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545
 shadow_enabled = true
 directional_shadow_max_distance = 1.0
 
-[node name="Player" parent="." index="4" instance=ExtResource("2_bcq6a")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.4989804, 4.599416)
+[node name="Cubo" parent="." index="1"]
+transform = Transform3D(4.534682, 0, 0, 0, 4.1838965, 0, 0, 0, 3.8416147, 0.8631058, 4.580909, -6.3200526)
+
+[node name="Cubo_001" parent="." index="2"]
+transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 1.4693247, 7.1523776, 39.01459)
