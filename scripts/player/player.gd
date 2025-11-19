@@ -11,6 +11,11 @@ extends CharacterBody3D
 @onready var hud = $PlayerHUD/hud
 @onready var object_marker = $Pivot/Camera3D/ObjectMarker
 
+# 👟 Sistema de pasos
+@onready var footsteps_player = $FootstepsPlayer
+@onready var footsteps_timer = $FootstepsTimer
+@onready var check_floor_ray = $CheckFloorMaterialRay
+
 # --- INVENTARIO GLOOT ---
 @onready var inventory_scene = preload("res://scenes/player/inventario.tscn")
 var inventory_instance: Node = null
@@ -29,7 +34,6 @@ var max_speed = 5
 var crouch_speed = 1.0
 var acceleration = 0.5
 var desaceleration = 0.5
-var can_footstep : bool = true
 var gravity = 25
 
 #CROUCH
@@ -41,6 +45,18 @@ const MAX_STEP_HEIGHT = 0.2
 var _snaped_to_stairs_last_frame := false
 var _last_frame_was_on_floor = -INF
 
+# 👟 Variables de control de pasos
+var can_footstep: bool = true
+var is_moving: bool = false
+
+# Configuración de pasos
+@export_group("Footsteps Settings")
+@export var footstep_sound: AudioStream  # Asigna tu archivo de audio aquí
+@export var base_footstep_interval: float = 0.45
+@export var crouch_footstep_interval: float = 0.65
+@export var footstep_volume_db: float = -10.0
+@export var pitch_variation: float = 0.15
+
 func _ready():
 	# --- Instanciar inventario de Gloot ---
 	inventory_instance = inventory_scene.instantiate()
@@ -50,10 +66,7 @@ func _ready():
 	else:
 		call_deferred("add_child", inventory_instance)
 	
-	# ✅ Ahora que ya existe, asignarlo al HUD
 	var inv_node = inventory_instance.get_node_or_null("Inventory") 
-	
-	#funcion items
 	var items = inv_node.get_items()
 	print("🔹 Total de ítems en inventario: funcion de player ", items)
 	
@@ -65,6 +78,27 @@ func _ready():
 	can_move = true
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	GLOBAL.update_hud.emit()
+	
+	# 👟 Configurar sistema de pasos
+	_setup_footsteps()
+
+func _setup_footsteps():
+	if footsteps_player:
+		footsteps_player.volume_db = footstep_volume_db
+		footsteps_player.max_distance = 15.0
+		footsteps_player.attenuation_model = AudioStreamPlayer3D.ATTENUATION_INVERSE_DISTANCE
+		footsteps_player.unit_size = 1.0
+		
+	if footsteps_timer:
+		footsteps_timer.one_shot = true
+		footsteps_timer.wait_time = base_footstep_interval
+		if not footsteps_timer.is_connected("timeout", Callable(self, "_on_footsteps_timer_timeout")):
+			footsteps_timer.connect("timeout", Callable(self, "_on_footsteps_timer_timeout"))
+	
+	if check_floor_ray:
+		check_floor_ray.target_position = Vector3(0, -1.5, 0)
+		check_floor_ray.enabled = true
+		check_floor_ray.collision_mask = 1
 
 func equip_item_from_slot(slot_index: int):
 	print("--- equip_item_from_slot called for slot: ", slot_index, " ---")
@@ -86,7 +120,6 @@ func equip_item_from_slot(slot_index: int):
 		item_id_to_equip = item_to_equip_from_inventory.get_prototype().get("_id")
 	print("DEBUG: Item to equip ID: ", item_id_to_equip)
 
-	# 1. If an item is already in hand, just remove it.
 	if object_marker.get_child_count() > 0:
 		print("DEBUG: Object marker has children. Clearing held item.")
 		for child in object_marker.get_children():
@@ -94,7 +127,6 @@ func equip_item_from_slot(slot_index: int):
 	else:
 		print("DEBUG: Object marker is empty. No item in hand.")
 
-	# 2. Get item data from inventory and prepare to instantiate
 	var proto = item_to_equip_from_inventory.get_prototype()
 	if not proto or not proto.has_method("get"):
 		print("DEBUG: ⚠️ Item prototype not found or missing 'get' method.")
@@ -115,13 +147,11 @@ func equip_item_from_slot(slot_index: int):
 		return
 	print("DEBUG: Item scene loaded successfully.")
 
-	# 3. Instantiate the new item and place it in the player's hand.
 	print("DEBUG: Instantiating new item.")
 	var new_item_instance = item_scene.instantiate()
 	object_marker.add_child(new_item_instance)
 	print("DEBUG: New item instantiated and added to object marker.")
 
-	# 4. Configure the item's state
 	print("DEBUG: Configuring new item's state.")
 	if new_item_instance.has_method("set_held_transform"):
 		new_item_instance.set_held_transform()
@@ -137,20 +167,17 @@ func equip_item_from_slot(slot_index: int):
 	
 	print("DEBUG: New item state configured. --- End equip_item_from_slot ---")
 
-
 func _physics_process(delta):
 	if is_on_floor(): _last_frame_was_on_floor = Engine.get_physics_frames()
 	crouch()
 	move(delta, get_input())
 
 func _process(_delta):
-	# Equipar ítems de inventario
 	if Input.is_action_just_pressed("inventory1H"):
 		equip_item_from_slot(0)
 	if Input.is_action_just_pressed("inventory2H"):
 		equip_item_from_slot(1)
 	
-	# Micrófono
 	if Input.is_action_just_pressed("Microphone"):
 		voice_controller.toggle_microphone()
 	if voice_controller.is_active():
@@ -158,12 +185,9 @@ func _process(_delta):
 	else:
 		voice_particles.stop_emission()
 	
-	# 🍗 CONSUMIR ÍTEM CON TECLA R
-	if Input.is_key_pressed(KEY_R):  # Tecla R
-		print("🔑 Tecla R presionada")
+	if Input.is_key_pressed(KEY_R):
 		_try_consume_held_item()
 	
-	# Soltar ítem
 	if Input.is_action_just_pressed("Drop"):
 		if object_marker.get_child_count() > 0:
 			var held_item = object_marker.get_child(0)
@@ -172,7 +196,6 @@ func _process(_delta):
 					remove_from_inventory(held_item.item_id)
 				held_item.drop(object_marker.global_transform)
 
-	# Abrir inventario
 	if Input.is_action_just_pressed("Inventory"):
 		if inventory_instance and inventory_instance is Control:
 			inventory_instance.visible = !inventory_instance.visible
@@ -188,57 +211,31 @@ func _process(_delta):
 				if player_hud:
 					player_hud.visible = true
 
-
-# ===============================
-# 🍗 SISTEMA DE CONSUMO DE ÍTEMS
-# ===============================
-
 func _try_consume_held_item():
-	print("🔍 _try_consume_held_item() llamada")
-	
 	if not object_marker:
-		print("❌ No hay object_marker")
 		return
 	
-	print("✅ Object marker existe. Hijos:", object_marker.get_child_count())
-	
-	# Verificar si hay algo en la mano
 	if object_marker.get_child_count() == 0:
 		print("⚠️ No tienes nada en la mano para consumir")
 		return
 	
 	var held_item = object_marker.get_child(0)
-	print("📦 Item en mano:", held_item.name)
 	
-	# Verificar si el ítem tiene el método consume
 	if not held_item.has_method("consume"):
 		print("⚠️ Este ítem NO tiene el método consume()")
 		return
 	
-	print("✅ El ítem tiene método consume()")
-	
-	# Verificar si el ítem es consumible
-	if "is_consumable" in held_item:  # ✅ CAMBIO AQUÍ
-		print("   is_consumable =", held_item.is_consumable)
+	if "is_consumable" in held_item:
 		if not held_item.is_consumable:
 			print("⚠️ Este ítem no es consumible")
 			return
 	
-	# Consumir el ítem
-	print("🍽️ Intentando consumir ítem...")
 	var success = held_item.consume(self)
 	
 	if success:
 		print("✅ Ítem consumido exitosamente")
-		# Remover el ítem del inventario
-		if "item_id" in held_item:  # ✅ TAMBIÉN AQUÍ
+		if "item_id" in held_item:
 			remove_from_inventory(held_item.item_id)
-	else:
-		print("❌ No se pudo consumir el ítem")
-
-# ===============================
-# MOVIMIENTO Y FÍSICA
-# ===============================
 
 func _snap_down_to_stairs_check() -> void:
 	var did_snap := false
@@ -277,23 +274,21 @@ func _snap_up_stairs_check(delta) -> bool:
 
 func is_surface_too_step(normal : Vector3):
 	return normal.angle_to(Vector3.UP) > self.floor_max_angle
-	
-func _run_body_test_motion(from: Transform3D, motion : Vector3, result = null):
-	if not result: result = PhysicsTestMotionResult3D.new()
-	var params = PhysicsTestMotionParameters3D.new()
-	params.from = from
-	params.motion = motion
-	return PhysicsServer3D.body_test_motion(self.get_rid(), params, result)
 
 func move(delta, input):
 	var impulse = Vector3(
 		transform.basis.x.x * input.x + transform.basis.z.x * input.z,
 		0,
 		transform.basis.x.z * input.x + transform.basis.z.z * input.z
-		).normalized() * max_speed
+	).normalized() * max_speed
+	
 	velocity.y -= gravity * delta
-	if input.x != 0 or input.z != 0:
-		play_footsteps()
+	
+	# 👟 Detectar movimiento
+	is_moving = (input.x != 0 or input.z != 0) and is_on_floor()
+	
+	if is_moving:
+		_play_footsteps()
 		velocity.x = lerp(velocity.x, impulse.x, acceleration)
 		velocity.z = lerp(velocity.z, impulse.z, acceleration)
 	else:
@@ -303,6 +298,44 @@ func move(delta, input):
 	if not _snap_up_stairs_check(delta):
 		move_and_slide()
 		_snap_down_to_stairs_check()
+
+# ===============================
+# 👟 SISTEMA DE PASOS
+# ===============================
+
+func _play_footsteps():
+	if not can_footstep or not footsteps_player:
+		return
+	
+	# Cargar audio si no está asignado
+	if not footsteps_player.stream and footstep_sound:
+		footsteps_player.stream = footstep_sound
+	elif not footsteps_player.stream:
+		var default_path = "res://resources/audio/footstep.mp3"
+		if ResourceLoader.exists(default_path):
+			footsteps_player.stream = load(default_path)
+		else:
+			return
+	
+	# Variación de pitch para naturalidad
+	footsteps_player.pitch_scale = randf_range(1.0 - pitch_variation, 1.0 + pitch_variation)
+	
+	# Ajustar volumen según velocidad
+	var speed_factor = velocity.length() / max_speed
+	footsteps_player.volume_db = footstep_volume_db + (speed_factor * 3.0)
+	
+	footsteps_player.play()
+	can_footstep = false
+	
+	# Ajustar intervalo según crouch
+	var interval = crouch_footstep_interval if is_crouching else base_footstep_interval
+	interval = interval / max(speed_factor, 0.5)
+	
+	footsteps_timer.wait_time = interval
+	footsteps_timer.start()
+
+func _on_footsteps_timer_timeout():
+	can_footstep = true
 
 func crouch():
 	if Input.is_action_pressed("Crouch"):
@@ -329,31 +362,6 @@ func get_input():
 			input.x -= 1
 	return input
 
-func play_footsteps():
-	if can_footstep:
-		var sound : String
-		var creaking : String
-		if $CheckFloorMaterialRay.get_collider() != null:
-			if $CheckFloorMaterialRay.get_collider().is_in_group("wood"):
-				$FootstepsPlayer.bus = "HighReverb"
-				sound = "res://assets/audio/fx/footsteps/wood/" + str(randi() % 3 + 1) + ".mp3"
-				creaking = "res://assets/audio/fx/footsteps/wood/c" + str(randi() % 3 + 1) + ".mp3"
-				if((randi() % 10 + 1) == 3):
-					$"FootstepsPlayer(creaking)".stream = load(creaking)
-					$"FootstepsPlayer(creaking)".play()
-			elif $CheckFloorMaterialRay.get_collider().is_in_group("grass"):
-				$FootstepsPlayer.bus = "Master"
-				sound = "res://assets/audio/fx/footsteps/grass/1.mp3"
-				$FootstepsPlayer.pitch_scale = randf_range(0.7, 1)
-			else:
-				return
-		else:
-			return
-		$FootstepsPlayer.stream = load(sound)
-		$FootstepsPlayer.play()
-		can_footstep = false
-		$FootstepsTimer.start()
-
 func desactivate():
 	can_move = false
 	Pivote.cameraLock = true
@@ -361,18 +369,6 @@ func desactivate():
 func activate():
 	can_move = true
 	Pivote.cameraLock = false
-
-func _on_footsteps_timer_timeout():
-	can_footstep = true
-
-func _on_area_3d_body_entered(body: Node3D) -> void:
-	if(body.is_in_group("player")):
-		$"../AudioStreamPlayer3D".play()
-		$"../Area3D".queue_free()
-
-# ===============================
-# GESTIÓN DE INVENTARIO
-# ===============================
 
 func add_to_inventory(item_id: String):
 	if not inventory_instance:
@@ -427,15 +423,10 @@ func remove_from_inventory(item_id: String):
 	else:
 		print("⚠️ El nodo InventoryPlayer no tiene los métodos get_items() o remove_item()")
 
-# ===============================
-# SISTEMA DE SALUD
-# ===============================
-
 func take_damage(amount: int):
 	current_health -= amount
 	current_health = clamp(current_health, 0, max_health)
 	update_health_bar()
-
 	if current_health <= 0:
 		die()
 

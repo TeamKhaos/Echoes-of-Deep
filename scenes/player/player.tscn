@@ -1,6 +1,7 @@
-[gd_scene load_steps=18 format=3 uid="uid://0n2ppdjdgm7e"]
+[gd_scene load_steps=19 format=3 uid="uid://0n2ppdjdgm7e"]
 
 [ext_resource type="Script" uid="uid://bn6v4om706bah" path="res://scripts/player/player.gd" id="1_3vyb7"]
+[ext_resource type="AudioStream" uid="uid://dxtn8b4s08tbm" path="res://resources/audio/pasos.mp3" id="2_fm80t"]
 [ext_resource type="Script" uid="uid://dxyjryo76ydaf" path="res://scripts/player/pivot.gd" id="2_g2els"]
 [ext_resource type="Script" uid="uid://v5yco4th2db3" path="res://scripts/player/mouse_ray_cast.gd" id="3_dqkch"]
 [ext_resource type="Script" uid="uid://bylygc04apr34" path="res://scripts/player/interaction_handler.gd" id="3_qhqgy"]
@@ -48,6 +49,7 @@ height = 1.7
 [node name="Player" type="CharacterBody3D" groups=["player"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8527156, 0)
 script = ExtResource("1_3vyb7")
+footstep_sound = ExtResource("2_fm80t")
 
 [node name="Pivot" type="Node3D" parent="."]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0.5366583, 0)
