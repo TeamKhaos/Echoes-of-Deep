@@ -50,6 +50,7 @@ height = 1.7
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8527156, 0)
 script = ExtResource("1_3vyb7")
 footstep_sound = ExtResource("2_fm80t")
+footstep_volume_db = 10.0
 
 [node name="Pivot" type="Node3D" parent="."]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0.5366583, 0)
