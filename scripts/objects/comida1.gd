@@ -1,7 +1,7 @@
 
 extends RigidBody3D
 
-@export var item_id: String = "food_1"
+@export var item_id: String = "food"
 # 🍗 Propiedades de consumo
 @export var hunger_restore: float = 30.0  # Cuánto hambre restaura
 @export var health_restore: float = 15.0   # Cuánta vida restaura si hambre está al máximo
