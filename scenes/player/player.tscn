@@ -1,46 +1,15 @@
-[gd_scene load_steps=19 format=3 uid="uid://0n2ppdjdgm7e"]
+[gd_scene load_steps=12 format=3 uid="uid://0n2ppdjdgm7e"]
 
 [ext_resource type="Script" uid="uid://bn6v4om706bah" path="res://scripts/player/player.gd" id="1_3vyb7"]
-[ext_resource type="AudioStream" uid="uid://dxtn8b4s08tbm" path="res://resources/audio/pasos.mp3" id="2_fm80t"]
+[ext_resource type="AudioStream" uid="uid://cehsgt0fa8cuq" path="res://resources/audio/pasos.mp3" id="2_fm80t"]
 [ext_resource type="Script" uid="uid://dxyjryo76ydaf" path="res://scripts/player/pivot.gd" id="2_g2els"]
 [ext_resource type="Script" uid="uid://v5yco4th2db3" path="res://scripts/player/mouse_ray_cast.gd" id="3_dqkch"]
 [ext_resource type="Script" uid="uid://bylygc04apr34" path="res://scripts/player/interaction_handler.gd" id="3_qhqgy"]
 [ext_resource type="Script" uid="uid://du2cmouich2u" path="res://scripts/player/camera_3d.gd" id="3_qlg0r"]
 [ext_resource type="PackedScene" uid="uid://qqki4f1idp4p" path="res://scenes/player/player_arms.tscn" id="4_75vfm"]
-[ext_resource type="Texture2D" uid="uid://dfb6qb6xfdsvo" path="res://resources/images/bg-circulo.png" id="6_h17s1"]
 [ext_resource type="PackedScene" uid="uid://cu3maytsanx4s" path="res://scenes/player/voice.tscn" id="6_qek5x"]
 [ext_resource type="PackedScene" uid="uid://c1118cqtdm1xd" path="res://scenes/player/hud/hud.tscn" id="7_0owmy"]
-[ext_resource type="Script" uid="uid://bl2gxq4ige58v" path="res://scripts/player/voice_particles.gd" id="7_je7p5"]
-[ext_resource type="PackedScene" path="res://scenes/scenary_objects/voz prueba.tscn" id="10_je7p5"]
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fm80t"]
-transparency = 1
-vertex_color_use_as_albedo = true
-albedo_texture = ExtResource("6_h17s1")
-emission_enabled = true
-emission = Color(0.3882353, 0.79607844, 0.79607844, 1)
-emission_energy_multiplier = 2.5
-billboard_mode = 1
-billboard_keep_scale = true
-
-[sub_resource type="Curve" id="Curve_gx1jg"]
-_limits = [0.0, 2.0, 0.0, 1.0]
-_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.51051044, 0.28947353), 0.0, 0.0, 0, 0, Vector2(1, 2), 0.0, 0.0, 0, 0]
-point_count = 3
-
-[sub_resource type="CurveTexture" id="CurveTexture_ougmn"]
-curve = SubResource("Curve_gx1jg")
-
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_ugbui"]
-direction = Vector3(0, 0, 0)
-gravity = Vector3(0, 0, 0)
-scale_curve = SubResource("CurveTexture_ougmn")
-collision_mode = 1
-collision_friction = 1.0
-collision_bounce = 1.0
-collision_use_scale = true
-
-[sub_resource type="QuadMesh" id="QuadMesh_fcs02"]
+[ext_resource type="PackedScene" uid="uid://bcu48jnv386ea" path="res://scenes/scenary_objects/voz prueba.tscn" id="10_je7p5"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_u8vuu"]
 radius = 0.2
@@ -72,16 +41,6 @@ script = ExtResource("3_dqkch")
 
 [node name="RightBackAudio" type="AudioStreamPlayer3D" parent="Pivot/Camera3D" groups=["right_back_audio_player"]]
 
-[node name="VoiceParticle" type="Node3D" parent="Pivot/Camera3D"]
-script = ExtResource("7_je7p5")
-
-[node name="VoiceParticles" type="GPUParticles3D" parent="Pivot/Camera3D/VoiceParticle"]
-material_override = SubResource("StandardMaterial3D_fm80t")
-emitting = false
-speed_scale = 0.7
-process_material = SubResource("ParticleProcessMaterial_ugbui")
-draw_pass_1 = SubResource("QuadMesh_fcs02")
-
 [node name="Voice" parent="." instance=ExtResource("6_qek5x")]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
@@ -102,6 +61,7 @@ hud = NodePath("../PlayerHUD/hud")
 unique_name_in_owner = true
 
 [node name="VoiceWave" parent="." instance=ExtResource("10_je7p5")]
+visible = false
 script = null
 
 [node name="StairsBelowRaycast" type="RayCast3D" parent="."]

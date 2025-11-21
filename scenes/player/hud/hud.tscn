@@ -229,7 +229,6 @@ texture = ExtResource("4_vo6io")
 metadata/_edit_use_anchors_ = true
 
 [node name="Microphone" type="TextureRect" parent="."]
-modulate = Color(1, 1, 1, 0.54901963)
 layout_mode = 0
 anchor_left = 0.46180555
 anchor_top = 0.8441358

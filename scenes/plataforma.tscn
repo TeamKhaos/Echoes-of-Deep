@@ -1,9 +1,9 @@
 [gd_scene load_steps=13 format=3 uid="uid://c6fhcls1wqh8"]
 
 [ext_resource type="PackedScene" uid="uid://0n2ppdjdgm7e" path="res://scenes/player/player.tscn" id="1_bc5n3"]
-[ext_resource type="PackedScene" uid="uid://buhbplfv7uyng" path="res://scenes/objets/palo.tscn" id="2_4jb62"]
+[ext_resource type="PackedScene" uid="uid://b73eyetc8mca0" path="res://scenes/objets/palo.tscn" id="2_4jb62"]
 [ext_resource type="PackedScene" uid="uid://ci0tkyqdlb68j" path="res://scenes/objets/comida_1.tscn" id="3_ke8ey"]
-[ext_resource type="PackedScene" uid="uid://cktf40cbudpbf" path="res://scenes/objets/botella.tscn" id="4_14w5t"]
+[ext_resource type="PackedScene" uid="uid://n5p1stc4i1qx" path="res://scenes/objets/botella.tscn" id="4_14w5t"]
 [ext_resource type="PackedScene" uid="uid://be5kkjfpgt3sy" path="res://scenes/scenary_objects/fogata.tscn" id="5_sfnd5"]
 [ext_resource type="PackedScene" uid="uid://b0o2h1nf4516m" path="res://scenes/EnemyTest.tscn" id="6_lxy4y"]
 

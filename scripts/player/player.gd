@@ -6,7 +6,7 @@ extends CharacterBody3D
 @onready var collision_shape = $CollisionShape3D
 @onready var player_hud = $PlayerHUD
 @onready var voice_controller = $Voice
-@onready var voice_particles = $Pivot/Camera3D/VoiceParticle
+@onready var voiceparticle = $VoiceWave
 
 @onready var hud = $PlayerHUD/hud
 @onready var object_marker = $Pivot/Camera3D/ObjectMarker
@@ -71,6 +71,7 @@ func _ready():
 	print("🔹 Total de ítems en inventario: funcion de player ", items)
 	
 	hud.set_inventory(inv_node)
+	voice_controller.microphone_toggled.connect(hud._on_microphone_toggled)
 	
 	# --- Resto de tu configuración ---
 	GLOBAL.PlayerRef = self
@@ -180,10 +181,11 @@ func _process(_delta):
 	
 	if Input.is_action_just_pressed("Microphone"):
 		voice_controller.toggle_microphone()
+	
 	if voice_controller.is_active():
-		voice_particles.update_emission(-Camera.global_transform.basis.z)
+		voiceparticle.visible = true
 	else:
-		voice_particles.stop_emission()
+		voiceparticle.visible = false
 	
 	if Input.is_key_pressed(KEY_R):
 		_try_consume_held_item()

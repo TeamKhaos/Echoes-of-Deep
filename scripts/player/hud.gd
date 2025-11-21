@@ -13,6 +13,10 @@ extends Control
 # 🔹 Texto de interacción
 @onready var interact_label = $InteractLabel
 
+# 🎙️ Control del micrófono
+@onready var microphone_texture_off = $"Microphone/Microphone OFF"
+@onready var microphone_texture_on = $"Microphone/Microphone ON"
+
 # 🔹 Variables internas
 var inventory_ref: Node = null
 var _is_interact_mode = false
@@ -30,6 +34,12 @@ func _ready():
 	if low_hunger_overlay:
 		low_hunger_overlay.modulate = Color(1, 1, 1, 0)  # Totalmente transparente
 		low_hunger_overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	
+	# Inicializar estado del micrófono
+	if microphone_texture_off:
+		microphone_texture_off.visible = true
+	if microphone_texture_on:
+		microphone_texture_on.visible = false
 
 # ===============================
 # 🧭 INVENTARIO
@@ -295,3 +305,13 @@ func restore_sanity(amount: float):
 	if sanity_bar:
 		sanity_bar.value = sanity_value
 	print("🧠 Cordura restaurada a:", sanity_value)
+
+# ===============================
+# 🎙️ FUNCIONALIDAD DEL MICRÓFONO
+# ===============================
+
+func _on_microphone_toggled(active: bool):
+	if microphone_texture_off:
+		microphone_texture_off.visible = not active
+	if microphone_texture_on:
+		microphone_texture_on.visible = active

@@ -1,19 +1,21 @@
-[gd_scene load_steps=14 format=3 uid="uid://qalas2xm418v"]
+[gd_scene load_steps=16 format=3 uid="uid://qalas2xm418v"]
 
 [ext_resource type="Script" uid="uid://c6wangdtwc4m7" path="res://addons/gloot/core/item_slot.gd" id="1_8v3xu"]
 [ext_resource type="Script" uid="uid://d0pfc3q6sof8y" path="res://addons/gloot/ui/ctrl_inventory_grid.gd" id="1_t2sse"]
 [ext_resource type="JSON" path="res://resources/json/inventario.json" id="2_ai134"]
-[ext_resource type="Texture2D" uid="uid://b86ne8h7k2hsc" path="res://resources/images/field_background.png" id="2_t6213"]
+[ext_resource type="Texture2D" uid="uid://bpmdtgysdm2tp" path="res://resources/images/field_background.png" id="2_t6213"]
 [ext_resource type="Texture2D" uid="uid://cryy16ynshic6" path="res://resources/images/field_highlighted_background.png" id="3_ai134"]
 [ext_resource type="Script" uid="uid://5hfig5q3x8it" path="res://addons/gloot/core/inventory.gd" id="4_t2sse"]
 [ext_resource type="Script" uid="uid://b8hbvp4kl88cn" path="res://addons/gloot/core/constraints/grid_constraint.gd" id="5_6qtn5"]
+[ext_resource type="Texture2D" uid="uid://b6g5y8ynjyd08" path="res://resources/images/marco.png" id="6_8fb8u"]
 [ext_resource type="Script" uid="uid://trghhrgo3fax" path="res://addons/gloot/ui/ctrl_item_slot.gd" id="7_la582"]
+[ext_resource type="Texture2D" uid="uid://b3xcvsmf7mrat" path="res://resources/images/marco_oscuro.png" id="7_mukqp"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_q0ogx"]
-texture = ExtResource("2_t6213")
+texture = ExtResource("6_8fb8u")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_dwpwl"]
-texture = ExtResource("3_ai134")
+texture = ExtResource("7_mukqp")
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_oefha"]
 draw_center = false
