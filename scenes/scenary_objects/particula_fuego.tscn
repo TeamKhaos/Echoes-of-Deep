@@ -45,6 +45,7 @@ process_material = SubResource("ParticleProcessMaterial_grdq2")
 draw_pass_1 = SubResource("QuadMesh_8pkia")
 
 [node name="OmniLight3D" type="OmniLight3D" parent="fuegoprimario"]
+light_color = Color(1, 0.4509804, 0.1254902, 1)
 
 [node name="humo" type="GPUParticles3D" parent="."]
 material_override = SubResource("StandardMaterial3D_n2hb2")

@@ -1,21 +1,25 @@
-[gd_scene load_steps=13 format=3 uid="uid://c6fhcls1wqh8"]
+[gd_scene load_steps=14 format=3 uid="uid://c6fhcls1wqh8"]
 
 [ext_resource type="PackedScene" uid="uid://0n2ppdjdgm7e" path="res://scenes/player/player.tscn" id="1_bc5n3"]
 [ext_resource type="PackedScene" uid="uid://b73eyetc8mca0" path="res://scenes/objets/palo.tscn" id="2_4jb62"]
-[ext_resource type="PackedScene" uid="uid://ci0tkyqdlb68j" path="res://scenes/objets/comida_1.tscn" id="3_ke8ey"]
+[ext_resource type="PackedScene" uid="uid://dho25c04rkus1" path="res://scenes/objets/comida_2.tscn" id="2_lxy4y"]
+[ext_resource type="PackedScene" uid="uid://bpaicuppyrwfj" path="res://materials/antorcha.tscn" id="2_m7nr4"]
 [ext_resource type="PackedScene" uid="uid://n5p1stc4i1qx" path="res://scenes/objets/botella.tscn" id="4_14w5t"]
 [ext_resource type="PackedScene" uid="uid://be5kkjfpgt3sy" path="res://scenes/scenary_objects/fogata.tscn" id="5_sfnd5"]
 [ext_resource type="PackedScene" uid="uid://b0o2h1nf4516m" path="res://scenes/EnemyTest.tscn" id="6_lxy4y"]
 
-[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_rkcww"]
-sky_top_color = Color(0.152127, 0.15663025, 0.14990631, 1)
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_m7nr4"]
+sky_top_color = Color(0, 0, 0, 1)
+sky_horizon_color = Color(0, 0, 0, 1)
+ground_bottom_color = Color(0, 0, 0, 1)
+ground_horizon_color = Color(0, 0, 0, 1)
 
-[sub_resource type="Sky" id="Sky_4jb62"]
-sky_material = SubResource("ProceduralSkyMaterial_rkcww")
+[sub_resource type="Sky" id="Sky_o8nxa"]
+sky_material = SubResource("ProceduralSkyMaterial_m7nr4")
 
-[sub_resource type="Environment" id="Environment_ke8ey"]
+[sub_resource type="Environment" id="Environment_bc5n3"]
 background_mode = 2
-sky = SubResource("Sky_4jb62")
+sky = SubResource("Sky_o8nxa")
 tonemap_mode = 2
 glow_enabled = true
 
@@ -30,7 +34,7 @@ size = Vector3(20, 0.5, 20)
 [node name="Plataforma" type="Node3D"]
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
-environment = SubResource("Environment_ke8ey")
+environment = SubResource("Environment_bc5n3")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="."]
 
@@ -51,11 +55,14 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.35051894, -6.5081606)
 transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0, 0)
 shape = SubResource("SphereShape3D_bc5n3")
 
+[node name="Antorcha" parent="." groups=["interactable"] instance=ExtResource("2_m7nr4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.6971633, 0)
+
+[node name="Comida2" parent="." groups=["interactable"] instance=ExtResource("2_lxy4y")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.35051894, -6.5081606)
+
 [node name="Palo" parent="." instance=ExtResource("2_4jb62")]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 1.0716718, 1.621802, 0)
-
-[node name="Comida1" parent="." instance=ExtResource("3_ke8ey")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.7451472, 0.74210477, 0)
 
 [node name="Agua" parent="." instance=ExtResource("4_14w5t")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.9869989, 1.6902466, 0.6015465)

@@ -10,38 +10,36 @@ extends RigidBody3D
 var original_scale: Vector3
 
 # --- LÓGICA DE ILUMINACIÓN (COMENTADA) ---
-#@onready var mesh = $MeshInstance3D 
-# var outlined_material: Material
-# var base_materials := []
+@onready var mesh = $Cylinder
+var outlined_material: Material
+var base_materials := []
 
 func _ready():
 	original_scale = scale
-	print("✅ Comida inicializada - consumible:", is_consumable)
+	print("✅ Agua inicializada - consumible:", is_consumable)
 	
-	# --- LÓGICA DE ILUMINACIÓN (COMENTADA) ---
-	# if mesh.mesh:
-	# 	mesh.mesh = mesh.mesh.duplicate()
-	# 
-	# var mesh_res = mesh.mesh
-	# 
-	# if mesh_res:
-	# 	for i in range(mesh_res.get_surface_count()):
-	# 		base_materials.append(mesh_res.surface_get_material(i))
-	# 	
-	# 	outlined_material = mesh_res.surface_get_material(1)
-	# 	mesh_res.surface_set_material(1, null)
+	if mesh.mesh:
+		mesh.mesh = mesh.mesh.duplicate()
+	
+	var mesh_res = mesh.mesh  # el recurso Mesh interno
+	if mesh_res:
+		for i in range(mesh_res.get_surface_count()):
+			base_materials.append(mesh_res.surface_get_material(i))
+		
+		# Guarda el material de brillo o delineado (por ejemplo surface 3)
+		outlined_material = mesh_res.surface_get_material(3)
+		# Empieza desactivado
+		mesh_res.surface_set_material(3, null)
 
-# --- LÓGICA DE ILUMINACIÓN (COMENTADA) ---
-# func set_highlight(active: bool):
-# 	var mesh_res = mesh.mesh
-# 	if not mesh_res:
-# 		return
-# 	
-# 	if active:
-# 		mesh_res.surface_set_material(1, outlined_material)
-# 	else:
-# 		mesh_res.surface_set_material(1, null)
-
+func set_highlight(active: bool):
+	var mesh_res = mesh.mesh
+	if not mesh_res:
+		return
+	
+	if active:
+		mesh_res.surface_set_material(3, outlined_material)
+	else:
+		mesh_res.surface_set_material(3, null)
 func mouse_interaction(player):
 	# set_highlight(false) # LÓGICA DE ILUMINACIÓN (COMENTADA)
 	player.add_to_inventory(item_id)
