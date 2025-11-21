@@ -31,7 +31,17 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="ItemSlot" type="Node" parent="."]
+[node name="item1" type="Node" parent="."]
+script = ExtResource("1_8v3xu")
+protoset = ExtResource("2_ai134")
+metadata/_custom_type_script = "uid://c6wangdtwc4m7"
+
+[node name="item2" type="Node" parent="."]
+script = ExtResource("1_8v3xu")
+protoset = ExtResource("2_ai134")
+metadata/_custom_type_script = "uid://c6wangdtwc4m7"
+
+[node name="item3" type="Node" parent="."]
 script = ExtResource("1_8v3xu")
 protoset = ExtResource("2_ai134")
 metadata/_custom_type_script = "uid://c6wangdtwc4m7"
@@ -79,6 +89,10 @@ alignment = 1
 layout_mode = 2
 alignment = 1
 
+[node name="VSeparator4" type="Control" parent="Panel/MarginContainer/VBox/GridBox/VBoxContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 25)
+layout_mode = 2
+
 [node name="Label" type="Label" parent="Panel/MarginContainer/VBox/GridBox/VBoxContainer/VBoxContainer"]
 layout_mode = 2
 text = "Inventario"
@@ -108,11 +122,13 @@ layout_mode = 2
 theme_override_constants/separation = 20
 alignment = 1
 
-[node name="CtrlItemSlot1" type="Control" parent="Panel/MarginContainer/VBox/GridBox/VBoxContainer/VBoxContainer/SlotsBox"]
+[node name="CtrlItemSlot1" type="Control" parent="Panel/MarginContainer/VBox/GridBox/VBoxContainer/VBoxContainer/SlotsBox" node_paths=PackedStringArray("item_slot")]
 texture_filter = 1
 custom_minimum_size = Vector2(128, 128)
 layout_mode = 2
 script = ExtResource("7_la582")
+item_slot = NodePath("../../../../../../../../item1")
+icon_stretch_mode = 6
 slot_style = ExtResource("6_8v3xu")
 slot_highlighted_style = ExtResource("7_8fb8u")
 metadata/_custom_type_script = "uid://trghhrgo3fax"
@@ -123,11 +139,12 @@ text = "+"
 label_settings = SubResource("LabelSettings_plus_sign")
 vertical_alignment = 1
 
-[node name="CtrlItemSlot2" type="Control" parent="Panel/MarginContainer/VBox/GridBox/VBoxContainer/VBoxContainer/SlotsBox"]
+[node name="CtrlItemSlot2" type="Control" parent="Panel/MarginContainer/VBox/GridBox/VBoxContainer/VBoxContainer/SlotsBox" node_paths=PackedStringArray("item_slot")]
 texture_filter = 1
 custom_minimum_size = Vector2(128, 128)
 layout_mode = 2
 script = ExtResource("7_la582")
+item_slot = NodePath("../../../../../../../../item2")
 icon_stretch_mode = 5
 slot_style = ExtResource("6_8v3xu")
 slot_highlighted_style = ExtResource("7_8fb8u")
@@ -139,11 +156,13 @@ text = "+"
 label_settings = SubResource("LabelSettings_plus_sign")
 vertical_alignment = 1
 
-[node name="CtrlItemSlot3" type="Control" parent="Panel/MarginContainer/VBox/GridBox/VBoxContainer/VBoxContainer/SlotsBox"]
+[node name="CtrlItemSlot3" type="Control" parent="Panel/MarginContainer/VBox/GridBox/VBoxContainer/VBoxContainer/SlotsBox" node_paths=PackedStringArray("item_slot")]
 texture_filter = 1
 custom_minimum_size = Vector2(128, 128)
 layout_mode = 2
 script = ExtResource("7_la582")
+item_slot = NodePath("../../../../../../../../item3")
+icon_stretch_mode = 6
 slot_style = ExtResource("6_8v3xu")
 slot_highlighted_style = ExtResource("7_8fb8u")
 metadata/_custom_type_script = "uid://trghhrgo3fax"
@@ -157,3 +176,7 @@ custom_minimum_size = Vector2(0, 80)
 layout_mode = 2
 text = "Craft
 "
+
+[node name="VSeparator3" type="Control" parent="Panel/MarginContainer/VBox/GridBox/VBoxContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 25)
+layout_mode = 2

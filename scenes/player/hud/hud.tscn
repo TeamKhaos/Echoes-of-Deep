@@ -74,7 +74,7 @@ texture = ExtResource("2_rp8h0")
 stretch_mode = 5
 
 [node name="HambreTexture" type="TextureRect" parent="."]
-modulate = Color(1, 1, 1, 0.54901963)
+modulate = Color(1, 1, 1, 0.6313726)
 texture_filter = 1
 layout_mode = 1
 anchors_preset = -1
@@ -103,7 +103,7 @@ texture_progress = ExtResource("8_2imlo")
 metadata/_edit_use_anchors_ = true
 
 [node name="VidaTexture" type="TextureRect" parent="."]
-modulate = Color(1, 1, 1, 0.54901963)
+modulate = Color(1, 1, 1, 0.6313726)
 texture_filter = 1
 layout_mode = 1
 anchors_preset = -1
@@ -134,7 +134,7 @@ texture_progress = ExtResource("10_wnypu")
 metadata/_edit_use_anchors_ = true
 
 [node name="CorduraTexture" type="TextureRect" parent="."]
-modulate = Color(1, 1, 1, 0.54901963)
+modulate = Color(1, 1, 1, 0.6313726)
 texture_filter = 1
 layout_mode = 1
 anchors_preset = -1
@@ -162,7 +162,7 @@ texture_progress = ExtResource("11_qyxei")
 metadata/_edit_use_anchors_ = true
 
 [node name="Item2" type="TextureRect" parent="."]
-modulate = Color(1, 1, 1, 0.54901963)
+self_modulate = Color(1, 1, 1, 0.6313726)
 texture_filter = 1
 layout_mode = 1
 anchors_preset = -1
@@ -189,7 +189,7 @@ expand_mode = 3
 metadata/_edit_use_anchors_ = true
 
 [node name="Item1" type="TextureRect" parent="."]
-modulate = Color(1, 1, 1, 0.54901963)
+self_modulate = Color(1, 1, 1, 0.6313726)
 texture_filter = 1
 layout_mode = 1
 anchors_preset = -1
@@ -218,7 +218,7 @@ expand_mode = 3
 metadata/_edit_use_anchors_ = true
 
 [node name="Mochila" type="TextureRect" parent="."]
-modulate = Color(1, 1, 1, 0.54901963)
+self_modulate = Color(1, 1, 1, 0.6313726)
 texture_filter = 1
 layout_mode = 0
 anchor_left = 0.9045139
@@ -229,6 +229,7 @@ texture = ExtResource("4_vo6io")
 metadata/_edit_use_anchors_ = true
 
 [node name="Microphone" type="TextureRect" parent="."]
+self_modulate = Color(1, 1, 1, 0.6313726)
 layout_mode = 0
 anchor_left = 0.46180555
 anchor_top = 0.8441358
@@ -265,6 +266,7 @@ texture = ExtResource("5_vo6io")
 metadata/_edit_use_anchors_ = true
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
+visible = false
 
 [node name="ColorRect" type="ColorRect" parent="CanvasLayer"]
 z_index = 3
