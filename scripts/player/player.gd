@@ -16,6 +16,9 @@ extends CharacterBody3D
 @onready var footsteps_timer = $FootstepsTimer
 @onready var check_floor_ray = $CheckFloorMaterialRay
 
+# ⏸️ Menú de pausa
+@onready var pause_menu = $PauseMenu
+
 # --- INVENTARIO GLOOT ---
 @onready var inventory_scene = preload("res://scenes/player/inventario.tscn")
 var inventory_instance: Node = null
@@ -51,7 +54,7 @@ var is_moving: bool = false
 
 # Configuración de pasos
 @export_group("Footsteps Settings")
-@export var footstep_sound: AudioStream  # Asigna tu archivo de audio aquí
+@export var footstep_sound: AudioStream
 @export var base_footstep_interval: float = 0.45
 @export var crouch_footstep_interval: float = 0.65
 @export var footstep_volume_db: float = -10.0
@@ -173,7 +176,22 @@ func _physics_process(delta):
 	crouch()
 	move(delta, get_input())
 
+func _input(event):
+	# ⏸️ DETECCIÓN DE PAUSA CON ESC
+	if event is InputEventKey:
+		if event.pressed and event.keycode == KEY_ESCAPE:
+			if pause_menu:
+				if not pause_menu.is_paused:
+					pause_menu.pause_game()
+				else:
+					pause_menu.resume_game()
+			get_viewport().set_input_as_handled()
+
 func _process(_delta):
+	# ⏸️ No procesar inputs si el juego está pausado
+	if pause_menu and pause_menu.is_paused:
+		return
+	
 	if Input.is_action_just_pressed("inventory1H"):
 		equip_item_from_slot(0)
 	if Input.is_action_just_pressed("inventory2H"):
@@ -301,35 +319,27 @@ func move(delta, input):
 		move_and_slide()
 		_snap_down_to_stairs_check()
 
-# ===============================
-# 👟 SISTEMA DE PASOS
-# ===============================
-
 func _play_footsteps():
 	if not can_footstep or not footsteps_player:
 		return
 	
-	# Cargar audio si no está asignado
 	if not footsteps_player.stream and footstep_sound:
 		footsteps_player.stream = footstep_sound
 	elif not footsteps_player.stream:
-		var default_path = "res://resources/audio/footstep.mp3"
+		var default_path = "res://resources/audio/pasos.mp3"
 		if ResourceLoader.exists(default_path):
 			footsteps_player.stream = load(default_path)
 		else:
 			return
 	
-	# Variación de pitch para naturalidad
 	footsteps_player.pitch_scale = randf_range(1.0 - pitch_variation, 1.0 + pitch_variation)
 	
-	# Ajustar volumen según velocidad
 	var speed_factor = velocity.length() / max_speed
 	footsteps_player.volume_db = footstep_volume_db + (speed_factor * 3.0)
 	
 	footsteps_player.play()
 	can_footstep = false
 	
-	# Ajustar intervalo según crouch
 	var interval = crouch_footstep_interval if is_crouching else base_footstep_interval
 	interval = interval / max(speed_factor, 0.5)
 	
