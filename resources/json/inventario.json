@@ -9,12 +9,12 @@
 		"scene": "res://scenes/objets/botella.tscn"
 	},
 	"food": {
-		"image": "res://resources/images/food.png",
+		"image": "res://resources/images/barra.png",
 		"size": "Vector2i(1, 1)",
 		"scene": "res://scenes/objets/comida_1.tscn"
 	},
 	"palo": {
-		"image": "res://resources/images/torch.png",
+		"image": "res://resources/images/palo.png",
 		"size": "Vector2i(1, 1)",
 		"scene": "res://scenes/objets/palo.tscn"
 	},
