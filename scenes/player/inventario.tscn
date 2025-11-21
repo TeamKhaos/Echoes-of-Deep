@@ -1,21 +1,16 @@
-[gd_scene load_steps=16 format=3 uid="uid://qalas2xm418v"]
+[gd_scene load_steps=12 format=3 uid="uid://qalas2xm418v"]
 
 [ext_resource type="Script" uid="uid://c6wangdtwc4m7" path="res://addons/gloot/core/item_slot.gd" id="1_8v3xu"]
 [ext_resource type="Script" uid="uid://d0pfc3q6sof8y" path="res://addons/gloot/ui/ctrl_inventory_grid.gd" id="1_t2sse"]
 [ext_resource type="JSON" path="res://resources/json/inventario.json" id="2_ai134"]
-[ext_resource type="Texture2D" uid="uid://bpmdtgysdm2tp" path="res://resources/images/field_background.png" id="2_t6213"]
-[ext_resource type="Texture2D" uid="uid://cryy16ynshic6" path="res://resources/images/field_highlighted_background.png" id="3_ai134"]
 [ext_resource type="Script" uid="uid://5hfig5q3x8it" path="res://addons/gloot/core/inventory.gd" id="4_t2sse"]
 [ext_resource type="Script" uid="uid://b8hbvp4kl88cn" path="res://addons/gloot/core/constraints/grid_constraint.gd" id="5_6qtn5"]
-[ext_resource type="Texture2D" uid="uid://b6g5y8ynjyd08" path="res://resources/images/marco.png" id="6_8fb8u"]
+[ext_resource type="StyleBox" uid="uid://14752m8jytng" path="res://texturacaja.tres" id="6_8v3xu"]
+[ext_resource type="StyleBox" uid="uid://dfh6cbak5nb5b" path="res://texturasombra.tres" id="7_8fb8u"]
 [ext_resource type="Script" uid="uid://trghhrgo3fax" path="res://addons/gloot/ui/ctrl_item_slot.gd" id="7_la582"]
-[ext_resource type="Texture2D" uid="uid://b3xcvsmf7mrat" path="res://resources/images/marco_oscuro.png" id="7_mukqp"]
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_q0ogx"]
-texture = ExtResource("6_8fb8u")
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_dwpwl"]
-texture = ExtResource("7_mukqp")
+[sub_resource type="LabelSettings" id="LabelSettings_8v3xu"]
+font_size = 64
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_oefha"]
 draw_center = false
@@ -25,11 +20,8 @@ border_width_right = 1
 border_width_bottom = 1
 border_color = Color(1, 1, 1, 1)
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_8v3xu"]
-texture = ExtResource("2_t6213")
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_8fb8u"]
-texture = ExtResource("3_ai134")
+[sub_resource type="LabelSettings" id="LabelSettings_plus_sign"]
+font_size = 64
 
 [node name="Inventario" type="Control"]
 layout_mode = 3
@@ -54,129 +46,114 @@ metadata/_custom_type_script = "uid://5hfig5q3x8it"
 script = ExtResource("5_6qtn5")
 size = Vector2i(5, 2)
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -491.0
-offset_top = -235.5
-offset_right = 491.0
-offset_bottom = 235.5
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 4
-
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/VBoxContainer"]
-layout_mode = 2
-
-[node name="Recipes" type="Panel" parent="VBoxContainer/VBoxContainer/HBoxContainer"]
-custom_minimum_size = Vector2(175, 300)
-layout_mode = 2
-
-[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/VBoxContainer/HBoxContainer"]
-layout_mode = 2
-
-[node name="Profile3" type="Panel" parent="VBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer"]
-custom_minimum_size = Vector2(0, 80)
-layout_mode = 2
-
-[node name="Label" type="Label" parent="VBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer/Profile3"]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -20.0
-offset_top = -11.5
-offset_right = 20.0
-offset_bottom = 11.5
+[node name="MarginContainer" type="MarginContainer" parent="Panel"]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-text = "Bag"
 
-[node name="CtrlInventoryGrid" type="Control" parent="VBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer" node_paths=PackedStringArray("inventory")]
-custom_minimum_size = Vector2(320, 128)
+[node name="VBox" type="VBoxContainer" parent="Panel/MarginContainer"]
 layout_mode = 2
-size_flags_horizontal = 8
-size_flags_vertical = 4
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="GridBox" type="HBoxContainer" parent="Panel/MarginContainer/VBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/MarginContainer/VBox/GridBox"]
+layout_mode = 2
+alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/MarginContainer/VBox/GridBox/VBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="Label" type="Label" parent="Panel/MarginContainer/VBox/GridBox/VBoxContainer/VBoxContainer"]
+layout_mode = 2
+text = "Inventario"
+label_settings = SubResource("LabelSettings_8v3xu")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="CtrlInventoryGrid" type="Control" parent="Panel/MarginContainer/VBox/GridBox/VBoxContainer/VBoxContainer" node_paths=PackedStringArray("inventory")]
+texture_filter = 1
+clip_contents = true
+custom_minimum_size = Vector2(640, 256)
+layout_mode = 2
 script = ExtResource("1_t2sse")
-inventory = NodePath("../../../../../Inventory")
-field_dimensions = Vector2(64, 64)
-field_style = SubResource("StyleBoxTexture_q0ogx")
-field_highlighted_style = SubResource("StyleBoxTexture_dwpwl")
+inventory = NodePath("../../../../../../../Inventory")
+field_dimensions = Vector2(128, 128)
+field_style = ExtResource("6_8v3xu")
+field_highlighted_style = ExtResource("7_8fb8u")
 selection_style = SubResource("StyleBoxFlat_oefha")
 metadata/_custom_type_script = "uid://d0pfc3q6sof8y"
 
-[node name="Profile4" type="Panel" parent="VBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer"]
-custom_minimum_size = Vector2(0, 85)
+[node name="VSeparator" type="Control" parent="Panel/MarginContainer/VBox/GridBox/VBoxContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 25)
 layout_mode = 2
 
-[node name="Drop" type="Button" parent="VBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer/Profile4"]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.18200001
-anchor_top = 0.5
-anchor_right = 0.18200001
-anchor_bottom = 0.5
-offset_left = -39.740005
-offset_top = -22.5
-offset_right = 39.759995
-offset_bottom = 22.5
-text = "Drop
-"
+[node name="SlotsBox" type="HBoxContainer" parent="Panel/MarginContainer/VBox/GridBox/VBoxContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+alignment = 1
 
-[node name="CtrlItemSlot" type="Control" parent="VBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer/Profile4" node_paths=PackedStringArray("item_slot")]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -32.0
-offset_top = -32.0
-offset_right = 32.0
-offset_bottom = 32.0
-grow_horizontal = 2
-grow_vertical = 2
+[node name="CtrlItemSlot1" type="Control" parent="Panel/MarginContainer/VBox/GridBox/VBoxContainer/VBoxContainer/SlotsBox"]
+texture_filter = 1
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 2
 script = ExtResource("7_la582")
-item_slot = NodePath("../../../../../../ItemSlot")
-icon_stretch_mode = 5
-slot_style = SubResource("StyleBoxTexture_8v3xu")
-slot_highlighted_style = SubResource("StyleBoxTexture_8fb8u")
+slot_style = ExtResource("6_8v3xu")
+slot_highlighted_style = ExtResource("7_8fb8u")
 metadata/_custom_type_script = "uid://trghhrgo3fax"
 
-[node name="Remove" type="Button" parent="VBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer/Profile4"]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.80100006
-anchor_top = 0.5
-anchor_right = 0.80100006
-anchor_bottom = 0.5
-offset_left = -39.820007
-offset_top = -22.5
-offset_right = 39.679993
-offset_bottom = 22.5
-text = "Remove"
+[node name="PlusLabel1" type="Label" parent="Panel/MarginContainer/VBox/GridBox/VBoxContainer/VBoxContainer/SlotsBox"]
+layout_mode = 2
+text = "+"
+label_settings = SubResource("LabelSettings_plus_sign")
+vertical_alignment = 1
 
-[node name="Crafting" type="Panel" parent="VBoxContainer/VBoxContainer/HBoxContainer"]
-custom_minimum_size = Vector2(175, 300)
+[node name="CtrlItemSlot2" type="Control" parent="Panel/MarginContainer/VBox/GridBox/VBoxContainer/VBoxContainer/SlotsBox"]
+texture_filter = 1
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 2
+script = ExtResource("7_la582")
+icon_stretch_mode = 5
+slot_style = ExtResource("6_8v3xu")
+slot_highlighted_style = ExtResource("7_8fb8u")
+metadata/_custom_type_script = "uid://trghhrgo3fax"
+
+[node name="PlusLabel2" type="Label" parent="Panel/MarginContainer/VBox/GridBox/VBoxContainer/VBoxContainer/SlotsBox"]
+layout_mode = 2
+text = "+"
+label_settings = SubResource("LabelSettings_plus_sign")
+vertical_alignment = 1
+
+[node name="CtrlItemSlot3" type="Control" parent="Panel/MarginContainer/VBox/GridBox/VBoxContainer/VBoxContainer/SlotsBox"]
+texture_filter = 1
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 2
+script = ExtResource("7_la582")
+slot_style = ExtResource("6_8v3xu")
+slot_highlighted_style = ExtResource("7_8fb8u")
+metadata/_custom_type_script = "uid://trghhrgo3fax"
+
+[node name="VSeparator2" type="Control" parent="Panel/MarginContainer/VBox/GridBox/VBoxContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 25)
 layout_mode = 2
 
-[node name="Hambre" type="Panel" parent="VBoxContainer/VBoxContainer"]
-custom_minimum_size = Vector2(50, 50)
+[node name="CraftsButton" type="Button" parent="Panel/MarginContainer/VBox/GridBox/VBoxContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 80)
 layout_mode = 2
-
-[node name="Cordura" type="Panel" parent="VBoxContainer/VBoxContainer"]
-custom_minimum_size = Vector2(50, 50)
-layout_mode = 2
-
-[node name="Sed" type="Panel" parent="VBoxContainer/VBoxContainer"]
-custom_minimum_size = Vector2(50, 50)
-layout_mode = 2
+text = "Craft
+"

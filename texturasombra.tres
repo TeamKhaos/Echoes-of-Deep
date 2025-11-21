@@ -1,0 +1,6 @@
+[gd_resource type="StyleBoxTexture" load_steps=2 format=3 uid="uid://dfh6cbak5nb5b"]
+
+[ext_resource type="Texture2D" uid="uid://b3xcvsmf7mrat" path="res://resources/images/marco_oscuro.png" id="1_f4q7x"]
+
+[resource]
+texture = ExtResource("1_f4q7x")
