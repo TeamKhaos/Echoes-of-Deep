@@ -1,7 +1,7 @@
 [gd_scene load_steps=9 format=4 uid="uid://n5p1stc4i1qx"]
 
 [ext_resource type="Script" uid="uid://0ivriyllatbm" path="res://scripts/objects/botella.gd" id="1_0yirx"]
-[ext_resource type="Material" uid="uid://cdyx8vju1ovrj" path="res://materials/contorno.tres" id="2_mc2ye"]
+[ext_resource type="Material" uid="uid://cdyx8vju1ovrj" path="res://resources/materials/contorno.tres" id="2_mc2ye"]
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_28t7f"]
 height = 1.2109528

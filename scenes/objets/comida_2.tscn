@@ -1,7 +1,7 @@
 [gd_scene load_steps=9 format=4 uid="uid://dho25c04rkus1"]
 
 [ext_resource type="Script" uid="uid://cq4a7r8v05vj7" path="res://scripts/objects/comida1.gd" id="1_okpms"]
-[ext_resource type="Material" uid="uid://cdyx8vju1ovrj" path="res://materials/contorno.tres" id="2_kbx3v"]
+[ext_resource type="Material" uid="uid://cdyx8vju1ovrj" path="res://resources/materials/contorno.tres" id="2_kbx3v"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_223hy"]
 resource_name = "Material.001"

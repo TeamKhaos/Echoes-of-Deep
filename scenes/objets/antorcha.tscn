@@ -183,6 +183,7 @@ process_material = SubResource("ParticleProcessMaterial_15cww")
 draw_pass_1 = SubResource("QuadMesh_2vwsy")
 
 [node name="OmniLight3D" type="OmniLight3D" parent="particula/fuegoprimario"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.48869294)
 light_color = Color(1, 0.4509804, 0.1254902, 1)
 
 [node name="humo" type="GPUParticles3D" parent="particula"]
