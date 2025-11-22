@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://c6fhcls1wqh8"]
+[gd_scene load_steps=15 format=3 uid="uid://c6fhcls1wqh8"]
 
 [ext_resource type="PackedScene" uid="uid://0n2ppdjdgm7e" path="res://scenes/player/player.tscn" id="1_bc5n3"]
 [ext_resource type="PackedScene" uid="uid://b73eyetc8mca0" path="res://scenes/objets/palo.tscn" id="2_4jb62"]
@@ -8,6 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://be5kkjfpgt3sy" path="res://scenes/scenary_objects/fogata.tscn" id="5_sfnd5"]
 [ext_resource type="PackedScene" uid="uid://b0o2h1nf4516m" path="res://scenes/EnemyTest.tscn" id="6_lxy4y"]
 [ext_resource type="PackedScene" uid="uid://cjinoan3rfh77" path="res://scenes/scenary_cave/tunel_1.tscn" id="8_o8nxa"]
+[ext_resource type="Shader" uid="uid://be8jh6fto5804" path="res://resources/materials/postprocesado.gdshader" id="9_bc5n3"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ij1v8"]
 size = Vector3(20, 0.5, 20)
@@ -16,6 +17,15 @@ size = Vector3(20, 0.5, 20)
 size = Vector3(20, 0.5, 20)
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_bc5n3"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_yqmvt"]
+render_priority = 0
+shader = ExtResource("9_bc5n3")
+shader_parameter/dither_amount = 0.0
+
+[sub_resource type="QuadMesh" id="QuadMesh_o8nxa"]
+flip_faces = true
+size = Vector2(2, 2)
 
 [node name="Plataforma" type="Node3D"]
 
@@ -63,3 +73,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.35051894, -6.5081606)
 
 [node name="Tunel1" parent="." instance=ExtResource("8_o8nxa")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.936312, 2.975579, -0.4726367)
+
+[node name="PantallaFiltro" type="MeshInstance3D" parent="."]
+material_override = SubResource("ShaderMaterial_yqmvt")
+extra_cull_margin = 16384.0
+mesh = SubResource("QuadMesh_o8nxa")
