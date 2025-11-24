@@ -14,7 +14,6 @@ extends CharacterBody3D
 # 👟 Sistema de pasos
 @onready var footsteps_player = $FootstepsPlayer
 @onready var footsteps_timer = $FootstepsTimer
-@onready var check_floor_ray = $CheckFloorMaterialRay
 
 # ⏸️ Menú de pausa
 @onready var pause_menu = $PauseMenu
@@ -99,10 +98,7 @@ func _setup_footsteps():
 		if not footsteps_timer.is_connected("timeout", Callable(self, "_on_footsteps_timer_timeout")):
 			footsteps_timer.connect("timeout", Callable(self, "_on_footsteps_timer_timeout"))
 	
-	if check_floor_ray:
-		check_floor_ray.target_position = Vector3(0, -1.5, 0)
-		check_floor_ray.enabled = true
-		check_floor_ray.collision_mask = 1
+	
 
 func equip_item_from_slot(slot_index: int):
 	print("--- equip_item_from_slot called for slot: ", slot_index, " ---")
@@ -257,40 +253,9 @@ func _try_consume_held_item():
 		if "item_id" in held_item:
 			remove_from_inventory(held_item.item_id)
 
-func _snap_down_to_stairs_check() -> void:
-	var did_snap := false
-	%StairsBelowRaycast.force_raycast_update()
-	var floor_below : bool = %StairsBelowRaycast.is_colliding() and not is_surface_too_step(%StairsBelowRaycast.get_collision_normal())
-	var was_on_floor_last_frame = Engine.get_physics_frames() == _last_frame_was_on_floor
-	if not is_on_floor() and velocity.y <= 0 and (was_on_floor_last_frame or _snaped_to_stairs_last_frame) and floor_below:
-		var body_test_result = KinematicCollision3D.new()
-		if self.test_move(self.global_transform, Vector3(0,-MAX_STEP_HEIGHT,0), body_test_result):
-			var translate_y = body_test_result.get_travel().y
-			var tween : Tween = get_tree().create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
-			tween.tween_property(self, "position", position + Vector3(0, translate_y, 0), 0.05)
-			apply_floor_snap()
-			did_snap = true
-	_snaped_to_stairs_last_frame = did_snap
 
-func _snap_up_stairs_check(delta) -> bool:
-	if not is_on_floor() and not _snaped_to_stairs_last_frame: return false
-	if self.velocity.y > 0 or (self.velocity * Vector3(1,0,1)).length() == 0: return false
-	var expected_move_motion = self.velocity * Vector3(1,0,1) * delta
-	var step_pos_with_clearance = self.global_transform.translated(expected_move_motion + Vector3(0, MAX_STEP_HEIGHT * 2, 0))
-	var down_check_result = KinematicCollision3D.new()
-	if (self.test_move(step_pos_with_clearance, Vector3(0,-MAX_STEP_HEIGHT*2,0), down_check_result)
-	and (down_check_result.get_collider().is_class("StaticBody3D") and down_check_result.get_collider().is_in_group("climbeable"))):
-		var step_height = ((step_pos_with_clearance.origin + down_check_result.get_travel()) - self.global_position).y
-		if step_height > MAX_STEP_HEIGHT or step_height <= 0.01 or (down_check_result.get_position() - self.global_position).y > MAX_STEP_HEIGHT: return false
-		%StairsRaycast.global_position = down_check_result.get_position() + Vector3(0,MAX_STEP_HEIGHT,0) + expected_move_motion.normalized() * 0.1
-		%StairsRaycast.force_raycast_update()
-		if %StairsRaycast.is_colliding() and not is_surface_too_step(%StairsRaycast.get_collision_normal()):
-			var tween : Tween = get_tree().create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
-			tween.tween_property(self, "global_position", step_pos_with_clearance.origin + down_check_result.get_travel(), 0.1)
-			apply_floor_snap()
-			_snaped_to_stairs_last_frame = true
-			return true
-	return false
+
+
 
 func is_surface_too_step(normal : Vector3):
 	return normal.angle_to(Vector3.UP) > self.floor_max_angle
@@ -315,9 +280,9 @@ func move(delta, input):
 		velocity.x = lerp(velocity.x, 0.0, desaceleration)
 		velocity.z = lerp(velocity.z, 0.0, desaceleration)
 	
-	if not _snap_up_stairs_check(delta):
-		move_and_slide()
-		_snap_down_to_stairs_check()
+
+	move_and_slide()
+		
 
 func _play_footsteps():
 	if not can_footstep or not footsteps_player:

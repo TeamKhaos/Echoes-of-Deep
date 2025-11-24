@@ -156,18 +156,24 @@ func _on_button_back_options_pressed():
 	_hide_panel(options_panel)
 
 func _on_master_volume_changed(value: float):
-	var db = linear_to_db(value)
-	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Master"), db)
+	var bus_index = AudioServer.get_bus_index("Master")
+	if bus_index != -1:
+		var db = linear_to_db(value)
+		AudioServer.set_bus_volume_db(bus_index, db)
 	_save_settings()
 
 func _on_music_volume_changed(value: float):
-	var db = linear_to_db(value)
-	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Music"), db)
+	var bus_index = AudioServer.get_bus_index("Music")
+	if bus_index != -1:
+		var db = linear_to_db(value)
+		AudioServer.set_bus_volume_db(bus_index, db)
 	_save_settings()
 
 func _on_sfx_volume_changed(value: float):
-	var db = linear_to_db(value)
-	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("SFX"), db)
+	var bus_index = AudioServer.get_bus_index("SFX")
+	if bus_index != -1:
+		var db = linear_to_db(value)
+		AudioServer.set_bus_volume_db(bus_index, db)
 	_save_settings()
 
 # ===============================
