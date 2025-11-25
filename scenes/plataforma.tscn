@@ -8,7 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://be5kkjfpgt3sy" path="res://scenes/scenary_objects/fogata.tscn" id="5_sfnd5"]
 [ext_resource type="PackedScene" uid="uid://b0o2h1nf4516m" path="res://scenes/EnemyTest.tscn" id="6_lxy4y"]
 [ext_resource type="PackedScene" uid="uid://cjinoan3rfh77" path="res://scenes/scenary_cave/tunel_1.tscn" id="8_o8nxa"]
-[ext_resource type="Shader" path="res://resources/materials/postprocesado.gdshader" id="9_bc5n3"]
+[ext_resource type="Shader" uid="uid://be8jh6fto5804" path="res://resources/materials/postprocesado.gdshader" id="9_bc5n3"]
 [ext_resource type="Script" uid="uid://crh7g3k80a01s" path="res://scripts/AmbientWindControll.gd" id="10_yqmvt"]
 [ext_resource type="AudioStream" uid="uid://co0tgnjj4ylil" path="res://resources/audio/viento_fuerte.mp3" id="11_2kgci"]
 [ext_resource type="AudioStream" uid="uid://cxpobmpa53gue" path="res://resources/audio/viento_suave.mp3" id="12_mxmwd"]
@@ -24,6 +24,7 @@ size = Vector3(20, 0.5, 20)
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_yqmvt"]
 render_priority = 0
 shader = ExtResource("9_bc5n3")
+shader_parameter/dither_amount = 0.0
 
 [sub_resource type="QuadMesh" id="QuadMesh_o8nxa"]
 flip_faces = true
