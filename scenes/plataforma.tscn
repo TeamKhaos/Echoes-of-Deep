@@ -28,6 +28,19 @@ size = Vector3(20, 0.5, 20)
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_yqmvt"]
 render_priority = 0
 shader = ExtResource("9_bc5n3")
+shader_parameter/color_profundidad = 16.0
+shader_parameter/dither_amount = 0.5
+shader_parameter/brightness_threshold = 1.2
+shader_parameter/preserve_bright_pixels = true
+shader_parameter/shadow_brightness = 0.15
+shader_parameter/outline_thickness = 2.0
+shader_parameter/outline_threshold = 0.05
+shader_parameter/outline_color = Color(1, 1, 1, 1)
+shader_parameter/outline_intensity = 1.5
+shader_parameter/use_depth_outline = true
+shader_parameter/use_normal_outline = true
+shader_parameter/depth_sensitivity = 40.0
+shader_parameter/sonar_mode = false
 
 [sub_resource type="QuadMesh" id="QuadMesh_o8nxa"]
 flip_faces = true
