@@ -6,7 +6,7 @@ extends CharacterBody3D
 @onready var collision_shape = $CollisionShape3D
 @onready var player_hud = $PlayerHUD
 @onready var voice_controller = $Voice
-@onready var voiceparticle = $VoiceWave
+@onready var sonar = $Sonar
 
 @onready var hud = $PlayerHUD/hud
 @onready var object_marker = $Pivot/Camera3D/ObjectMarker
@@ -174,9 +174,9 @@ func _process(_delta):
 		voice_controller.toggle_microphone()
 	
 	if voice_controller.is_active():
-		voiceparticle.visible = true
+		sonar.visible = true
 	else:
-		voiceparticle.visible = false
+		sonar.visible = false
 	
 	if Input.is_key_pressed(KEY_R):
 		_try_consume_held_item()

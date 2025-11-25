@@ -1,7 +1,7 @@
-[gd_scene load_steps=12 format=3 uid="uid://0n2ppdjdgm7e"]
+[gd_scene load_steps=15 format=3 uid="uid://0n2ppdjdgm7e"]
 
 [ext_resource type="Script" uid="uid://bn6v4om706bah" path="res://scripts/player/player.gd" id="1_3vyb7"]
-[ext_resource type="AudioStream" uid="uid://dxtn8b4s08tbm" path="res://resources/audio/pasos.mp3" id="2_fm80t"]
+[ext_resource type="AudioStream" uid="uid://c33l5d33cmkg8" path="res://resources/audio/pasos.mp3" id="2_fm80t"]
 [ext_resource type="Script" uid="uid://dxyjryo76ydaf" path="res://scripts/player/pivot.gd" id="2_g2els"]
 [ext_resource type="Script" uid="uid://v5yco4th2db3" path="res://scripts/player/mouse_ray_cast.gd" id="3_dqkch"]
 [ext_resource type="Script" uid="uid://bylygc04apr34" path="res://scripts/player/interaction_handler.gd" id="3_qhqgy"]
@@ -9,18 +9,39 @@
 [ext_resource type="PackedScene" uid="uid://qqki4f1idp4p" path="res://scenes/player/player_arms.tscn" id="4_75vfm"]
 [ext_resource type="PackedScene" uid="uid://cu3maytsanx4s" path="res://scenes/player/voice.tscn" id="6_qek5x"]
 [ext_resource type="PackedScene" uid="uid://c1118cqtdm1xd" path="res://scenes/player/hud/hud.tscn" id="7_0owmy"]
-[ext_resource type="PackedScene" path="res://scenes/scenary_objects/voz prueba.tscn" id="10_je7p5"]
 [ext_resource type="PackedScene" uid="uid://d8md2xjyxxb0" path="res://scenes/pause_menu.tscn" id="11_pause"]
+[ext_resource type="Shader" uid="uid://be8jh6fto5804" path="res://resources/materials/postprocesado.gdshader" id="12_fm80t"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_u8vuu"]
 radius = 0.2
 height = 1.7
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_gx1jg"]
+render_priority = 0
+shader = ExtResource("12_fm80t")
+shader_parameter/color_profundidad = 16.0
+shader_parameter/dither_amount = 0.5
+shader_parameter/brightness_threshold = 1.2
+shader_parameter/preserve_bright_pixels = true
+shader_parameter/shadow_brightness = 0.15
+shader_parameter/outline_thickness = 2.0
+shader_parameter/outline_threshold = 0.05
+shader_parameter/outline_color = Color(1, 1, 1, 1)
+shader_parameter/outline_intensity = 1.5
+shader_parameter/use_depth_outline = true
+shader_parameter/use_normal_outline = true
+shader_parameter/depth_sensitivity = 40.0
+shader_parameter/sonar_mode = false
+
+[sub_resource type="QuadMesh" id="QuadMesh_ugbui"]
+flip_faces = true
+size = Vector2(2, 2)
+
 [node name="Player" type="CharacterBody3D" groups=["player"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8527156, 0)
 script = ExtResource("1_3vyb7")
 footstep_sound = ExtResource("2_fm80t")
-footstep_volume_db = 10.0
+footstep_volume_db = 1.0
 
 [node name="Pivot" type="Node3D" parent="."]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0.5366583, 0)
@@ -56,21 +77,16 @@ hud = NodePath("../PlayerHUD/hud")
 
 [node name="FootstepsPlayer" type="AudioStreamPlayer3D" parent="."]
 
-[node name="CheckFloorMaterialRay" type="RayCast3D" parent="."]
-
-[node name="StairsRaycast" type="RayCast3D" parent="."]
-unique_name_in_owner = true
-
-[node name="VoiceWave" parent="." instance=ExtResource("10_je7p5")]
-visible = false
-script = null
-
-[node name="StairsBelowRaycast" type="RayCast3D" parent="."]
-unique_name_in_owner = true
-
 [node name="PlayerHUD" type="CanvasLayer" parent="."]
 
 [node name="hud" parent="PlayerHUD" instance=ExtResource("7_0owmy")]
 
-[connection signal="timeout" from="FootstepsTimer" to="." method="_on_footsteps_timer_timeout"]
 [node name="PauseMenu" parent="." instance=ExtResource("11_pause")]
+
+[node name="Sonar" type="MeshInstance3D" parent="."]
+visible = false
+material_override = SubResource("ShaderMaterial_gx1jg")
+extra_cull_margin = 16384.0
+mesh = SubResource("QuadMesh_ugbui")
+
+[connection signal="timeout" from="FootstepsTimer" to="." method="_on_footsteps_timer_timeout"]
