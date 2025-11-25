@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://dahqqm6cbn4yf"]
+[gd_scene load_steps=6 format=3 uid="uid://dahqqm6cbn4yf"]
 
 [ext_resource type="Script" uid="uid://c77qmqqkawhyt" path="res://scripts/main_menu.gd" id="1_l6cm7"]
 [ext_resource type="Texture2D" uid="uid://cn7ja2j2kipn7" path="res://resources/images/Dev Studio.png" id="2_bqqt6"]
 [ext_resource type="Texture2D" uid="uid://bs4jfcy8fupf4" path="res://resources/images/Game Off.png" id="3_wu84c"]
 [ext_resource type="AudioStream" uid="uid://dv2q533pp4u6r" path="res://resources/audio/menu_music.ogg" id="4_wu84c"]
+[ext_resource type="VideoStream" uid="uid://cax8qqaplepm8" path="res://resources/video/intro.ogv" id="5_8ln24"]
 
 [node name="MainMenu" type="Control"]
 layout_mode = 3
@@ -16,6 +17,28 @@ script = ExtResource("1_l6cm7")
 developer_logo = ExtResource("2_bqqt6")
 gamejam_logo = ExtResource("3_wu84c")
 menu_music = ExtResource("4_wu84c")
+
+[node name="VideoBackground" type="VideoStreamPlayer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+stream = ExtResource("5_8ln24")
+expand = true
+loop = true
+
+[node name="VideoOverlay" type="ColorRect" parent="VideoBackground"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0.15686275)
 
 [node name="Background" type="ColorRect" parent="."]
 layout_mode = 1

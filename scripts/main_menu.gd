@@ -18,6 +18,11 @@ extends Control
 @export var button_hover_sound: AudioStream
 @export var button_click_sound: AudioStream
 
+# 🎬 Configuración de video
+@export_group("Video Background")
+@export var enable_video_background: bool = true
+@export_range(0.0, 1.0, 0.1) var video_overlay_opacity: float = 0.4
+
 # Nodos
 @onready var credits_panel = $CreditsPanel
 @onready var options_panel = $OptionsPanel
@@ -25,7 +30,12 @@ extends Control
 @onready var developer_logo_node = $DeveloperLogo
 @onready var gamejam_logo_node = $GameJamLogo
 @onready var background_texture = $Background/BackgroundTexture
+@onready var background_rect = $Background
 @onready var music_player = $AudioStreamPlayer
+
+# 🎬 Nodos de video (opcionales)
+@onready var video_background: VideoStreamPlayer = $VideoBackground if has_node("VideoBackground") else null
+@onready var video_overlay: ColorRect = $VideoBackground/VideoOverlay if has_node("VideoBackground/VideoOverlay") else null
 
 # Sliders de volumen
 @onready var master_volume_slider = $OptionsPanel/CenterContainer/VBoxContainer/MasterVolumeSlider
@@ -44,6 +54,9 @@ func _ready():
 	# Configurar cursor
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	
+	# Configurar video de fondo
+	_setup_video_background()
+	
 	# Cargar recursos visuales
 	_load_visual_resources()
 	
@@ -57,7 +70,61 @@ func _ready():
 	
 	# Configurar hover effects en botones
 	_setup_button_effects()
+
+# ===============================
+# 🎬 SISTEMA DE VIDEO DE FONDO
+# ===============================
+
+func _setup_video_background():
+	"""Configura el video de fondo si está disponible"""
 	
+	if not enable_video_background or not video_background:
+		# Si el video está desactivado o no existe, mostrar fondo estático
+		if background_rect:
+			background_rect.visible = true
+		return
+	
+	# Verificar que el video tenga un stream asignado
+	if video_background.stream:
+		# Configurar el video
+		video_background.autoplay = true
+		video_background.loop = true
+		video_background.expand = true
+		
+		# Silenciar el video (usaremos la música del menú)
+		video_background.volume_db = -80.0
+		
+		# Reproducir el video
+		video_background.play()
+		
+		# Conectar señal para reiniciar si termina (por si loop falla)
+		if not video_background.finished.is_connected(_on_video_finished):
+			video_background.finished.connect(_on_video_finished)
+		
+		# Ocultar el fondo estático
+		if background_rect:
+			background_rect.visible = false
+		
+		# Configurar overlay oscuro
+		if video_overlay:
+			video_overlay.color = Color(0, 0, 0, video_overlay_opacity)
+			video_overlay.visible = true
+		
+		print("🎬 Video de fondo configurado correctamente")
+	else:
+		# Si no hay video asignado, mostrar fondo estático
+		if background_rect:
+			background_rect.visible = true
+		push_warning("⚠️ VideoBackground existe pero no tiene stream asignado")
+
+func _on_video_finished():
+	"""Reinicia el video cuando termina (backup por si loop falla)"""
+	if video_background and video_background.stream:
+		video_background.play()
+
+# ===============================
+# CONFIGURACIÓN VISUAL
+# ===============================
 
 func _load_visual_resources():
 	# Cargar logo del desarrollador
@@ -68,8 +135,8 @@ func _load_visual_resources():
 	if gamejam_logo and gamejam_logo_node:
 		gamejam_logo_node.texture = gamejam_logo
 	
-	# Cargar imagen de fondo
-	if background_image and background_texture:
+	# Cargar imagen de fondo (solo si no hay video)
+	if background_image and background_texture and not (enable_video_background and video_background):
 		background_texture.texture = background_image
 		background_texture.visible = true
 
@@ -142,12 +209,15 @@ func _on_master_volume_changed(value: float):
 
 func _on_music_volume_changed(value: float):
 	var db = linear_to_db(value)
-	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Music"), db)
+	var music_bus = AudioServer.get_bus_index("Music")
+	if music_bus != -1:
+		AudioServer.set_bus_volume_db(music_bus, db)
 	_save_settings()
 
 func _on_sfx_volume_changed(value: float):
 	var db = linear_to_db(value)
-	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("SFX"), db)
+	if AudioServer.get_bus_index("SFX") != -1:
+		AudioServer.set_bus_volume_db(AudioServer.get_bus_index("SFX"), db)
 	_save_settings()
 
 func _on_fullscreen_toggled(toggled_on: bool):
