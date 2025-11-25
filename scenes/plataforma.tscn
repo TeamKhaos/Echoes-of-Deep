@@ -25,6 +25,11 @@ size = Vector3(20, 0.5, 20)
 render_priority = 0
 shader = ExtResource("9_bc5n3")
 shader_parameter/dither_amount = 0.0
+shader_parameter/edge_threshold = 0.1
+shader_parameter/edge_softness = 0.3
+shader_parameter/brightness_threshold = 1.2
+shader_parameter/use_edge_detection = true
+shader_parameter/preserve_bright_pixels = true
 
 [sub_resource type="QuadMesh" id="QuadMesh_o8nxa"]
 flip_faces = true
