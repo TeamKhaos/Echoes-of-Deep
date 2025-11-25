@@ -10,11 +10,11 @@
 [ext_resource type="PackedScene" uid="uid://cjinoan3rfh77" path="res://scenes/scenary_cave/tunel_1.tscn" id="8_o8nxa"]
 [ext_resource type="Shader" uid="uid://be8jh6fto5804" path="res://resources/materials/postprocesado.gdshader" id="9_bc5n3"]
 [ext_resource type="Script" uid="uid://crh7g3k80a01s" path="res://scripts/AmbientWindControll.gd" id="10_yqmvt"]
-[ext_resource type="AudioStream" uid="uid://co0tgnjj4ylil" path="res://resources/audio/viento_fuerte.mp3" id="11_2kgci"]
-[ext_resource type="AudioStream" uid="uid://cxpobmpa53gue" path="res://resources/audio/viento_suave.mp3" id="12_mxmwd"]
-[ext_resource type="Script" uid="uid://dsoj5j6phbx5a" path="res://scripts/ItemAudioController.gd" id="13_mxmwd"]
-[ext_resource type="AudioStream" path="res://resources/audio/tomar_item.mp3" id="14_34t2b"]
-[ext_resource type="AudioStream" path="res://resources/audio/soltar item.mp3" id="15_dua2e"]
+[ext_resource type="AudioStream" uid="uid://c52fv2m553jn3" path="res://resources/audio/viento_fuerte.mp3" id="11_2kgci"]
+[ext_resource type="AudioStream" uid="uid://c0jno4xp7bac2" path="res://resources/audio/viento_suave.mp3" id="12_mxmwd"]
+[ext_resource type="Script" path="res://scripts/ItemAudioController.gd" id="13_mxmwd"]
+[ext_resource type="AudioStream" uid="uid://dkisj0jap0h0r" path="res://resources/audio/pickup.mp3" id="14_34t2b"]
+[ext_resource type="AudioStream" uid="uid://bauivodcj556c" path="res://resources/audio/drop.mp3" id="15_dua2e"]
 [ext_resource type="AudioStream" uid="uid://07gs5dl0xh07" path="res://resources/audio/comer.mp3" id="16_vh305"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ij1v8"]
@@ -28,6 +28,19 @@ size = Vector3(20, 0.5, 20)
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_yqmvt"]
 render_priority = 0
 shader = ExtResource("9_bc5n3")
+shader_parameter/color_profundidad = 16.0
+shader_parameter/dither_amount = 0.5
+shader_parameter/brightness_threshold = 1.2
+shader_parameter/preserve_bright_pixels = true
+shader_parameter/shadow_brightness = 0.15
+shader_parameter/outline_thickness = 2.5
+shader_parameter/outline_threshold = 0.05
+shader_parameter/outline_color = Color(1, 1, 1, 1)
+shader_parameter/outline_intensity = 1.5
+shader_parameter/use_depth_outline = true
+shader_parameter/use_normal_outline = true
+shader_parameter/depth_sensitivity = 40.0
+shader_parameter/sonar_mode = false
 
 [sub_resource type="QuadMesh" id="QuadMesh_o8nxa"]
 flip_faces = true
