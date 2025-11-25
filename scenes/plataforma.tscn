@@ -47,6 +47,22 @@ mesh = SubResource("BoxMesh_ij1v8")
 [node name="Player" parent="." instance=ExtResource("1_bc5n3")]
 transform = Transform3D(0.009354769, 0, -0.99995625, 0, 1, 0, 0.99995625, 0, 0.009354769, 0, 0.8527156, 5.840806)
 
+[node name="ItemAudioController" type="Node3D" parent="Player"]
+transform = Transform3D(0.009354769, 0, 0.99995625, 0, 1, 0, -0.99995625, 0, 0.009354769, -5.8405504, -0.8527156, -0.05463939)
+script = ExtResource("13_mxmwd")
+volume = 1.0
+
+[node name="PickupSound" type="AudioStreamPlayer3D" parent="Player/ItemAudioController"]
+stream = ExtResource("14_34t2b")
+
+[node name="DropSound" type="AudioStreamPlayer3D" parent="Player/ItemAudioController"]
+stream = ExtResource("15_dua2e")
+
+[node name="EatSound" type="AudioStreamPlayer3D" parent="Player/ItemAudioController"]
+stream = ExtResource("16_vh305")
+
+[node name="DrinkSound" type="AudioStreamPlayer3D" parent="Player/ItemAudioController"]
+
 [node name="Area3D" type="Area3D" parent="." groups=["reverb_zone"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.35051894, -6.5081606)
 
@@ -96,18 +112,3 @@ max_distance = 50.0
 [node name="WindSoft" type="AudioStreamPlayer3D" parent="AmbientWindController"]
 stream = ExtResource("12_mxmwd")
 max_distance = 50.0
-
-[node name="ItemAudioController" type="Node3D" parent="."]
-script = ExtResource("13_mxmwd")
-volume = 1.0
-
-[node name="PickupSound" type="AudioStreamPlayer3D" parent="ItemAudioController"]
-stream = ExtResource("14_34t2b")
-
-[node name="DropSound" type="AudioStreamPlayer3D" parent="ItemAudioController"]
-stream = ExtResource("15_dua2e")
-
-[node name="EatSound" type="AudioStreamPlayer3D" parent="ItemAudioController"]
-stream = ExtResource("16_vh305")
-
-[node name="DrinkSound" type="AudioStreamPlayer3D" parent="ItemAudioController"]
