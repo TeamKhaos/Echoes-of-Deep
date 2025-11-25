@@ -38,6 +38,11 @@ func set_highlight(active: bool):
 
 func mouse_interaction(player):
 	set_highlight(false)
+	
+	# 🔊 SONIDO DE PICKUP
+	if player.has_node("ItemAudioController"):
+		player.get_node("ItemAudioController").play_pickup_sound()
+	
 	player.add_to_inventory(item_id)
 	
 	var object_marker = player.object_marker

@@ -15,6 +15,9 @@ extends CharacterBody3D
 @onready var footsteps_player = $FootstepsPlayer
 @onready var footsteps_timer = $FootstepsTimer
 
+@onready var item_audio = $ItemAudioController
+
+
 # ⏸️ Menú de pausa
 @onready var pause_menu = $PauseMenu
 
@@ -182,6 +185,10 @@ func _process(_delta):
 		if object_marker.get_child_count() > 0:
 			var held_item = object_marker.get_child(0)
 			if held_item.has_method("drop"):
+				# 🔊 SONIDO DE SOLTAR
+				if item_audio:
+					item_audio.play_drop_sound()
+				
 				if "item_id" in held_item:
 					remove_from_inventory(held_item.item_id)
 				held_item.drop(object_marker.global_transform)
@@ -206,20 +213,32 @@ func _try_consume_held_item():
 		return
 	
 	if object_marker.get_child_count() == 0:
+		print("⚠️ No tienes nada en la mano para consumir")
 		return
 	
 	var held_item = object_marker.get_child(0)
 	
 	if not held_item.has_method("consume"):
+		print("⚠️ Este ítem NO tiene el método consume()")
 		return
 	
 	if "is_consumable" in held_item:
 		if not held_item.is_consumable:
+			print("⚠️ Este ítem no es consumible")
 			return
+	
+	# 🔊 SONIDO DE CONSUMIR
+	if item_audio and "item_id" in held_item:
+		var item_id = held_item.item_id.to_lower()
+		if item_id.contains("agua") or item_id.contains("water"):
+			item_audio.play_drink_sound()
+		else:
+			item_audio.play_eat_sound()
 	
 	var success = held_item.consume(self)
 	
 	if success:
+		print("✅ Ítem consumido exitosamente")
 		if "item_id" in held_item:
 			remove_from_inventory(held_item.item_id)
 

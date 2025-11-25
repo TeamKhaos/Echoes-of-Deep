@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://c6fhcls1wqh8"]
+[gd_scene load_steps=22 format=3 uid="uid://c6fhcls1wqh8"]
 
 [ext_resource type="PackedScene" uid="uid://0n2ppdjdgm7e" path="res://scenes/player/player.tscn" id="1_bc5n3"]
 [ext_resource type="PackedScene" uid="uid://b73eyetc8mca0" path="res://scenes/objets/palo.tscn" id="2_4jb62"]
@@ -10,8 +10,12 @@
 [ext_resource type="PackedScene" uid="uid://cjinoan3rfh77" path="res://scenes/scenary_cave/tunel_1.tscn" id="8_o8nxa"]
 [ext_resource type="Shader" uid="uid://be8jh6fto5804" path="res://resources/materials/postprocesado.gdshader" id="9_bc5n3"]
 [ext_resource type="Script" uid="uid://crh7g3k80a01s" path="res://scripts/AmbientWindControll.gd" id="10_yqmvt"]
-[ext_resource type="AudioStream" uid="uid://c52fv2m553jn3" path="res://resources/audio/viento_fuerte.mp3" id="11_2kgci"]
-[ext_resource type="AudioStream" uid="uid://c0jno4xp7bac2" path="res://resources/audio/viento_suave.mp3" id="12_mxmwd"]
+[ext_resource type="AudioStream" uid="uid://co0tgnjj4ylil" path="res://resources/audio/viento_fuerte.mp3" id="11_2kgci"]
+[ext_resource type="AudioStream" uid="uid://cxpobmpa53gue" path="res://resources/audio/viento_suave.mp3" id="12_mxmwd"]
+[ext_resource type="Script" uid="uid://dsoj5j6phbx5a" path="res://scripts/ItemAudioController.gd" id="13_mxmwd"]
+[ext_resource type="AudioStream" path="res://resources/audio/tomar_item.mp3" id="14_34t2b"]
+[ext_resource type="AudioStream" path="res://resources/audio/soltar item.mp3" id="15_dua2e"]
+[ext_resource type="AudioStream" uid="uid://07gs5dl0xh07" path="res://resources/audio/comer.mp3" id="16_vh305"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ij1v8"]
 size = Vector3(20, 0.5, 20)
@@ -24,12 +28,6 @@ size = Vector3(20, 0.5, 20)
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_yqmvt"]
 render_priority = 0
 shader = ExtResource("9_bc5n3")
-shader_parameter/dither_amount = 0.0
-shader_parameter/edge_threshold = 0.1
-shader_parameter/edge_softness = 0.3
-shader_parameter/brightness_threshold = 1.2
-shader_parameter/use_edge_detection = true
-shader_parameter/preserve_bright_pixels = true
 
 [sub_resource type="QuadMesh" id="QuadMesh_o8nxa"]
 flip_faces = true
@@ -98,3 +96,18 @@ max_distance = 50.0
 [node name="WindSoft" type="AudioStreamPlayer3D" parent="AmbientWindController"]
 stream = ExtResource("12_mxmwd")
 max_distance = 50.0
+
+[node name="ItemAudioController" type="Node3D" parent="."]
+script = ExtResource("13_mxmwd")
+volume = 1.0
+
+[node name="PickupSound" type="AudioStreamPlayer3D" parent="ItemAudioController"]
+stream = ExtResource("14_34t2b")
+
+[node name="DropSound" type="AudioStreamPlayer3D" parent="ItemAudioController"]
+stream = ExtResource("15_dua2e")
+
+[node name="EatSound" type="AudioStreamPlayer3D" parent="ItemAudioController"]
+stream = ExtResource("16_vh305")
+
+[node name="DrinkSound" type="AudioStreamPlayer3D" parent="ItemAudioController"]
