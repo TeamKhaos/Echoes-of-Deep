@@ -110,6 +110,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.35051894, -6.5081606)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.936312, 2.975579, -0.4726367)
 
 [node name="PantallaFiltro" type="MeshInstance3D" parent="."]
+visible = false
 material_override = SubResource("ShaderMaterial_yqmvt")
 extra_cull_margin = 16384.0
 mesh = SubResource("QuadMesh_o8nxa")

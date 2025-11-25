@@ -1,7 +1,7 @@
-[gd_scene load_steps=12 format=3 uid="uid://0n2ppdjdgm7e"]
+[gd_scene load_steps=13 format=3 uid="uid://0n2ppdjdgm7e"]
 
 [ext_resource type="Script" uid="uid://bn6v4om706bah" path="res://scripts/player/player.gd" id="1_3vyb7"]
-[ext_resource type="AudioStream" uid="uid://dxtn8b4s08tbm" path="res://resources/audio/pasos.mp3" id="2_fm80t"]
+[ext_resource type="AudioStream" uid="uid://cehsgt0fa8cuq" path="res://resources/audio/pasos.mp3" id="2_fm80t"]
 [ext_resource type="Script" uid="uid://dxyjryo76ydaf" path="res://scripts/player/pivot.gd" id="2_g2els"]
 [ext_resource type="Script" uid="uid://v5yco4th2db3" path="res://scripts/player/mouse_ray_cast.gd" id="3_dqkch"]
 [ext_resource type="Script" uid="uid://bylygc04apr34" path="res://scripts/player/interaction_handler.gd" id="3_qhqgy"]
@@ -9,7 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://qqki4f1idp4p" path="res://scenes/player/player_arms.tscn" id="4_75vfm"]
 [ext_resource type="PackedScene" uid="uid://cu3maytsanx4s" path="res://scenes/player/voice.tscn" id="6_qek5x"]
 [ext_resource type="PackedScene" uid="uid://c1118cqtdm1xd" path="res://scenes/player/hud/hud.tscn" id="7_0owmy"]
-[ext_resource type="PackedScene" path="res://scenes/scenary_objects/voz prueba.tscn" id="10_je7p5"]
+[ext_resource type="PackedScene" uid="uid://bcu48jnv386ea" path="res://scenes/scenary_objects/voz prueba.tscn" id="10_je7p5"]
 [ext_resource type="PackedScene" uid="uid://d8md2xjyxxb0" path="res://scenes/pause_menu.tscn" id="11_pause"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_u8vuu"]
@@ -72,5 +72,6 @@ unique_name_in_owner = true
 
 [node name="hud" parent="PlayerHUD" instance=ExtResource("7_0owmy")]
 
-[connection signal="timeout" from="FootstepsTimer" to="." method="_on_footsteps_timer_timeout"]
 [node name="PauseMenu" parent="." instance=ExtResource("11_pause")]
+
+[connection signal="timeout" from="FootstepsTimer" to="." method="_on_footsteps_timer_timeout"]
