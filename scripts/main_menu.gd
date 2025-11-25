@@ -105,6 +105,7 @@ func _on_button_new_game_pressed():
 	if ResourceLoader.exists(demo_scene_path):
 		get_tree().change_scene_to_file(demo_scene_path)
 	else:
+		print("exit")
 
 func _on_button_load_game_pressed():
 	_play_button_sound()
