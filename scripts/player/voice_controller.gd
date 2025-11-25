@@ -14,7 +14,6 @@ func _ready():
 	mic_player.bus = "VoiceBus"
 	mic_player.stop()
 
-	print("🎤 Dispositivo de entrada actual:", AudioServer.input_device)
 
 	# Conectar detección de zonas de reverb
 	reverb_area.connect("area_entered", Callable(self, "_on_area_entered"))
@@ -32,7 +31,6 @@ func toggle_microphone():
 # 🔹 Detecta entrada a zona de reverb
 func _on_area_entered(area: Area3D):
 	if area.is_in_group("reverb_zone"):
-		print("🎤 area de reverb")
 		in_reverb_zone = true
 		var bus_index = AudioServer.get_bus_index("VoiceBus")
 		AudioServer.set_bus_effect_enabled(bus_index, 0, true)
@@ -40,7 +38,6 @@ func _on_area_entered(area: Area3D):
 # 🔹 Detecta salida de zona de reverb
 func _on_area_exited(area: Area3D):
 	if area.is_in_group("reverb_zone"):
-		print("🎤 area de reverb salida")
 		in_reverb_zone = false
 		var bus_index = AudioServer.get_bus_index("VoiceBus")
 		AudioServer.set_bus_effect_enabled(bus_index, 0, false)

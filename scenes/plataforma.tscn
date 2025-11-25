@@ -10,8 +10,8 @@
 [ext_resource type="PackedScene" uid="uid://cjinoan3rfh77" path="res://scenes/scenary_cave/tunel_1.tscn" id="8_o8nxa"]
 [ext_resource type="Shader" uid="uid://be8jh6fto5804" path="res://resources/materials/postprocesado.gdshader" id="9_bc5n3"]
 [ext_resource type="Script" uid="uid://crh7g3k80a01s" path="res://scripts/AmbientWindControll.gd" id="10_yqmvt"]
-[ext_resource type="AudioStream" uid="uid://co0tgnjj4ylil" path="res://resources/audio/viento_fuerte.mp3" id="11_2kgci"]
-[ext_resource type="AudioStream" uid="uid://cxpobmpa53gue" path="res://resources/audio/viento_suave.mp3" id="12_mxmwd"]
+[ext_resource type="AudioStream" uid="uid://c52fv2m553jn3" path="res://resources/audio/viento_fuerte.mp3" id="11_2kgci"]
+[ext_resource type="AudioStream" uid="uid://c0jno4xp7bac2" path="res://resources/audio/viento_suave.mp3" id="12_mxmwd"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ij1v8"]
 size = Vector3(20, 0.5, 20)
@@ -85,7 +85,6 @@ mesh = SubResource("QuadMesh_o8nxa")
 [node name="AmbientWindController" type="Node3D" parent="." node_paths=PackedStringArray("player")]
 script = ExtResource("10_yqmvt")
 player = NodePath("../Player")
-metadata/_custom_type_script = "uid://crh7g3k80a01s"
 
 [node name="WindStrong" type="AudioStreamPlayer3D" parent="AmbientWindController"]
 stream = ExtResource("11_2kgci")

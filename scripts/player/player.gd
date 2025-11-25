@@ -69,8 +69,6 @@ func _ready():
 		call_deferred("add_child", inventory_instance)
 	
 	var inv_node = inventory_instance.get_node_or_null("Inventory") 
-	var items = inv_node.get_items()
-	print("🔹 Total de ítems en inventario: funcion de player ", items)
 	
 	hud.set_inventory(inv_node)
 	voice_controller.microphone_toggled.connect(hud._on_microphone_toggled)
@@ -97,62 +95,41 @@ func _setup_footsteps():
 		footsteps_timer.wait_time = base_footstep_interval
 		if not footsteps_timer.is_connected("timeout", Callable(self, "_on_footsteps_timer_timeout")):
 			footsteps_timer.connect("timeout", Callable(self, "_on_footsteps_timer_timeout"))
-	
-	
 
 func equip_item_from_slot(slot_index: int):
-	print("--- equip_item_from_slot called for slot: ", slot_index, " ---")
 	var inv_node = inventory_instance.get_node_or_null("Inventory")
 	if not inv_node:
-		print("DEBUG: ⚠️ Inventory node not found.")
 		return
-	print("DEBUG: Inventory node found.")
 
 	var items = inv_node.get_items()
 	if slot_index >= items.size():
-		print("DEBUG: ⚠️ Slot ", slot_index, " is empty or out of bounds. Items in inventory: ", items.size())
 		return
-	print("DEBUG: Item found in slot ", slot_index, ". Total items: ", items.size())
 
 	var item_to_equip_from_inventory = items[slot_index]
 	var item_id_to_equip = ""
 	if item_to_equip_from_inventory and item_to_equip_from_inventory.has_method("get_prototype"):
 		item_id_to_equip = item_to_equip_from_inventory.get_prototype().get("_id")
-	print("DEBUG: Item to equip ID: ", item_id_to_equip)
 
 	if object_marker.get_child_count() > 0:
-		print("DEBUG: Object marker has children. Clearing held item.")
 		for child in object_marker.get_children():
 			child.queue_free()
-	else:
-		print("DEBUG: Object marker is empty. No item in hand.")
 
 	var proto = item_to_equip_from_inventory.get_prototype()
 	if not proto or not proto.has_method("get"):
-		print("DEBUG: ⚠️ Item prototype not found or missing 'get' method.")
 		return
-	print("DEBUG: Item prototype found.")
 
 	var props = proto.get("_properties")
 	if typeof(props) != TYPE_DICTIONARY or not props.has("scene"):
-		print("DEBUG: ⚠️ Item prototype is missing 'scene' property for item: ", item_id_to_equip)
 		return
-	print("DEBUG: Item properties and 'scene' property found.")
 
 	var scene_path = props["scene"]
-	print("DEBUG: Scene path for item: ", scene_path)
 	var item_scene = load(scene_path)
 	if not item_scene:
-		print("DEBUG: ⚠️ Failed to load item scene: ", scene_path)
 		return
-	print("DEBUG: Item scene loaded successfully.")
 
-	print("DEBUG: Instantiating new item.")
 	var new_item_instance = item_scene.instantiate()
 	object_marker.add_child(new_item_instance)
-	print("DEBUG: New item instantiated and added to object marker.")
 
-	print("DEBUG: Configuring new item's state.")
 	if new_item_instance.has_method("set_held_transform"):
 		new_item_instance.set_held_transform()
 	else:
@@ -163,9 +140,6 @@ func equip_item_from_slot(slot_index: int):
 		new_item_instance.freeze = true
 		new_item_instance.set_collision_layer_value(1, false)
 		new_item_instance.set_collision_mask_value(1, false)
-		print("DEBUG: Item is RigidBody3D. Freeze set and collision disabled.")
-	
-	print("DEBUG: New item state configured. --- End equip_item_from_slot ---")
 
 func _physics_process(delta):
 	if is_on_floor(): _last_frame_was_on_floor = Engine.get_physics_frames()
@@ -232,30 +206,22 @@ func _try_consume_held_item():
 		return
 	
 	if object_marker.get_child_count() == 0:
-		print("⚠️ No tienes nada en la mano para consumir")
 		return
 	
 	var held_item = object_marker.get_child(0)
 	
 	if not held_item.has_method("consume"):
-		print("⚠️ Este ítem NO tiene el método consume()")
 		return
 	
 	if "is_consumable" in held_item:
 		if not held_item.is_consumable:
-			print("⚠️ Este ítem no es consumible")
 			return
 	
 	var success = held_item.consume(self)
 	
 	if success:
-		print("✅ Ítem consumido exitosamente")
 		if "item_id" in held_item:
 			remove_from_inventory(held_item.item_id)
-
-
-
-
 
 func is_surface_too_step(normal : Vector3):
 	return normal.angle_to(Vector3.UP) > self.floor_max_angle
@@ -280,9 +246,7 @@ func move(delta, input):
 		velocity.x = lerp(velocity.x, 0.0, desaceleration)
 		velocity.z = lerp(velocity.z, 0.0, desaceleration)
 	
-
 	move_and_slide()
-		
 
 func _play_footsteps():
 	if not can_footstep or not footsteps_player:
@@ -349,17 +313,14 @@ func activate():
 
 func add_to_inventory(item_id: String):
 	if not inventory_instance:
-		print("⚠️ Inventario no instanciado")
 		return
 
 	var inv_node = inventory_instance.get_node_or_null("Inventory")
 	if not inv_node:
-		print("⚠️ No se encontró el nodo InventoryPlayer dentro del inventario")
 		return
 
 	var protoset = load("res://resources/json/inventario.json")
 	if not protoset:
-		print("⚠️ No se pudo cargar el protoset de ítems")
 		return
 
 	var new_item := InventoryItem.new(protoset, item_id)
@@ -367,23 +328,15 @@ func add_to_inventory(item_id: String):
 	if inv_node.has_method("add_item"):
 		var success = inv_node.add_item(new_item)
 		if success:
-			print("📦 Añadido al inventario:", item_id)
 			if hud:
 				hud.set_inventory(inv_node)
-				print("🖼️ HUD actualizado tras añadir:", item_id)
-		else:
-			print("⚠️ No se pudo añadir el ítem (inventario lleno o inválido)")
-	else:
-		print("⚠️ El nodo InventoryPlayer no tiene el método add_item()")
 
 func remove_from_inventory(item_id: String):
 	if not inventory_instance:
-		print("⚠️ Inventario no instanciado")
 		return
 
 	var inv_node = inventory_instance.get_node_or_null("Inventory")
 	if not inv_node:
-		print("⚠️ No se encontró el nodo InventoryPlayer dentro del inventario")
 		return
 
 	if inv_node.has_method("get_items") and inv_node.has_method("remove_item"):
@@ -391,14 +344,9 @@ func remove_from_inventory(item_id: String):
 		for item in items:
 			if "_prototype" in item and item._prototype != null and "_id" in item._prototype and item._prototype._id == item_id:
 				inv_node.remove_item(item)
-				print("📦 Removido del inventario:", item_id)
 				if hud:
 					hud.set_inventory(inv_node)
-					print("🖼️ HUD actualizado tras remover:", item_id)
 				return
-		print("⚠️ No se encontró el ítem con id:", item_id, " en el inventario")
-	else:
-		print("⚠️ El nodo InventoryPlayer no tiene los métodos get_items() o remove_item()")
 
 func take_damage(amount: int):
 	current_health -= amount
@@ -417,4 +365,4 @@ func update_health_bar():
 		hud.set_health(current_health)
 
 func die():
-	print("💀 El jugador ha muerto")
+	pass

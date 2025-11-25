@@ -48,12 +48,10 @@ func mouse_interaction(player_node):
 		fuego_node.visible = is_lit
 	
 	if is_lit:
-		print("🔥 Fogata encendida")
 		# Actualizar jugadores que ya están en el área
 		for player in players_in_range:
 			_notify_player_light_status(player, true)
 	else:
-		print("💨 Fogata apagada")
 		# Notificar a jugadores que la luz se apagó
 		for player in players_in_range:
 			_notify_player_light_status(player, false)

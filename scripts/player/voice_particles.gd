@@ -10,10 +10,7 @@ func _ready():
 
 func _on_microphone_toggled(active: bool):
 	particles.emitting = active
-	if active:
-		print("💨 Partículas activadas por voz")
-	else:
-		print("💨 Partículas desactivadas por voz")
+
 
 func _process(delta: float) -> void:
 	if particles.emitting:

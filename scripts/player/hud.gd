@@ -76,7 +76,6 @@ func _refresh_hud():
 		return
 
 	var items = inventory_ref.get_items()
-	print("🔹 Total de ítems en inventario (HUD):", items.size())
 
 	hud_slot_1.texture = _get_item_icon(items, 0)
 	hud_slot_2.texture = _get_item_icon(items, 1)
@@ -138,7 +137,7 @@ func set_crosshair_interact(active: bool):
 # ===============================
 func show_interact_prompt(active: bool):
 	if _is_prompt_visible == active:
-		return # evita reiniciar el tween si no hay cambio
+		return
 	_is_prompt_visible = active
 
 	if _tween_prompt:
@@ -185,13 +184,14 @@ var _low_hunger_tween: Tween = null
 var hunger_warning_threshold := 20.0
 var hunger_warning_active := false
 
-# velocidad de descenso por segundo
-@export var hunger_decay_rate: float = 1.0  # baja 1 punto por segundo
+# Velocidad de descenso por segundo
+@export var hunger_decay_rate: float = 1.0
 
 func _process(delta: float):
 	_update_hunger(delta)
-	_process_sanity(delta)  # ✅ Agregar procesamiento de cordura
+	_process_sanity(delta)
 
+# 🍗 LÓGICA PRINCIPAL: Reducir hambre constantemente y actualizar barra
 func _update_hunger(delta: float):
 	hunger_value -= hunger_decay_rate * delta
 	hunger_value = clamp(hunger_value, hunger_min, hunger_max)
@@ -199,10 +199,11 @@ func _update_hunger(delta: float):
 	if hunger_bar:
 		hunger_bar.value = hunger_value
 	
-	# 🔥 activar o desactivar efecto visual según hambre (ESTA ERA LA LÍNEA FALTANTE)
+	# 🔥 Activar overlay de advertencia cuando hambre es baja
 	_update_hunger_warning(hunger_value <= hunger_warning_threshold)
 
 
+# 🔥 EFECTO VISUAL: Parpadeo rojo cuando hambre < 20
 func _update_hunger_warning(is_low: bool):
 	if hunger_warning_active == is_low:
 		return
@@ -213,21 +214,21 @@ func _update_hunger_warning(is_low: bool):
 		_low_hunger_tween.kill()
 	
 	if is_low:
-		print("🔴 ACTIVANDO PARPADEO ROJO - Hambre:", hunger_value)
+		# Crear loop infinito de parpadeo
 		_low_hunger_tween = create_tween()
-		_low_hunger_tween.set_loops(-1)  # Loop infinito
+		_low_hunger_tween.set_loops(-1)
 		_low_hunger_tween.tween_property(low_hunger_overlay,
 			"modulate:a", 0.25, 0.7)
 		_low_hunger_tween.tween_property(low_hunger_overlay,
 			"modulate:a", 0.05, 0.7)
 	else:
-		print("✅ DESACTIVANDO PARPADEO - Hambre:", hunger_value)
+		# Fade out suave
 		_low_hunger_tween = create_tween()
 		_low_hunger_tween.tween_property(low_hunger_overlay,
 			"modulate:a", 0.0, 0.4)
 
 
-# Función para restaurar hambre (llamada desde otros scripts, ej: al comer)
+# 🍎 FUNCIÓN PÚBLICA: Restaurar hambre (llamada desde ítems consumibles)
 func restore_hunger(amount: float):
 	hunger_value = clamp(hunger_value + amount, hunger_min, hunger_max)
 	if hunger_bar:
@@ -235,14 +236,13 @@ func restore_hunger(amount: float):
 	_update_hunger_warning(hunger_value <= hunger_warning_threshold)
 
 
-# ❤️ Restaurar vida
+# ❤️ FUNCIÓN PÚBLICA: Restaurar vida (llamada desde ítems consumibles)
 func restore_health(amount: float):
 	if not health_bar:
 		return
 	
 	var new_value = clamp(health_bar.value + amount, 0, health_bar.max_value)
 	health_bar.value = new_value
-	print("❤️ Vida restaurada a:", new_value)
 
 
 # ===============================
@@ -256,14 +256,15 @@ var sanity_min: float = 0.0
 var sanity_max: float = 100.0
 
 # Velocidades de cambio
-@export var sanity_decay_rate_dark: float = 2.0     # Baja 2 puntos/seg en oscuridad
-@export var sanity_restore_rate_light: float = 5.0  # Sube 5 puntos/seg cerca de luz
-@export var sanity_warning_threshold: float = 30.0  # Umbral de advertencia
+@export var sanity_decay_rate_dark: float = 2.0     # Pierde 2 puntos/seg en oscuridad
+@export var sanity_restore_rate_light: float = 5.0  # Gana 5 puntos/seg cerca de luz
+@export var sanity_warning_threshold: float = 30.0
 
 var is_near_light: bool = false
 var _sanity_warning_active: bool = false
 var _sanity_tween: Tween = null
 
+# 🧠 LÓGICA PRINCIPAL: Cambiar cordura según iluminación
 func _process_sanity(delta: float):
 	if is_near_light:
 		# Restaurar cordura cerca de luz
@@ -280,31 +281,28 @@ func _process_sanity(delta: float):
 	# Activar efectos visuales si cordura es baja
 	_update_sanity_warning(sanity_value <= sanity_warning_threshold)
 
+# 💡 FUNCIÓN PÚBLICA: Actualizar estado de iluminación (llamada desde detector de luz)
 func set_near_light(near_light: bool):
 	is_near_light = near_light
-	if near_light:
-		print("☀️ Cerca de luz - Restaurando cordura")
-	else:
-		print("🌑 En oscuridad - Perdiendo cordura")
 
+# 🧠 EFECTO VISUAL: Advertencia cuando cordura < 30 (implementar efectos aquí)
 func _update_sanity_warning(is_low: bool):
 	if _sanity_warning_active == is_low:
 		return
 	
 	_sanity_warning_active = is_low
 	
-	# Aquí puedes agregar efectos visuales para cordura baja
-	# Por ejemplo, distorsión de pantalla, viñeta, etc.
-	if is_low:
-		print("🧠 ⚠️ CORDURA BAJA:", sanity_value)
-	else:
-		print("🧠 ✅ Cordura estable:", sanity_value)
+	# TODO: Implementar efectos visuales para cordura baja
+	# - Distorsión de pantalla
+	# - Viñeta oscura
+	# - Efectos de sonido
+	# - Alucinaciones visuales
 
+# 🧠 FUNCIÓN PÚBLICA: Restaurar cordura manualmente
 func restore_sanity(amount: float):
 	sanity_value = clamp(sanity_value + amount, sanity_min, sanity_max)
 	if sanity_bar:
 		sanity_bar.value = sanity_value
-	print("🧠 Cordura restaurada a:", sanity_value)
 
 # ===============================
 # 🎙️ FUNCIONALIDAD DEL MICRÓFONO

@@ -9,11 +9,6 @@ var current_object : Node3D
 var already_interacted := false
 var last_interactable : Node3D = null
 
-func _ready():
-	if hud == null:
-		push_warning("⚠️ HUD no asignado en el Inspector. Arrastra el nodo HUD aquí.")
-	else:
-		print("✅ HUD asignado correctamente:", hud.name)
 
 
 func _process(_delta):

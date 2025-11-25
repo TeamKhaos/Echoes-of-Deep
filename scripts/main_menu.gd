@@ -58,7 +58,6 @@ func _ready():
 	# Configurar hover effects en botones
 	_setup_button_effects()
 	
-	print("🎮 Menú principal cargado")
 
 func _load_visual_resources():
 	# Cargar logo del desarrollador
@@ -97,7 +96,6 @@ func _on_button_hover(button: Button):
 # ===============================
 
 func _on_button_new_game_pressed():
-	print("🎮 Iniciando nueva partida...")
 	_play_button_sound()
 	
 	# Fade out opcional
@@ -107,30 +105,23 @@ func _on_button_new_game_pressed():
 	if ResourceLoader.exists(demo_scene_path):
 		get_tree().change_scene_to_file(demo_scene_path)
 	else:
-		print("⚠️ No se encontró la escena del juego en:", demo_scene_path)
 
 func _on_button_load_game_pressed():
-	print("📂 Cargando partida...")
 	_play_button_sound()
 	
 	if _save_exists():
 		_load_game()
-	else:
-		print("⚠️ No hay partidas guardadas")
-		# Aquí podrías mostrar un mensaje al jugador
+
 
 func _on_button_options_pressed():
-	print("⚙️ Abriendo opciones...")
 	_play_button_sound()
 	_show_panel(options_panel)
 
 func _on_button_credits_pressed():
-	print("📜 Mostrando créditos...")
 	_play_button_sound()
 	_show_panel(credits_panel)
 
 func _on_button_quit_pressed():
-	print("👋 Saliendo del juego...")
 	_play_button_sound()
 	await get_tree().create_timer(0.2).timeout
 	get_tree().quit()
@@ -187,13 +178,11 @@ func _load_game():
 		file.close()
 		
 		# Aquí cargarías los datos del jugador
-		print("✅ Partida cargada:", save_data)
 		
 		# Cambiar a la escena con los datos cargados
 		if ResourceLoader.exists(game_scene_path):
 			get_tree().change_scene_to_file(game_scene_path)
-	else:
-		print("❌ Error al cargar la partida")
+
 
 func _save_settings():
 	var config = ConfigFile.new()
