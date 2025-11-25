@@ -14,16 +14,30 @@ uniform float brightness_threshold : hint_range(0.5, 3.0, 0.1) = 1.2;
 uniform bool use_edge_detection = true;
 uniform bool preserve_bright_pixels = true;
 
-// Matriz de Bayer 4x4 para dithering
-const mat4 bayer_matrix = (1.0 / 16.0) * mat4(
-    vec4(0.0, 8.0, 2.0, 10.0),
-    vec4(12.0, 4.0, 14.0, 6.0),
-    vec4(3.0, 11.0, 1.0, 9.0),
-    vec4(15.0, 7.0, 13.0, 5.0)
-) - 0.5;
-
 void vertex() {
 	POSITION = vec4(VERTEX.xy, 1.0, 1.0);
+}
+
+// --- NUEVA IMPLEMENTACIÓN 8x8 ---
+// Función para obtener el valor de Bayer 8x8
+// Reemplaza a la matriz 4x4 anterior
+float get_bayer_8x8(ivec2 uv) {
+	const float bayer8[64] = float[](
+		0.0, 32.0, 8.0, 40.0, 2.0, 34.0, 10.0, 42.0,
+		48.0, 16.0, 56.0, 24.0, 50.0, 18.0, 58.0, 26.0,
+		12.0, 44.0, 4.0, 36.0, 14.0, 46.0, 6.0, 38.0,
+		60.0, 28.0, 52.0, 20.0, 62.0, 30.0, 54.0, 22.0,
+		3.0, 35.0, 11.0, 43.0, 1.0, 33.0, 9.0, 41.0,
+		51.0, 19.0, 59.0, 27.0, 49.0, 17.0, 57.0, 25.0,
+		15.0, 47.0, 7.0, 39.0, 13.0, 45.0, 5.0, 37.0,
+		63.0, 31.0, 55.0, 23.0, 61.0, 29.0, 53.0, 21.0
+	);
+	
+	// Calculamos el índice en el array plano basado en x e y
+	int index = (int(uv.y) % 8) * 8 + (int(uv.x) % 8);
+	
+	// Normalizamos (0 a 1) y centramos (-0.5 a 0.5)
+	return (bayer8[index] / 64.0) - 0.5;
 }
 
 // Función para detectar bordes usando luminancia
@@ -75,36 +89,32 @@ void fragment() {
 	vec2 uv = floor(SCREEN_UV * resolucion) / resolucion;
 	ivec2 int_uv = ivec2(uv * resolucion);
 	
-	// Muestreo múltiple para capturar mejor partículas pequeñas
+	// Muestreo múltiple
 	vec3 color_center = texture(screen_texture, uv).rgb;
 	vec3 color_offset1 = texture(screen_texture, uv + pixel_size * 0.25).rgb;
 	vec3 color_offset2 = texture(screen_texture, uv + pixel_size * 0.5).rgb;
 	vec3 color_offset3 = texture(screen_texture, uv + pixel_size * 0.75).rgb;
 	
-	// Tomar el valor máximo para preservar píxeles brillantes
 	vec3 color = max(max(color_center, color_offset1), max(color_offset2, color_offset3));
 	
-	// Calcular brillo del pixel
 	float brightness = max(max(color.r, color.g), color.b);
 	float luma = dot(color, vec3(0.299, 0.587, 0.114));
 	
-	// Detectar si es un pixel brillante (fuego, chispas, partículas emisivas)
 	bool is_bright = preserve_bright_pixels && (brightness > brightness_threshold || luma > brightness_threshold * 0.7);
 	
 	vec3 final_color;
 	
-	// Para píxeles brillantes, aplicar procesamiento mínimo
+	// LLAMAMOS A LA NUEVA FUNCIÓN AQUÍ
+	float dither_value = get_bayer_8x8(int_uv);
+
 	if (is_bright) {
-		// Dithering muy reducido para partículas
 		float particle_dither = dither_amount * 0.2;
-		float dither_value = bayer_matrix[int_uv.x % 4][int_uv.y % 4];
+		// Ya no necesitamos acceder a la matriz con [], usamos el valor retornado
 		vec3 dithered_color = color + dither_value / color_profundidad * particle_dither;
 		vec3 quantized_color = round(dithered_color * color_profundidad) / color_profundidad;
 		
-		// Mezclar más con el original para preservar la intensidad
 		final_color = mix(quantized_color, color, 0.4);
 	} else {
-		// Detección de bordes combinada (solo para píxeles normales)
 		float edge_strength = 0.0;
 		if (use_edge_detection) {
 			float color_edge = detect_edges(uv, pixel_size);
@@ -113,17 +123,11 @@ void fragment() {
 			edge_strength = smoothstep(edge_threshold, edge_threshold + edge_softness, edge_strength);
 		}
 		
-		// Aplicar dithering con menor intensidad en los bordes
 		float adaptive_dither = dither_amount * (1.0 - edge_strength * 0.7);
 		
-		// Dithering con Bayer matrix
-		float dither_value = bayer_matrix[int_uv.x % 4][int_uv.y % 4];
 		vec3 dithered_color = color + dither_value / color_profundidad * adaptive_dither;
-		
-		// Cuantización de color
 		vec3 quantized_color = round(dithered_color * color_profundidad) / color_profundidad;
 		
-		// En los bordes fuertes, mezclar un poco con el color original para suavizar
 		final_color = mix(quantized_color, color, edge_strength * 0.2);
 	}
 	
