@@ -45,6 +45,7 @@ func _ready():
 	wind_strong.play()
 	wind_soft.play()
 	
+	print("🌬️ Sistema de viento ambiental iniciado")
 
 func _setup_audio_players():
 	# Configurar viento fuerte
@@ -55,12 +56,23 @@ func _setup_audio_players():
 		
 		# Cargar audio si existe
 		var strong_path = "res://resources/audio/viento_fuerte.mp3"
+		var strong_stream = null
 		if ResourceLoader.exists(strong_path):
-			wind_strong.stream = load(strong_path)
+			strong_stream = load(strong_path)
 		elif ResourceLoader.exists("res://resources/audio/viento_fuerte.ogg"):
-			wind_strong.stream = load("res://resources/audio/viento_fuerte.ogg")
+			strong_stream = load("res://resources/audio/viento_fuerte.ogg")
 		elif ResourceLoader.exists("res://resources/audio/viento_fuerte.wav"):
-			wind_strong.stream = load("res://resources/audio/viento_fuerte.wav")
+			strong_stream = load("res://resources/audio/viento_fuerte.wav")
+		
+		# Configurar loop en el stream
+		if strong_stream:
+			if strong_stream is AudioStreamMP3:
+				strong_stream.loop = true
+			elif strong_stream is AudioStreamOggVorbis:
+				strong_stream.loop = true
+			elif strong_stream is AudioStreamWAV:
+				strong_stream.loop_mode = AudioStreamWAV.LOOP_FORWARD
+			wind_strong.stream = strong_stream
 	
 	# Configurar viento suave
 	if wind_soft:
@@ -70,12 +82,23 @@ func _setup_audio_players():
 		
 		# Cargar audio si existe
 		var soft_path = "res://resources/audio/viento_suave.mp3"
+		var soft_stream = null
 		if ResourceLoader.exists(soft_path):
-			wind_soft.stream = load(soft_path)
+			soft_stream = load(soft_path)
 		elif ResourceLoader.exists("res://resources/audio/viento_suave.ogg"):
-			wind_soft.stream = load("res://resources/audio/viento_suave.ogg")
+			soft_stream = load("res://resources/audio/viento_suave.ogg")
 		elif ResourceLoader.exists("res://resources/audio/viento_suave.wav"):
-			wind_soft.stream = load("res://resources/audio/viento_suave.wav")
+			soft_stream = load("res://resources/audio/viento_suave.wav")
+		
+		# Configurar loop en el stream
+		if soft_stream:
+			if soft_stream is AudioStreamMP3:
+				soft_stream.loop = true
+			elif soft_stream is AudioStreamOggVorbis:
+				soft_stream.loop = true
+			elif soft_stream is AudioStreamWAV:
+				soft_stream.loop_mode = AudioStreamWAV.LOOP_FORWARD
+			wind_soft.stream = soft_stream
 
 func _process(delta):
 	if not player:
@@ -102,11 +125,13 @@ func _process(delta):
 
 func _transition_to_soft_wind():
 	"""Transición suave al viento suave (jugador caminando)"""
+	print("🌬️ Transición a viento suave (caminando)")
 	_create_fade_transition(wind_strong, strong_wind_max_volume, min_volume, 
 						   wind_soft, min_volume, soft_wind_max_volume)
 
 func _transition_to_strong_wind():
 	"""Transición suave al viento fuerte (jugador quieto)"""
+	print("🌬️ Transición a viento fuerte (quieto)")
 	_create_fade_transition(wind_soft, soft_wind_max_volume, min_volume,
 						   wind_strong, min_volume, strong_wind_max_volume)
 
