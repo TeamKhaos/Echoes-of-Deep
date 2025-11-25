@@ -13,8 +13,8 @@
 [ext_resource type="AudioStream" uid="uid://co0tgnjj4ylil" path="res://resources/audio/viento_fuerte.mp3" id="11_2kgci"]
 [ext_resource type="AudioStream" uid="uid://cxpobmpa53gue" path="res://resources/audio/viento_suave.mp3" id="12_mxmwd"]
 [ext_resource type="Script" uid="uid://dsoj5j6phbx5a" path="res://scripts/ItemAudioController.gd" id="13_mxmwd"]
-[ext_resource type="AudioStream" path="res://resources/audio/tomar_item.mp3" id="14_34t2b"]
-[ext_resource type="AudioStream" path="res://resources/audio/soltar item.mp3" id="15_dua2e"]
+[ext_resource type="AudioStream" uid="uid://dkisj0jap0h0r" path="res://resources/audio/pickup.mp3" id="14_34t2b"]
+[ext_resource type="AudioStream" uid="uid://bauivodcj556c" path="res://resources/audio/drop.mp3" id="15_dua2e"]
 [ext_resource type="AudioStream" uid="uid://07gs5dl0xh07" path="res://resources/audio/comer.mp3" id="16_vh305"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ij1v8"]
