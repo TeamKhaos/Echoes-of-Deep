@@ -17,6 +17,10 @@ extends Control
 @onready var microphone_texture_off = $"Microphone/Microphone OFF"
 @onready var microphone_texture_on = $"Microphone/Microphone ON"
 
+# 🧠 Efectos visuales de cordura
+@onready var sanity_effects_overlay: ColorRect = null
+var sanity_shader_material: ShaderMaterial = null
+
 # 🔹 Variables internas
 var inventory_ref: Node = null
 var _is_interact_mode = false
@@ -30,6 +34,8 @@ var _tween_prompt: Tween
 @onready var low_hunger_overlay = $CanvasLayer/ColorRect
 
 func _ready():
+	# 🧠 Inicializar efectos de cordura
+	_ready_sanity_effects()
 	# Inicializar el overlay invisible al inicio
 	if low_hunger_overlay:
 		low_hunger_overlay.modulate = Color(1, 1, 1, 0)  # Totalmente transparente
@@ -40,6 +46,8 @@ func _ready():
 		microphone_texture_off.visible = true
 	if microphone_texture_on:
 		microphone_texture_on.visible = false
+		
+
 
 # ===============================
 # 🧭 INVENTARIO
@@ -246,7 +254,15 @@ func restore_health(amount: float):
 
 
 # ===============================
-# 🧠 CORDURA / SANIDAD MENTAL
+# 🧠 CORDURA / SANIDAD MENTAL - VERSIÓN MEJORADA
+# ===============================
+
+# AGREGAR ESTAS VARIABLES AL INICIO DEL SCRIPT (después de los @onready existentes)
+
+# Nodos de efectos visuales de locura
+
+# ===============================
+# REEMPLAZAR ESTA SECCIÓN COMPLETA EN TU HUD.GD
 # ===============================
 
 @onready var sanity_bar = $CorduraTexture/Cordura
@@ -255,52 +271,192 @@ var sanity_value: float = 100.0
 var sanity_min: float = 0.0
 var sanity_max: float = 100.0
 
-# Velocidades de cambio
-@export var sanity_decay_rate_dark: float = 2.0     # Pierde 2 puntos/seg en oscuridad
-@export var sanity_restore_rate_light: float = 5.0  # Gana 5 puntos/seg cerca de luz
-@export var sanity_warning_threshold: float = 30.0
+# 🔧 Velocidades ajustadas (MÁS LENTAS)
+@export var sanity_decay_rate_dark: float = 0.5     # Pierde 0.5 puntos/seg en oscuridad (era 2.0)
+@export var sanity_restore_rate_light: float = 3.0  # Gana 3 puntos/seg cerca de luz (era 5.0)
+@export var sanity_warning_threshold: float = 20.0  # Umbral de advertencia en 20%
+
+# 🎨 Umbrales de efectos visuales
+@export var sanity_critical_threshold: float = 20.0  # < 20% = efectos críticos
+@export var sanity_medium_threshold: float = 40.0    # < 40% = efectos moderados
+@export var sanity_low_threshold: float = 60.0       # < 60% = efectos leves
 
 var is_near_light: bool = false
 var _sanity_warning_active: bool = false
 var _sanity_tween: Tween = null
 
-# 🧠 LÓGICA PRINCIPAL: Cambiar cordura según iluminación
+# Variables para efectos de sonido (opcional)
+var _insanity_sound_timer: float = 0.0
+var _whisper_cooldown: float = 0.0
+
+
+# ===============================
+# FUNCIÓN _ready() - AGREGAR ESTA PARTE
+# ===============================
+
+func _ready_sanity_effects():
+	"""Llamar esta función desde tu _ready() existente"""
+	_setup_sanity_overlay()
+
+
+func _setup_sanity_overlay():
+	"""Crea el overlay de efectos visuales para la cordura"""
+	# Buscar o crear el CanvasLayer para efectos
+	var canvas_layer = get_node_or_null("SanityEffectsLayer")
+	if not canvas_layer:
+		canvas_layer = CanvasLayer.new()
+		canvas_layer.name = "SanityEffectsLayer"
+		canvas_layer.layer = 99  # Debajo del Game Over (100)
+		add_child(canvas_layer)
+	
+	# Crear el overlay con shader
+	sanity_effects_overlay = ColorRect.new()
+	sanity_effects_overlay.name = "SanityEffectsOverlay"
+	sanity_effects_overlay.anchors_preset = Control.PRESET_FULL_RECT
+	sanity_effects_overlay.anchor_right = 1.0
+	sanity_effects_overlay.anchor_bottom = 1.0
+	sanity_effects_overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	sanity_effects_overlay.color = Color(1, 1, 1, 1)
+	
+	# Cargar y aplicar el shader
+	var shader = load("res://resources/shaders/sanity_effects.gdshader")
+	if shader:
+		sanity_shader_material = ShaderMaterial.new()
+		sanity_shader_material.shader = shader
+		sanity_effects_overlay.material = sanity_shader_material
+		
+		# Inicializar parámetros del shader
+		_update_shader_params(1.0)  # Comenzar con cordura al 100%
+	
+	canvas_layer.add_child(sanity_effects_overlay)
+	print("✅ Sistema de efectos de cordura inicializado")
+
+
+# ===============================
+# REEMPLAZAR _process_sanity() COMPLETO
+# ===============================
+
 func _process_sanity(delta: float):
+	"""Lógica principal de cordura con efectos visuales progresivos"""
+	
+	# 1. Actualizar valor de cordura
 	if is_near_light:
-		# Restaurar cordura cerca de luz
 		sanity_value += sanity_restore_rate_light * delta
 	else:
-		# Perder cordura en oscuridad
 		sanity_value -= sanity_decay_rate_dark * delta
 	
 	sanity_value = clamp(sanity_value, sanity_min, sanity_max)
 	
+	# 2. Actualizar barra visual
 	if sanity_bar:
 		sanity_bar.value = sanity_value
 	
-	# Activar efectos visuales si cordura es baja
+	# 3. Calcular porcentaje normalizado (0.0 a 1.0)
+	var sanity_percent = sanity_value / sanity_max
+	
+	# 4. Actualizar efectos visuales del shader
+	_update_shader_params(sanity_percent)
+	
+	# 5. Activar advertencias según umbral
 	_update_sanity_warning(sanity_value <= sanity_warning_threshold)
+	
+	# 6. Efectos de sonido opcionales (descomentar si tienes audio)
+	# _process_sanity_audio(delta, sanity_percent)
 
-# 💡 FUNCIÓN PÚBLICA: Actualizar estado de iluminación (llamada desde detector de luz)
-func set_near_light(near_light: bool):
-	is_near_light = near_light
 
-# 🧠 EFECTO VISUAL: Advertencia cuando cordura < 30 (implementar efectos aquí)
+# ===============================
+# NUEVA FUNCIÓN: Actualizar parámetros del shader
+# ===============================
+
+func _update_shader_params(sanity_percent: float):
+	"""Actualiza los efectos visuales según el nivel de cordura"""
+	if not sanity_shader_material:
+		return
+	
+	# Pasar el tiempo para animaciones
+	sanity_shader_material.set_shader_parameter("time_value", Time.get_ticks_msec() / 1000.0)
+	sanity_shader_material.set_shader_parameter("sanity_level", sanity_percent)
+	
+	# 🔴 CORDURA CRÍTICA (< 20%)
+	if sanity_percent < 0.2:
+		sanity_shader_material.set_shader_parameter("glitch_intensity", 0.8)
+		sanity_shader_material.set_shader_parameter("desaturation", 0.6)
+		sanity_shader_material.set_shader_parameter("vignette_strength", 0.9)
+		sanity_shader_material.set_shader_parameter("barrel_distortion", 0.15)
+		sanity_shader_material.set_shader_parameter("chromatic_aberration", 0.015)
+		sanity_shader_material.set_shader_parameter("noise_intensity", 0.4)
+	
+	# 🟠 CORDURA BAJA (20% - 40%)
+	elif sanity_percent < 0.4:
+		var intensity = (0.4 - sanity_percent) / 0.2  # 0.0 a 1.0
+		sanity_shader_material.set_shader_parameter("glitch_intensity", intensity * 0.5)
+		sanity_shader_material.set_shader_parameter("desaturation", intensity * 0.4)
+		sanity_shader_material.set_shader_parameter("vignette_strength", intensity * 0.6)
+		sanity_shader_material.set_shader_parameter("barrel_distortion", intensity * 0.08)
+		sanity_shader_material.set_shader_parameter("chromatic_aberration", intensity * 0.008)
+		sanity_shader_material.set_shader_parameter("noise_intensity", intensity * 0.2)
+	
+	# 🟡 CORDURA MEDIA (40% - 60%)
+	elif sanity_percent < 0.6:
+		var intensity = (0.6 - sanity_percent) / 0.2  # 0.0 a 1.0
+		sanity_shader_material.set_shader_parameter("glitch_intensity", 0.0)
+		sanity_shader_material.set_shader_parameter("desaturation", intensity * 0.2)
+		sanity_shader_material.set_shader_parameter("vignette_strength", intensity * 0.3)
+		sanity_shader_material.set_shader_parameter("barrel_distortion", 0.0)
+		sanity_shader_material.set_shader_parameter("chromatic_aberration", 0.0)
+		sanity_shader_material.set_shader_parameter("noise_intensity", intensity * 0.05)
+	
+	# 🟢 CORDURA NORMAL (> 60%)
+	else:
+		sanity_shader_material.set_shader_parameter("glitch_intensity", 0.0)
+		sanity_shader_material.set_shader_parameter("desaturation", 0.0)
+		sanity_shader_material.set_shader_parameter("vignette_strength", 0.0)
+		sanity_shader_material.set_shader_parameter("barrel_distortion", 0.0)
+		sanity_shader_material.set_shader_parameter("chromatic_aberration", 0.0)
+		sanity_shader_material.set_shader_parameter("noise_intensity", 0.0)
+
+
+# ===============================
+# REEMPLAZAR _update_sanity_warning()
+# ===============================
+
 func _update_sanity_warning(is_low: bool):
+	"""Muestra advertencias cuando la cordura es crítica"""
 	if _sanity_warning_active == is_low:
 		return
 	
 	_sanity_warning_active = is_low
 	
-	# TODO: Implementar efectos visuales para cordura baja
-	# - Distorsión de pantalla
-	# - Viñeta oscura
-	# - Efectos de sonido
-	# - Alucinaciones visuales
+	if _sanity_tween:
+		_sanity_tween.kill()
+	
+	if is_low:
+		print("⚠️ CORDURA CRÍTICA - Efectos visuales activados")
+		# Opcional: reproducir sonido de advertencia
+		# $SanityWarningSound.play()
+	else:
+		print("✅ Cordura restaurada - Efectos desactivados")
 
-# 🧠 FUNCIÓN PÚBLICA: Restaurar cordura manualmente
+
+# ===============================
+# FUNCIONES PÚBLICAS (mantener las existentes)
+# ===============================
+
+func set_near_light(near_light: bool):
+	"""Actualiza si el jugador está cerca de una fuente de luz"""
+	is_near_light = near_light
+
+
 func restore_sanity(amount: float):
+	"""Restaura cordura manualmente (por ítems, eventos, etc.)"""
 	sanity_value = clamp(sanity_value + amount, sanity_min, sanity_max)
+	if sanity_bar:
+		sanity_bar.value = sanity_value
+
+
+func damage_sanity(amount: float):
+	"""Reduce cordura por eventos traumáticos"""
+	sanity_value = clamp(sanity_value - amount, sanity_min, sanity_max)
 	if sanity_bar:
 		sanity_bar.value = sanity_value
 
