@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://c6fhcls1wqh8"]
+[gd_scene load_steps=23 format=3 uid="uid://c6fhcls1wqh8"]
 
 [ext_resource type="PackedScene" uid="uid://0n2ppdjdgm7e" path="res://scenes/player/player.tscn" id="1_bc5n3"]
 [ext_resource type="PackedScene" uid="uid://b73eyetc8mca0" path="res://scenes/objets/palo.tscn" id="2_4jb62"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://bpaicuppyrwfj" path="res://scenes/objets/antorcha.tscn" id="2_m7nr4"]
 [ext_resource type="PackedScene" uid="uid://n5p1stc4i1qx" path="res://scenes/objets/botella.tscn" id="4_14w5t"]
 [ext_resource type="PackedScene" uid="uid://be5kkjfpgt3sy" path="res://scenes/scenary_objects/fogata.tscn" id="5_sfnd5"]
+[ext_resource type="PackedScene" uid="uid://yqa3bql5mth0" path="res://scenes/GameOver.tscn" id="6_dua2e"]
 [ext_resource type="PackedScene" uid="uid://b0o2h1nf4516m" path="res://scenes/EnemyTest.tscn" id="6_lxy4y"]
 [ext_resource type="PackedScene" uid="uid://cjinoan3rfh77" path="res://scenes/scenary_cave/tunel_1.tscn" id="8_o8nxa"]
 [ext_resource type="Shader" uid="uid://be8jh6fto5804" path="res://resources/materials/postprocesado.gdshader" id="9_bc5n3"]
@@ -75,6 +76,8 @@ stream = ExtResource("15_dua2e")
 stream = ExtResource("16_vh305")
 
 [node name="DrinkSound" type="AudioStreamPlayer3D" parent="Player/ItemAudioController"]
+
+[node name="GameOver" parent="Player" instance=ExtResource("6_dua2e")]
 
 [node name="Area3D" type="Area3D" parent="." groups=["reverb_zone"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.35051894, -6.5081606)

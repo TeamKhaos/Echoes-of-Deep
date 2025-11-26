@@ -7,6 +7,7 @@ extends CharacterBody3D
 @onready var player_hud = $PlayerHUD
 @onready var voice_controller = $Voice
 @onready var voiceparticle = $VoiceWave
+@onready var game_over_screen = $GameOver
 
 @onready var hud = $PlayerHUD/hud
 @onready var object_marker = $Pivot/Camera3D/ObjectMarker
@@ -33,6 +34,7 @@ var current_health: int = 100
 var can_move : bool = true
 var on_debug := false
 var is_crouching : bool = false
+var is_dead: bool = false
 
 #MOVE
 var max_speed = 5
@@ -85,6 +87,9 @@ func _ready():
 	
 	# 👟 Configurar sistema de pasos
 	_setup_footsteps()
+	
+	# 💀 NUEVO: Configurar Game Over
+	_setup_game_over()
 
 func _setup_footsteps():
 	if footsteps_player:
@@ -368,9 +373,14 @@ func remove_from_inventory(item_id: String):
 				return
 
 func take_damage(amount: int):
+	# No recibir daño si ya está muerto
+	if is_dead:
+		return
+	
 	current_health -= amount
 	current_health = clamp(current_health, 0, max_health)
 	update_health_bar()
+	
 	if current_health <= 0:
 		die()
 
@@ -384,4 +394,57 @@ func update_health_bar():
 		hud.set_health(current_health)
 
 func die():
-	pass
+	# Prevenir múltiples llamadas
+	if is_dead:
+		return
+	
+	print("💀 Player ha muerto")
+	is_dead = true
+	
+	# Desactivar controles
+	can_move = false
+	Pivote.cameraLock = true
+	
+	# Detener sonidos
+	if footsteps_player:
+		footsteps_player.stop()
+	
+	if voice_controller and voice_controller.is_active():
+		voice_controller.toggle_microphone()
+	
+	# Detener el timer de pasos
+	if footsteps_timer:
+		footsteps_timer.stop()
+	
+	# Ocultar partículas de voz
+	if voiceparticle:
+		voiceparticle.visible = false
+	
+	# Mostrar pantalla de Game Over
+	if game_over_screen:
+		game_over_screen.show_game_over()
+	else:
+		push_error("⚠️ No se encontró GameOverScreen")
+		# Fallback: recargar la escena
+		await get_tree().create_timer(2.0).timeout
+		get_tree().reload_current_scene()
+
+func _setup_game_over():
+	# El GameOver ya está en la escena como hijo del Player
+	if has_node("GameOver"):
+		game_over_screen = $GameOver
+		if game_over_screen:
+			game_over_screen.visible = false
+			print("✅ GameOver configurado correctamente")
+	else:
+		push_error("⚠️ No se encontró el nodo GameOver como hijo del Player")
+		push_error("⚠️ Verifica que el nodo se llame exactamente 'GameOver'")
+		
+func reset_player():
+	"""Resetea el estado del jugador (útil si quieres revivir)"""
+	is_dead = false
+	current_health = max_health
+	can_move = true
+	Pivote.cameraLock = false
+	update_health_bar()
+	velocity = Vector3.ZERO
