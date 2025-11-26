@@ -12,10 +12,6 @@
 [ext_resource type="PackedScene" uid="uid://d8md2xjyxxb0" path="res://scenes/pause_menu.tscn" id="11_pause"]
 [ext_resource type="Shader" uid="uid://be8jh6fto5804" path="res://resources/materials/postprocesado.gdshader" id="12_fm80t"]
 
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_u8vuu"]
-radius = 0.2
-height = 1.7
-
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_gx1jg"]
 render_priority = 0
 shader = ExtResource("12_fm80t")
@@ -31,17 +27,37 @@ shader_parameter/outline_intensity = 1.5
 shader_parameter/use_depth_outline = true
 shader_parameter/use_normal_outline = true
 shader_parameter/depth_sensitivity = 40.0
-shader_parameter/sonar_mode = false
+shader_parameter/sonar_mode = true
+shader_parameter/sonar_radius = 0.0
+shader_parameter/sonar_active = false
+shader_parameter/sonar_world_position = Vector3(0, 0, 0)
+shader_parameter/sonar_width = 3.000000095
+shader_parameter/sonar_falloff = 2.0
+shader_parameter/inv_projection_matrix = Projection(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)
+shader_parameter/inv_view_matrix = Projection(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)
+shader_parameter/camera_near = 0.05
+shader_parameter/camera_far = 4000.0
 
 [sub_resource type="QuadMesh" id="QuadMesh_ugbui"]
 flip_faces = true
 size = Vector2(2, 2)
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_u8vuu"]
+radius = 0.2
+height = 1.7
 
 [node name="Player" type="CharacterBody3D" groups=["player"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8527156, 0)
 script = ExtResource("1_3vyb7")
 footstep_sound = ExtResource("2_fm80t")
 footstep_volume_db = 1.0
+
+[node name="SonarMesh" type="MeshInstance3D" parent="." groups=["sonar_shader"]]
+visible = false
+material_override = SubResource("ShaderMaterial_gx1jg")
+cast_shadow = 0
+extra_cull_margin = 16384.0
+mesh = SubResource("QuadMesh_ugbui")
 
 [node name="Pivot" type="Node3D" parent="."]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0.5366583, 0)
@@ -82,11 +98,5 @@ hud = NodePath("../PlayerHUD/hud")
 [node name="hud" parent="PlayerHUD" instance=ExtResource("7_0owmy")]
 
 [node name="PauseMenu" parent="." instance=ExtResource("11_pause")]
-
-[node name="Sonar" type="MeshInstance3D" parent="."]
-visible = false
-material_override = SubResource("ShaderMaterial_gx1jg")
-extra_cull_margin = 16384.0
-mesh = SubResource("QuadMesh_ugbui")
 
 [connection signal="timeout" from="FootstepsTimer" to="." method="_on_footsteps_timer_timeout"]

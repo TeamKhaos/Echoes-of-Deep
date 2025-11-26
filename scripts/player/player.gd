@@ -8,7 +8,7 @@ extends CharacterBody3D
 @onready var voice_controller = $Voice
 @onready var voiceparticle = $VoiceWave
 @onready var game_over_screen = $GameOver
-@onready var sonar = $Sonar
+@onready var sonar = $SonarMesh
 @onready var hud = $PlayerHUD/hud
 @onready var object_marker = $Pivot/Camera3D/ObjectMarker
 
@@ -76,7 +76,12 @@ func _ready():
 	var inv_node = inventory_instance.get_node_or_null("Inventory") 
 	
 	hud.set_inventory(inv_node)
+	
+	# ✅ Conectar señal del micrófono (para el HUD)
 	voice_controller.microphone_toggled.connect(hud._on_microphone_toggled)
+
+	# ✅ Conectar señal de detección de voz (para las partículas)
+	voice_controller.voice_detected.connect(_on_voice_detected)
 	
 	# --- Resto de tu configuración ---
 	GLOBAL.PlayerRef = self
@@ -448,3 +453,14 @@ func reset_player():
 	Pivote.cameraLock = false
 	update_health_bar()
 	velocity = Vector3.ZERO
+# 🔊 Callback cuando se detecta voz
+func _on_voice_detected(is_speaking: bool):
+	if is_speaking:
+		print("🎤 Jugador está hablando")
+		# Aquí puedes hacer que las partículas se activen
+		if voiceparticle:
+			voiceparticle.visible = true
+	else:
+		print("🔇 Jugador dejó de hablar")
+		if voiceparticle:
+			voiceparticle.visible = false

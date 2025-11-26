@@ -36,6 +36,7 @@ enabled=PackedStringArray("res://addons/gloot/plugin.cfg")
 
 interactable=""
 reverb_zone=""
+sonar_shader=""
 
 [input]
 

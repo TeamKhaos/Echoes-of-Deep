@@ -22,8 +22,19 @@ uniform bool use_depth_outline = true;
 uniform bool use_normal_outline = true;
 uniform float depth_sensitivity : hint_range(1.0, 100.0, 1.0) = 40.0;
 
-// Modo sonar
+// 🌊 Parámetros del sonar 3D
 uniform bool sonar_mode = false;
+uniform float sonar_radius = 0.0;
+uniform bool sonar_active = false;
+uniform vec3 sonar_world_position = vec3(0.0, 0.0, 0.0); // Posición 3D del jugador
+uniform float sonar_width : hint_range(1.0, 20.0) = 5.0;
+uniform float sonar_falloff : hint_range(0.1, 5.0) = 2.0;
+
+// Parámetros de proyección (pasados desde GDScript)
+uniform mat4 inv_projection_matrix;
+uniform mat4 inv_view_matrix;
+uniform float camera_near = 0.05;
+uniform float camera_far = 4000.0;
 
 // --- VERTEX ---
 void vertex() {
@@ -45,6 +56,20 @@ float get_bayer_8x8(ivec2 uv) {
 
     int index = (int(uv.y) % 8) * 8 + (int(uv.x) % 8);
     return (bayer8[index] / 64.0) - 0.5;
+}
+
+// Reconstruir posición 3D desde profundidad
+vec3 reconstruct_world_position(vec2 uv, float depth) {
+    // Convertir UV a NDC (Normalized Device Coordinates)
+    vec4 ndc = vec4(uv * 2.0 - 1.0, depth * 2.0 - 1.0, 1.0);
+    
+    // Pasar a espacio de vista
+    vec4 view_pos = inv_projection_matrix * ndc;
+    view_pos /= view_pos.w;
+    
+    // Pasar a espacio mundial
+    vec4 world_pos = inv_view_matrix * view_pos;
+    return world_pos.xyz;
 }
 
 // --- DETECCIÓN DE BORDES NORMAL ---
@@ -91,6 +116,45 @@ float detect_depth_outline(vec2 uv, vec2 pixel_size) {
     return sqrt(gx * gx + gy * gy) * depth_sensitivity;
 }
 
+// 🌊 Calcula el efecto de anillo del sonar en 3D
+float calculate_sonar_ring_3d(vec2 uv) {
+    if (!sonar_active || sonar_radius <= 0.0) {
+        return 0.0;
+    }
+    
+    // Obtener profundidad del pixel actual
+    float depth = texture(depth_texture, uv).r;
+    
+    // Reconstruir posición 3D del pixel
+    vec3 world_pos = reconstruct_world_position(uv, depth);
+    
+    // Calcular distancia 3D desde el jugador
+    float dist_3d = distance(world_pos, sonar_world_position);
+    
+    // Calcular distancia al anillo
+    float ring_distance = abs(dist_3d - sonar_radius);
+    
+    // Crear el anillo con falloff suave
+    float ring = 1.0 - smoothstep(0.0, sonar_width, ring_distance);
+    ring = pow(ring, sonar_falloff);
+    
+    return ring;
+}
+
+// 🎯 Calcula si un pixel ha sido "revelado" por el sonar
+float calculate_sonar_reveal(vec2 uv) {
+    if (!sonar_active || sonar_radius <= 0.0) {
+        return 0.0;
+    }
+    
+    float depth = texture(depth_texture, uv).r;
+    vec3 world_pos = reconstruct_world_position(uv, depth);
+    float dist_3d = distance(world_pos, sonar_world_position);
+    
+    // El pixel se revela si el sonar ya pasó por él
+    return smoothstep(sonar_radius + sonar_width, sonar_radius - 2.0, dist_3d);
+}
+
 // --- FRAGMENT ---
 void fragment() {
     vec2 res = VIEWPORT_SIZE;
@@ -113,15 +177,26 @@ void fragment() {
     edge_strength *= outline_intensity;
     edge_strength = clamp(edge_strength, 0.0, 1.0);
 
+    // 🌊 2. Calcular anillo y revelación del sonar
+    float sonar_ring = calculate_sonar_ring_3d(SCREEN_UV);
+    float sonar_reveal = calculate_sonar_reveal(SCREEN_UV);
+
     vec3 final_color;
 
-    // --- MODO SONAR: SOLO NEGRO + LÍNEAS ---
+    // --- MODO SONAR: NEGRO + LÍNEAS REVELADAS + ANILLO ---
     if (sonar_mode) {
         float line = pow(edge_strength, 0.6);
-        final_color = vec3(line);
+        
+        // Solo mostrar líneas en áreas reveladas por el sonar
+        float visible_line = line * sonar_reveal;
+        
+        // Combinar con el anillo actual
+        float combined = max(visible_line, sonar_ring * 0.8);
+        
+        final_color = vec3(combined);
     }
     else {
-        // MODO NORMAL
+        // MODO NORMAL con sonar
         float dither = get_bayer_8x8(ivec2(uv * res));
         float depth = max(color_profundidad, 1.0);
 
@@ -130,12 +205,15 @@ void fragment() {
 
         vec3 ps1_color = max(quantized, vec3(shadow_brightness * 0.5));
 
-        final_color = mix(ps1_color, outline_color.rgb, edge_strength);
+        vec3 outlined = mix(ps1_color, outline_color.rgb, edge_strength);
+        
+        // Oscurecer áreas no reveladas
+        vec3 darkened = mix(vec3(0.0), outlined, sonar_reveal);
+        
+        // Agregar anillo del sonar
+        vec3 sonar_color = vec3(0.0, 1.0, 0.8);
+        final_color = mix(darkened, sonar_color, sonar_ring * 0.6);
     }
-
-    // --- FONDO NEGRO ---
-    // Si no es borde → negro total
-    final_color *= edge_strength;
 
     ALBEDO = final_color;
 }
