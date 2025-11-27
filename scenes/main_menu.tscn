@@ -96,12 +96,6 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 20
 text = "NUEVA PARTIDA"
 
-[node name="ButtonLoadGame" type="Button" parent="CenterContainer/VBoxContainer"]
-custom_minimum_size = Vector2(400, 50)
-layout_mode = 2
-theme_override_font_sizes/font_size = 20
-text = "CARGAR PARTIDA"
-
 [node name="ButtonOptions" type="Button" parent="CenterContainer/VBoxContainer"]
 custom_minimum_size = Vector2(400, 50)
 layout_mode = 2
@@ -344,7 +338,6 @@ text = "VOLVER"
 stream = ExtResource("4_wu84c")
 
 [connection signal="pressed" from="CenterContainer/VBoxContainer/ButtonNewGame" to="." method="_on_button_new_game_pressed"]
-[connection signal="pressed" from="CenterContainer/VBoxContainer/ButtonLoadGame" to="." method="_on_button_load_game_pressed"]
 [connection signal="pressed" from="CenterContainer/VBoxContainer/ButtonOptions" to="." method="_on_button_options_pressed"]
 [connection signal="pressed" from="CenterContainer/VBoxContainer/ButtonCredits" to="." method="_on_button_credits_pressed"]
 [connection signal="pressed" from="CenterContainer/VBoxContainer/ButtonQuit" to="." method="_on_button_quit_pressed"]
