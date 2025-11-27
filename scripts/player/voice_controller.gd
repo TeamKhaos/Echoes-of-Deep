@@ -23,21 +23,17 @@ var release_timer := 0.0
 var current_sonar_radius: float = 0.0
 var shader_material: ShaderMaterial = null
 
-# ✨ Sistema de ondas de voz desde la boca
-@export_group("Voice Waves from Mouth")
+# ✨ Sistema de ondas de voz usando el postprocesado
+@export_group("Voice Waves")
 @export var enable_voice_waves := true
 @export var wave_expansion_speed: float = 8.0
 @export var max_wave_radius: float = 15.0
-@export var wave_color: Color = Color(0.3, 0.9, 1.0, 1.0)
-@export var wave_thickness: float = 0.4
-@export var wave_intensity: float = 2.5
+@export var wave_color: Color = Color(1.0, 0.3, 0.3, 1.0)
+@export var wave_intensity: float = 3.0
 @export var num_waves: int = 3
 @export var wave_spacing: float = 3.0
-@export var mouth_offset: Vector3 = Vector3(0, 0, -0.3)  # Offset desde la cámara
 
 var current_wave_radius: float = 0.0
-var wave_material: ShaderMaterial = null
-var wave_mesh: MeshInstance3D = null
 
 func _ready():
 	var mic_stream = AudioStreamMicrophone.new()
@@ -77,9 +73,8 @@ func _ready():
 	
 	_find_shader_material()
 	
-	# ✨ Inicializar ondas de voz
-	if enable_voice_waves:
-		_setup_voice_waves()
+	# ✨ Las ondas de voz ahora están integradas en el shader de postprocesado
+	print("✅ Sistema de ondas de voz inicializado (integrado en postprocesado)")
 
 func _process(delta):
 	_process_voice_detection(delta)
@@ -94,97 +89,15 @@ func _process(delta):
 	
 	_update_sonar_shader()
 	
-	# ✨ Actualizar ondas de voz
+	# ✨ Actualizar ondas de voz (ahora en el shader de postprocesado)
 	if enable_voice_waves:
-		_update_voice_waves(delta)
+		_update_voice_waves_integrated(delta)
 
 # =============================================================
-# ✨ SISTEMA DE ONDAS DE VOZ DESDE LA BOCA
+# ✨ SISTEMA DE ONDAS DE VOZ INTEGRADO EN POSTPROCESADO
 # =============================================================
-func _setup_voice_waves():
-	print("🌊 Iniciando setup de ondas de voz...")
-	
-	var player = get_tree().get_first_node_in_group("player")
-	if not player:
-		push_error("❌ No se encontró el jugador en grupo 'player'")
-		return
-	print("✅ Jugador encontrado: ", player.name)
-	
-	var camera = player.get_node_or_null("Pivot/Camera3D")
-	if not camera:
-		push_error("❌ No se encontró la cámara en Pivot/Camera3D")
-		return
-	print("✅ Cámara encontrada: ", camera.name)
-	
-	# Buscar o crear el mesh de ondas en la cámara
-	wave_mesh = camera.get_node_or_null("VoiceWavesMesh")
-	
-	if not wave_mesh:
-		print("🔨 Creando VoiceWavesMesh...")
-		# Crear un quad billboard frente a la cámara
-		wave_mesh = MeshInstance3D.new()
-		wave_mesh.name = "VoiceWavesMesh"
-		camera.add_child(wave_mesh)
-		
-		# Crear mesh circular (quad) MÁS GRANDE
-		var quad_mesh = QuadMesh.new()
-		quad_mesh.size = Vector2(5.0, 5.0)  # Más grande para verlo mejor
-		wave_mesh.mesh = quad_mesh
-		
-		# Posicionar frente a la cámara (donde está la boca)
-		wave_mesh.position = mouth_offset
-		
-		print("✅ Mesh de ondas creado")
-		print("   Posición: ", wave_mesh.position)
-		print("   Tamaño: 5.0x5.0")
-	else:
-		print("✅ VoiceWavesMesh ya existe")
-	
-	# CRÍTICO: Asegurar que el mesh sea visible
-	wave_mesh.visible = true
-	
-	# Cargar el shader
-	print("📂 Cargando shader desde res://shaders/voice_waves.gdshader")
-	var shader = load("res://shaders/voice_waves.gdshader")
-	if not shader:
-		push_error("❌ No se pudo cargar voice_waves.gdshader")
-		push_error("   Ruta: res://shaders/voice_waves.gdshader")
-		push_error("   ¿Existe el archivo? ¿Está bien guardado?")
-		wave_mesh.queue_free()
-		enable_voice_waves = false
-		return
-	print("✅ Shader cargado exitosamente")
-	
-	# Crear y configurar material
-	wave_material = ShaderMaterial.new()
-	wave_material.shader = shader
-	wave_mesh.set_surface_override_material(0, wave_material)
-	print("✅ Material aplicado al mesh")
-	
-	# Configurar parámetros iniciales
-	wave_material.set_shader_parameter("wave_color", wave_color)
-	wave_material.set_shader_parameter("wave_thickness", wave_thickness)
-	wave_material.set_shader_parameter("wave_intensity", wave_intensity)
-	wave_material.set_shader_parameter("num_waves", num_waves)
-	wave_material.set_shader_parameter("wave_spacing", wave_spacing)
-	wave_material.set_shader_parameter("is_speaking", false)
-	wave_material.set_shader_parameter("wave_radius", 0.0)
-	
-	# Configurar rendering
-	wave_mesh.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-	wave_mesh.gi_mode = GeometryInstance3D.GI_MODE_DISABLED
-	wave_mesh.layers = 1  # Asegurar que esté en la capa visible
-	
-	print("✅ Parámetros configurados:")
-	print("   Color: ", wave_color)
-	print("   Intensidad: ", wave_intensity)
-	print("   Ondas: ", num_waves)
-	print("✅ Sistema de ondas de voz COMPLETAMENTE configurado")
-
-func _update_voice_waves(delta):
-	if not wave_material or not wave_mesh:
-		if Engine.get_frames_drawn() % 120 == 0:
-			print("⚠️ Wave material o mesh es null")
+func _update_voice_waves_integrated(delta):
+	if not shader_material:
 		return
 	
 	var player = get_tree().get_first_node_in_group("player")
@@ -200,23 +113,23 @@ func _update_voice_waves(delta):
 		current_wave_radius += wave_expansion_speed * delta
 		if current_wave_radius > max_wave_radius:
 			current_wave_radius = 0.0
-			if enable_voice_waves:
-				print("🔄 Onda reiniciada - Nueva onda comenzando")
+			print("🔄 Onda de voz reiniciada")
 	else:
-		# Desvanecer ondas suavemente cuando deja de hablar
 		current_wave_radius = lerp(current_wave_radius, 0.0, 3.0 * delta)
 	
-	# 📍 Calcular posición de la boca en el mundo
-	var mouth_world_pos = camera.global_position + camera.global_transform.basis * mouth_offset
+	# Actualizar parámetros del shader de postprocesado
+	shader_material.set_shader_parameter("voice_waves_active", speaking)
+	shader_material.set_shader_parameter("voice_wave_radius", current_wave_radius)
+	shader_material.set_shader_parameter("voice_wave_color", wave_color)
+	shader_material.set_shader_parameter("voice_wave_intensity", wave_intensity)
+	shader_material.set_shader_parameter("voice_num_waves", num_waves)
+	shader_material.set_shader_parameter("voice_wave_spacing", wave_spacing)
+	shader_material.set_shader_parameter("camera_position", camera.global_position)
+	shader_material.set_shader_parameter("camera_forward", -camera.global_transform.basis.z)
 	
-	# Actualizar parámetros del shader
-	wave_material.set_shader_parameter("mouth_position", mouth_world_pos)
-	wave_material.set_shader_parameter("wave_radius", current_wave_radius)
-	wave_material.set_shader_parameter("is_speaking", speaking)
-	
-	# Debug periódico
+	# Debug
 	if speaking and Engine.get_frames_drawn() % 60 == 0:
-		print("🌊 Radio: %.2f / %.2f | Mesh visible: %s" % [current_wave_radius, max_wave_radius, wave_mesh.visible])
+		print("🌊 Ondas de voz - Radio: %.2f / %.2f" % [current_wave_radius, max_wave_radius])
 
 # =============================================================
 # 🔊 SISTEMA DE DETECCIÓN DE VOZ (VOX)
@@ -352,14 +265,3 @@ func get_sonar_radius() -> float:
 
 func get_wave_radius() -> float:
 	return current_wave_radius
-
-# 🎨 Métodos para ajustar parámetros en runtime
-func set_wave_color(color: Color):
-	wave_color = color
-	if wave_material:
-		wave_material.set_shader_parameter("wave_color", color)
-
-func set_wave_intensity(intensity: float):
-	wave_intensity = intensity
-	if wave_material:
-		wave_material.set_shader_parameter("wave_intensity", intensity)

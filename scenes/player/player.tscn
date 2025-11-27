@@ -33,6 +33,14 @@ shader_parameter/sonar_active = false
 shader_parameter/sonar_world_position = Vector3(0, 0, 0)
 shader_parameter/sonar_width = 3.000000095
 shader_parameter/sonar_falloff = 2.0
+shader_parameter/voice_waves_active = false
+shader_parameter/voice_wave_radius = 0.0
+shader_parameter/camera_position = Vector3(0, 0, 0)
+shader_parameter/camera_forward = Vector3(0, 0, -1)
+shader_parameter/voice_wave_color = Color(1, 0.3, 0.3, 1)
+shader_parameter/voice_wave_intensity = 3.0
+shader_parameter/voice_num_waves = 3
+shader_parameter/voice_wave_spacing = 3.0
 shader_parameter/inv_projection_matrix = Projection(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)
 shader_parameter/inv_view_matrix = Projection(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)
 shader_parameter/camera_near = 0.05
@@ -54,6 +62,7 @@ footstep_volume_db = 1.0
 
 [node name="Voice" parent="." instance=ExtResource("6_qek5x")]
 wave_color = Color(1, 0.3, 0.3116665, 1)
+wave_intensity = 3.0
 
 [node name="SonarMesh" type="MeshInstance3D" parent="." groups=["sonar_shader"]]
 visible = false

@@ -26,11 +26,21 @@ uniform float depth_sensitivity : hint_range(1.0, 100.0, 1.0) = 40.0;
 uniform bool sonar_mode = false;
 uniform float sonar_radius = 0.0;
 uniform bool sonar_active = false;
-uniform vec3 sonar_world_position = vec3(0.0, 0.0, 0.0); // Posición 3D del jugador
+uniform vec3 sonar_world_position = vec3(0.0, 0.0, 0.0);
 uniform float sonar_width : hint_range(1.0, 20.0) = 5.0;
 uniform float sonar_falloff : hint_range(0.1, 5.0) = 2.0;
 
-// Parámetros de proyección (pasados desde GDScript)
+// 🎤 NUEVO: Parámetros de ondas de voz
+uniform bool voice_waves_active = false;
+uniform float voice_wave_radius : hint_range(0.0, 20.0) = 0.0;
+uniform vec3 camera_position = vec3(0.0, 0.0, 0.0);
+uniform vec3 camera_forward = vec3(0.0, 0.0, -1.0);
+uniform vec4 voice_wave_color : source_color = vec4(1.0, 0.3, 0.3, 1.0);
+uniform float voice_wave_intensity : hint_range(0.0, 10.0) = 3.0;
+uniform int voice_num_waves : hint_range(1, 5) = 3;
+uniform float voice_wave_spacing : hint_range(1.0, 10.0) = 3.0;
+
+// Parámetros de proyección
 uniform mat4 inv_projection_matrix;
 uniform mat4 inv_view_matrix;
 uniform float camera_near = 0.05;
@@ -53,21 +63,15 @@ float get_bayer_8x8(ivec2 uv) {
         15.0, 47.0, 7.0, 39.0, 13.0, 45.0, 5.0, 37.0,
         63.0, 31.0, 55.0, 23.0, 61.0, 29.0, 53.0, 21.0
     );
-
     int index = (int(uv.y) % 8) * 8 + (int(uv.x) % 8);
     return (bayer8[index] / 64.0) - 0.5;
 }
 
 // Reconstruir posición 3D desde profundidad
 vec3 reconstruct_world_position(vec2 uv, float depth) {
-    // Convertir UV a NDC (Normalized Device Coordinates)
     vec4 ndc = vec4(uv * 2.0 - 1.0, depth * 2.0 - 1.0, 1.0);
-    
-    // Pasar a espacio de vista
     vec4 view_pos = inv_projection_matrix * ndc;
     view_pos /= view_pos.w;
-    
-    // Pasar a espacio mundial
     vec4 world_pos = inv_view_matrix * view_pos;
     return world_pos.xyz;
 }
@@ -75,7 +79,6 @@ vec3 reconstruct_world_position(vec2 uv, float depth) {
 // --- DETECCIÓN DE BORDES NORMAL ---
 float detect_sonar_edges(vec2 uv, vec2 pixel_size) {
     float offset = outline_thickness;
-
     vec3 tl = texture(screen_texture, uv + vec2(-pixel_size.x, pixel_size.y) * offset).rgb;
     vec3 t  = texture(screen_texture, uv + vec2(0.0, pixel_size.y) * offset).rgb;
     vec3 tr = texture(screen_texture, uv + vec2(pixel_size.x, pixel_size.y) * offset).rgb;
@@ -86,7 +89,6 @@ float detect_sonar_edges(vec2 uv, vec2 pixel_size) {
     vec3 br = texture(screen_texture, uv + vec2(pixel_size.x, -pixel_size.y) * offset).rgb;
 
     vec3 w = vec3(0.299, 0.587, 0.114);
-
     float tl_lum = dot(tl, w); float t_lum = dot(t, w); float tr_lum = dot(tr, w);
     float l_lum = dot(l, w);  float r_lum = dot(r, w);
     float bl_lum = dot(bl, w); float b_lum = dot(b, w); float br_lum = dot(br, w);
@@ -100,7 +102,6 @@ float detect_sonar_edges(vec2 uv, vec2 pixel_size) {
 // --- DETECCIÓN DE BORDES POR PROFUNDIDAD ---
 float detect_depth_outline(vec2 uv, vec2 pixel_size) {
     float offset = outline_thickness;
-
     float tl = texture(depth_texture, uv + vec2(-pixel_size.x, pixel_size.y) * offset).r;
     float tr = texture(depth_texture, uv + vec2(pixel_size.x, pixel_size.y) * offset).r;
     float bl = texture(depth_texture, uv + vec2(-pixel_size.x, -pixel_size.y) * offset).r;
@@ -121,23 +122,12 @@ float calculate_sonar_ring_3d(vec2 uv) {
     if (!sonar_active || sonar_radius <= 0.0) {
         return 0.0;
     }
-    
-    // Obtener profundidad del pixel actual
     float depth = texture(depth_texture, uv).r;
-    
-    // Reconstruir posición 3D del pixel
     vec3 world_pos = reconstruct_world_position(uv, depth);
-    
-    // Calcular distancia 3D desde el jugador
     float dist_3d = distance(world_pos, sonar_world_position);
-    
-    // Calcular distancia al anillo
     float ring_distance = abs(dist_3d - sonar_radius);
-    
-    // Crear el anillo con falloff suave
     float ring = 1.0 - smoothstep(0.0, sonar_width, ring_distance);
     ring = pow(ring, sonar_falloff);
-    
     return ring;
 }
 
@@ -146,13 +136,58 @@ float calculate_sonar_reveal(vec2 uv) {
     if (!sonar_active || sonar_radius <= 0.0) {
         return 0.0;
     }
-    
     float depth = texture(depth_texture, uv).r;
     vec3 world_pos = reconstruct_world_position(uv, depth);
     float dist_3d = distance(world_pos, sonar_world_position);
-    
-    // El pixel se revela si el sonar ya pasó por él
     return smoothstep(sonar_radius + sonar_width, sonar_radius - 2.0, dist_3d);
+}
+
+// 🎤 NUEVO: Calcula ondas de voz en screen space (2D billboard)
+float calculate_voice_waves(vec2 screen_uv) {
+    if (!voice_waves_active || voice_wave_radius <= 0.0) {
+        return 0.0;
+    }
+
+    // Calcular distancia desde el centro de la pantalla (donde está la boca)
+    vec2 center = vec2(0.5, 0.5);
+    vec2 offset = screen_uv - center;
+
+    // Convertir a espacio circular
+    float dist_from_center = length(offset);
+
+    // Escalar la distancia para que coincida con el radio en unidades 3D
+    float normalized_dist = dist_from_center * 30.0;
+
+    float total_wave = 0.0;
+
+    // Crear múltiples ondas concéntricas
+    for (int i = 0; i < voice_num_waves; i++) {
+        float wave_offset = float(i) * voice_wave_spacing;
+        float current_radius = voice_wave_radius - wave_offset;
+
+        if (current_radius <= 0.0) continue;
+
+        // Calcular distancia a esta onda
+        float dist_to_wave = abs(normalized_dist - current_radius);
+
+        // Crear el anillo con falloff
+        float wave = 1.0 - smoothstep(0.0, 2.0, dist_to_wave);
+        wave = pow(wave, 2.0);
+
+        // Pulso animado
+        float pulse = sin(current_radius * 0.3 + TIME * 3.0) * 0.3 + 0.7;
+
+        // Fade out con lifetime
+        float fade = 1.0 - (wave_offset / (voice_wave_spacing * float(voice_num_waves)));
+        fade = smoothstep(0.0, 1.0, fade);
+
+        // Fade out en bordes de pantalla
+        float edge_fade = 1.0 - smoothstep(0.3, 0.5, dist_from_center);
+
+        total_wave += wave * pulse * fade * edge_fade;
+    }
+
+    return clamp(total_wave, 0.0, 1.0);
 }
 
 // --- FRAGMENT ---
@@ -165,14 +200,12 @@ void fragment() {
 
     // 1. Calcular bordes
     float edge_strength = 0.0;
-
     if (use_normal_outline) {
         edge_strength = max(edge_strength, detect_sonar_edges(uv, pixel_size));
     }
     if (use_depth_outline) {
         edge_strength = max(edge_strength, detect_depth_outline(uv, pixel_size));
     }
-
     edge_strength = smoothstep(outline_threshold, outline_threshold + 0.05, edge_strength);
     edge_strength *= outline_intensity;
     edge_strength = clamp(edge_strength, 0.0, 1.0);
@@ -181,18 +214,20 @@ void fragment() {
     float sonar_ring = calculate_sonar_ring_3d(SCREEN_UV);
     float sonar_reveal = calculate_sonar_reveal(SCREEN_UV);
 
+    // 🎤 3. NUEVO: Calcular ondas de voz
+    float voice_wave = calculate_voice_waves(SCREEN_UV);
+
     vec3 final_color;
 
     // --- MODO SONAR: NEGRO + LÍNEAS REVELADAS + ANILLO ---
     if (sonar_mode) {
         float line = pow(edge_strength, 0.6);
-        
-        // Solo mostrar líneas en áreas reveladas por el sonar
         float visible_line = line * sonar_reveal;
-        
-        // Combinar con el anillo actual
         float combined = max(visible_line, sonar_ring * 0.8);
-        
+
+        // 🎤 Agregar ondas de voz en modo sonar
+        combined = max(combined, voice_wave * voice_wave_intensity * 0.3);
+
         final_color = vec3(combined);
     }
     else {
@@ -202,17 +237,16 @@ void fragment() {
 
         vec3 dithered = original_color + (dither / depth) * dither_amount;
         vec3 quantized = round(dithered * depth) / depth;
-
         vec3 ps1_color = max(quantized, vec3(shadow_brightness * 0.5));
-
         vec3 outlined = mix(ps1_color, outline_color.rgb, edge_strength);
-        
-        // Oscurecer áreas no reveladas
         vec3 darkened = mix(vec3(0.0), outlined, sonar_reveal);
-        
-        // Agregar anillo del sonar
+
         vec3 sonar_color = vec3(0.0, 1.0, 0.8);
-        final_color = mix(darkened, sonar_color, sonar_ring * 0.6);
+        vec3 with_sonar = mix(darkened, sonar_color, sonar_ring * 0.6);
+
+        // 🎤 NUEVO: Agregar ondas de voz en modo normal
+        vec3 wave_contribution = voice_wave_color.rgb * voice_wave * voice_wave_intensity;
+        final_color = with_sonar + wave_contribution;
     }
 
     ALBEDO = final_color;
