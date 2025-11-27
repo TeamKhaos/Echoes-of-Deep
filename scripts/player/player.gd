@@ -37,7 +37,7 @@ var is_crouching : bool = false
 var is_dead: bool = false
 
 #MOVE
-var max_speed = 5
+var max_speed = 20
 var crouch_speed = 1.0
 var acceleration = 0.5
 var desaceleration = 0.5
@@ -315,7 +315,7 @@ func crouch():
 		Pivote.position.y = lerp(Pivote.position.y, 1.2, 0.1)
 	else:
 		is_crouching = false
-		max_speed = 2
+		max_speed = 5
 		collision_shape.shape.height = standing_height
 		Pivote.position.y = lerp(Pivote.position.y, 1.6, 0.1)
 
