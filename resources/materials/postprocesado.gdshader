@@ -30,16 +30,6 @@ uniform vec3 sonar_world_position = vec3(0.0, 0.0, 0.0);
 uniform float sonar_width : hint_range(1.0, 20.0) = 5.0;
 uniform float sonar_falloff : hint_range(0.1, 5.0) = 2.0;
 
-// 🎤 NUEVO: Parámetros de ondas de voz
-uniform bool voice_waves_active = false;
-uniform float voice_wave_radius : hint_range(0.0, 20.0) = 0.0;
-uniform vec3 camera_position = vec3(0.0, 0.0, 0.0);
-uniform vec3 camera_forward = vec3(0.0, 0.0, -1.0);
-uniform vec4 voice_wave_color : source_color = vec4(1.0, 0.3, 0.3, 1.0);
-uniform float voice_wave_intensity : hint_range(0.0, 10.0) = 3.0;
-uniform int voice_num_waves : hint_range(1, 5) = 3;
-uniform float voice_wave_spacing : hint_range(1.0, 10.0) = 3.0;
-
 // Parámetros de proyección
 uniform mat4 inv_projection_matrix;
 uniform mat4 inv_view_matrix;
@@ -142,54 +132,6 @@ float calculate_sonar_reveal(vec2 uv) {
     return smoothstep(sonar_radius + sonar_width, sonar_radius - 2.0, dist_3d);
 }
 
-// 🎤 NUEVO: Calcula ondas de voz en screen space (2D billboard)
-float calculate_voice_waves(vec2 screen_uv) {
-    if (!voice_waves_active || voice_wave_radius <= 0.0) {
-        return 0.0;
-    }
-
-    // Calcular distancia desde el centro de la pantalla (donde está la boca)
-    vec2 center = vec2(0.5, 0.5);
-    vec2 offset = screen_uv - center;
-
-    // Convertir a espacio circular
-    float dist_from_center = length(offset);
-
-    // Escalar la distancia para que coincida con el radio en unidades 3D
-    float normalized_dist = dist_from_center * 30.0;
-
-    float total_wave = 0.0;
-
-    // Crear múltiples ondas concéntricas
-    for (int i = 0; i < voice_num_waves; i++) {
-        float wave_offset = float(i) * voice_wave_spacing;
-        float current_radius = voice_wave_radius - wave_offset;
-
-        if (current_radius <= 0.0) continue;
-
-        // Calcular distancia a esta onda
-        float dist_to_wave = abs(normalized_dist - current_radius);
-
-        // Crear el anillo con falloff
-        float wave = 1.0 - smoothstep(0.0, 2.0, dist_to_wave);
-        wave = pow(wave, 2.0);
-
-        // Pulso animado
-        float pulse = sin(current_radius * 0.3 + TIME * 3.0) * 0.3 + 0.7;
-
-        // Fade out con lifetime
-        float fade = 1.0 - (wave_offset / (voice_wave_spacing * float(voice_num_waves)));
-        fade = smoothstep(0.0, 1.0, fade);
-
-        // Fade out en bordes de pantalla
-        float edge_fade = 1.0 - smoothstep(0.3, 0.5, dist_from_center);
-
-        total_wave += wave * pulse * fade * edge_fade;
-    }
-
-    return clamp(total_wave, 0.0, 1.0);
-}
-
 // --- FRAGMENT ---
 void fragment() {
     vec2 res = VIEWPORT_SIZE;
@@ -214,9 +156,6 @@ void fragment() {
     float sonar_ring = calculate_sonar_ring_3d(SCREEN_UV);
     float sonar_reveal = calculate_sonar_reveal(SCREEN_UV);
 
-    // 🎤 3. NUEVO: Calcular ondas de voz
-    float voice_wave = calculate_voice_waves(SCREEN_UV);
-
     vec3 final_color;
 
     // --- MODO SONAR: NEGRO + LÍNEAS REVELADAS + ANILLO ---
@@ -224,10 +163,6 @@ void fragment() {
         float line = pow(edge_strength, 0.6);
         float visible_line = line * sonar_reveal;
         float combined = max(visible_line, sonar_ring * 0.8);
-
-        // 🎤 Agregar ondas de voz en modo sonar
-        combined = max(combined, voice_wave * voice_wave_intensity * 0.3);
-
         final_color = vec3(combined);
     }
     else {
@@ -242,11 +177,7 @@ void fragment() {
         vec3 darkened = mix(vec3(0.0), outlined, sonar_reveal);
 
         vec3 sonar_color = vec3(0.0, 1.0, 0.8);
-        vec3 with_sonar = mix(darkened, sonar_color, sonar_ring * 0.6);
-
-        // 🎤 NUEVO: Agregar ondas de voz en modo normal
-        vec3 wave_contribution = voice_wave_color.rgb * voice_wave * voice_wave_intensity;
-        final_color = with_sonar + wave_contribution;
+        final_color = mix(darkened, sonar_color, sonar_ring * 0.6);
     }
 
     ALBEDO = final_color;

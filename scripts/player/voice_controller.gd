@@ -23,17 +23,66 @@ var release_timer := 0.0
 var current_sonar_radius: float = 0.0
 var shader_material: ShaderMaterial = null
 
-# ✨ Sistema de ondas de voz usando el postprocesado
-@export_group("Voice Waves")
-@export var enable_voice_waves := true
-@export var wave_expansion_speed: float = 8.0
-@export var max_wave_radius: float = 15.0
-@export var wave_color: Color = Color(1.0, 0.3, 0.3, 1.0)
-@export var wave_intensity: float = 3.0
-@export var num_waves: int = 3
-@export var wave_spacing: float = 3.0
+# 🎯 Sistema de proyectiles de voz en 2D
+@export_group("Voice Projectiles")
+@export var enable_voice_projectiles := true
+@export var projectile_speed: float = 300.0  # Píxeles por segundo
+@export var projectile_lifetime: float = 2.0
+@export var spawn_interval: float = 0.2
+@export var projectile_start_size: float = 40.0
+@export var projectile_max_size: float = 150.0
+@export var projectile_color: Color = Color(1.0, 0.3, 0.3, 0.8)
 
-var current_wave_radius: float = 0.0
+var canvas_layer: CanvasLayer = null
+var active_projectiles_2d: Array = []
+var spawn_timer: float = 0.0
+
+# Clase para proyectil 2D
+class VoiceProjectile2D:
+	var control: Control
+	var age: float = 0.0
+	var lifetime: float
+	var start_size: float
+	var max_size: float
+	var speed: float
+	var velocity: Vector2
+	var color: Color
+	
+	func _init(ctrl: Control, _lifetime: float, _start: float, _max: float, _speed: float, vel: Vector2, col: Color):
+		control = ctrl
+		lifetime = _lifetime
+		start_size = _start
+		max_size = _max
+		speed = _speed
+		velocity = vel
+		color = col
+	
+	func update(delta: float) -> bool:
+		age += delta
+		
+		if age >= lifetime:
+			return false
+		
+		var progress = age / lifetime
+		
+		# Expandir tamaño
+		var current_size = lerp(start_size, max_size, progress)
+		control.custom_minimum_size = Vector2(current_size, current_size)
+		control.size = Vector2(current_size, current_size)
+		
+		# Mover
+		control.position += velocity * delta
+		
+		# Fade out
+		var alpha = 1.0 - progress
+		control.modulate = Color(color.r, color.g, color.b, alpha * color.a)
+		
+		control.queue_redraw()
+		return true
+	
+	func destroy():
+		if control:
+			control.queue_free()
 
 func _ready():
 	var mic_stream = AudioStreamMicrophone.new()
@@ -53,33 +102,27 @@ func _ready():
 	var effect_count = AudioServer.get_bus_effect_count(bus_index)
 	print("📊 Efectos en VoiceBus: ", effect_count)
 	
-	if effect_count == 0:
-		push_error("❌ VoiceBus no tiene ningún efecto")
-		return
-	
 	for i in range(effect_count):
 		var effect = AudioServer.get_bus_effect(bus_index, i)
 		if effect is AudioEffectCapture:
 			capture_effect = effect
 			AudioServer.set_bus_effect_enabled(bus_index, i, true)
-			print("✅ AudioEffectCapture encontrado en índice ", i)
+			print("✅ AudioEffectCapture encontrado")
 			break
-	
-	if not capture_effect:
-		push_error("❌ No se encontró AudioEffectCapture en VoiceBus")
 	
 	reverb_area.connect("area_entered", Callable(self, "_on_area_entered"))
 	reverb_area.connect("area_exited", Callable(self, "_on_area_exited"))
 	
 	_find_shader_material()
 	
-	# ✨ Las ondas de voz ahora están integradas en el shader de postprocesado
-	print("✅ Sistema de ondas de voz inicializado (integrado en postprocesado)")
+	# 🎯 Setup proyectiles 2D
+	if enable_voice_projectiles:
+		_setup_projectile_2d_system()
 
 func _process(delta):
 	_process_voice_detection(delta)
 	
-	# 🌊 Actualizar sonar original
+	# 🌊 Actualizar sonar
 	if speaking:
 		current_sonar_radius += sonar_expansion_speed * delta
 		if current_sonar_radius > max_sonar_radius:
@@ -89,71 +132,127 @@ func _process(delta):
 	
 	_update_sonar_shader()
 	
-	# ✨ Actualizar ondas de voz (ahora en el shader de postprocesado)
-	if enable_voice_waves:
-		_update_voice_waves_integrated(delta)
+	# 🎯 Actualizar proyectiles
+	if enable_voice_projectiles:
+		_update_projectile_2d_system(delta)
 
 # =============================================================
-# ✨ SISTEMA DE ONDAS DE VOZ INTEGRADO EN POSTPROCESADO
+# 🎯 SISTEMA DE PROYECTILES 2D
 # =============================================================
-func _update_voice_waves_integrated(delta):
-	if not shader_material:
-		return
-	
+func _setup_projectile_2d_system():
+	# Buscar el PlayerHUD existente
 	var player = get_tree().get_first_node_in_group("player")
 	if not player:
+		push_error("❌ No se encontró el jugador")
 		return
 	
-	var camera = player.get_node_or_null("Pivot/Camera3D")
-	if not camera:
-		return
-	
-	# 🌊 Expandir ondas cuando se está hablando
-	if speaking:
-		current_wave_radius += wave_expansion_speed * delta
-		if current_wave_radius > max_wave_radius:
-			current_wave_radius = 0.0
-			print("🔄 Onda de voz reiniciada")
+	var player_hud = player.get_node_or_null("PlayerHUD")
+	if player_hud and player_hud is CanvasLayer:
+		canvas_layer = player_hud
+		print("✅ Usando PlayerHUD existente para proyectiles")
 	else:
-		current_wave_radius = lerp(current_wave_radius, 0.0, 3.0 * delta)
+		# Crear nuevo CanvasLayer
+		canvas_layer = CanvasLayer.new()
+		canvas_layer.name = "VoiceProjectilesLayer"
+		canvas_layer.layer = 100  # Encima de todo
+		player.add_child(canvas_layer)
+		print("✅ CanvasLayer creado para proyectiles")
 	
-	# Actualizar parámetros del shader de postprocesado
-	shader_material.set_shader_parameter("voice_waves_active", speaking)
-	shader_material.set_shader_parameter("voice_wave_radius", current_wave_radius)
-	shader_material.set_shader_parameter("voice_wave_color", wave_color)
-	shader_material.set_shader_parameter("voice_wave_intensity", wave_intensity)
-	shader_material.set_shader_parameter("voice_num_waves", num_waves)
-	shader_material.set_shader_parameter("voice_wave_spacing", wave_spacing)
-	shader_material.set_shader_parameter("camera_position", camera.global_position)
-	shader_material.set_shader_parameter("camera_forward", -camera.global_transform.basis.z)
+	print("✅ Sistema de proyectiles 2D inicializado")
+
+func _update_projectile_2d_system(delta):
+	if not canvas_layer:
+		return
 	
-	# Debug
-	if speaking and Engine.get_frames_drawn() % 60 == 0:
-		print("🌊 Ondas de voz - Radio: %.2f / %.2f" % [current_wave_radius, max_wave_radius])
+	# Spawn nuevos proyectiles
+	if speaking:
+		spawn_timer += delta
+		
+		if spawn_timer >= spawn_interval:
+			spawn_timer = 0.0
+			_spawn_projectile_2d()
+	
+	# Actualizar existentes
+	var dead = []
+	for i in range(active_projectiles_2d.size()):
+		if not active_projectiles_2d[i].update(delta):
+			dead.append(i)
+	
+	# Eliminar muertos
+	for i in range(dead.size() - 1, -1, -1):
+		var idx = dead[i]
+		active_projectiles_2d[idx].destroy()
+		active_projectiles_2d.remove_at(idx)
+
+func _spawn_projectile_2d():
+	# Crear Control que dibuja un círculo
+	var circle = Control.new()
+	circle.custom_minimum_size = Vector2(projectile_start_size, projectile_start_size)
+	circle.size = Vector2(projectile_start_size, projectile_start_size)
+	
+	# Posición inicial (centro de la pantalla = boca)
+	var viewport_size = get_viewport().get_visible_rect().size
+	circle.position = viewport_size / 2.0 - Vector2(projectile_start_size, projectile_start_size) / 2.0
+	
+	# Dirección aleatoria hacia afuera
+	var angle = randf() * TAU
+	var velocity = Vector2(cos(angle), sin(angle)) * projectile_speed
+	
+	# Conectar el draw
+	circle.draw.connect(_draw_circle.bind(circle))
+	
+	canvas_layer.add_child(circle)
+	
+	var projectile = VoiceProjectile2D.new(
+		circle,
+		projectile_lifetime,
+		projectile_start_size,
+		projectile_max_size,
+		projectile_speed,
+		velocity,
+		projectile_color
+	)
+	
+	active_projectiles_2d.append(projectile)
+	
+	if active_projectiles_2d.size() == 1:
+		print("🎯 Primer proyectil 2D lanzado")
+
+func _draw_circle(control: Control):
+	var radius = control.size.x / 2.0
+	var center = control.size / 2.0
+	
+	# Dibujar círculo relleno
+	control.draw_circle(center, radius, projectile_color)
+	
+	# Dibujar borde brillante
+	var ring_width = max(3.0, radius * 0.15)
+	for i in range(int(ring_width)):
+		var t = float(i) / ring_width
+		var ring_radius = radius - i
+		var ring_alpha = (1.0 - t) * projectile_color.a
+		var ring_color = Color(projectile_color.r, projectile_color.g, projectile_color.b, ring_alpha)
+		control.draw_arc(center, ring_radius, 0, TAU, 32, ring_color, 1.0)
 
 # =============================================================
-# 🔊 SISTEMA DE DETECCIÓN DE VOZ (VOX)
+# 🔊 SISTEMA DE DETECCIÓN DE VOZ
 # =============================================================
 func _process_voice_detection(delta):
 	if not mic_player.playing:
 		_set_speaking(false)
 		return
 	
-	if not capture_effect:
-		return
-		
-	if capture_effect.get_frames_available() == 0:
+	if not capture_effect or capture_effect.get_frames_available() == 0:
 		return
 	
 	var buffer = capture_effect.get_buffer(capture_effect.get_frames_available())
-	
 	var sum := 0.0
 	for sample in buffer:
 		sum += sample.length()
 	var average = sum / buffer.size()
 	
 	if Engine.get_frames_drawn() % 30 == 0:
-		print("🎤 Volumen: %.4f (threshold: %.4f)" % [average, voice_threshold])
+		print("🎤 Volumen: %.4f | Proyectiles: %d" % [average, active_projectiles_2d.size()])
 	
 	if average > voice_threshold:
 		_set_speaking(true)
@@ -171,23 +270,18 @@ func _set_speaking(state: bool):
 	emit_signal("voice_detected", speaking)
 	
 	if speaking:
-		print("🎤 💬 Hablando detectado - Ondas activadas desde la boca")
+		print("🎤 💬 Hablando - Lanzando proyectiles 2D")
+		spawn_timer = spawn_interval
 	else:
-		print("🔇 Silencio detectado")
+		print("🔇 Silencio")
 
 # =============================================================
-# 🎯 SISTEMA DE SHADER (SONAR ORIGINAL)
+# 🎯 SHADER SONAR
 # =============================================================
 func _find_shader_material():
 	var sonar_mesh = get_tree().get_first_node_in_group("sonar_shader")
 	if sonar_mesh and sonar_mesh is MeshInstance3D:
 		shader_material = sonar_mesh.get_active_material(0)
-		if shader_material and shader_material is ShaderMaterial:
-			print("✅ Shader material del sonar encontrado")
-		else:
-			push_warning("⚠️ SonarMesh no tiene ShaderMaterial")
-	else:
-		push_warning("⚠️ No se encontró nodo en grupo 'sonar_shader'")
 
 func _update_sonar_shader():
 	if not shader_material:
@@ -198,7 +292,7 @@ func _update_sonar_shader():
 		return
 	
 	var camera = player.get_node_or_null("Pivot/Camera3D")
-	if not camera or not (camera is Camera3D):
+	if not camera:
 		return
 	
 	shader_material.set_shader_parameter("sonar_world_position", player.global_position)
@@ -206,34 +300,33 @@ func _update_sonar_shader():
 	shader_material.set_shader_parameter("sonar_active", speaking)
 	
 	var projection = camera.get_camera_projection()
-	var inv_projection = projection.inverse()
-	shader_material.set_shader_parameter("inv_projection_matrix", inv_projection)
+	shader_material.set_shader_parameter("inv_projection_matrix", projection.inverse())
 	
-	var view_transform = camera.get_camera_transform()
-	var view = view_transform.affine_inverse()
-	var inv_view = view.inverse()
-	shader_material.set_shader_parameter("inv_view_matrix", inv_view)
+	var view = camera.get_camera_transform().affine_inverse()
+	shader_material.set_shader_parameter("inv_view_matrix", view.inverse())
 	
 	shader_material.set_shader_parameter("camera_near", camera.near)
 	shader_material.set_shader_parameter("camera_far", camera.far)
 
 # =============================================================
-# 🔘 CONTROL DEL MICRÓFONO
+# 🔘 CONTROL
 # =============================================================
 func toggle_microphone():
 	if mic_player.playing:
 		mic_player.stop()
 		emit_signal("microphone_toggled", false)
 		_set_speaking(false)
+		_clear_projectiles()
 	else:
 		mic_player.play()
 		emit_signal("microphone_toggled", true)
 		current_sonar_radius = 0.0
-		current_wave_radius = 0.0
 
-# =============================================================
-# 🎵 SISTEMA DE REVERB
-# =============================================================
+func _clear_projectiles():
+	for p in active_projectiles_2d:
+		p.destroy()
+	active_projectiles_2d.clear()
+
 func _on_area_entered(area: Area3D):
 	if area.is_in_group("reverb_zone"):
 		in_reverb_zone = true
@@ -247,13 +340,9 @@ func _on_area_exited(area: Area3D):
 func _update_reverb():
 	if bus_index == -1:
 		return
-	
 	var should_enable = in_reverb_zone and mic_player.playing
 	AudioServer.set_bus_effect_enabled(bus_index, 0, should_enable)
 
-# =============================================================
-# 📊 MÉTODOS DE UTILIDAD
-# =============================================================
 func is_active() -> bool:
 	return mic_player.playing
 
@@ -262,6 +351,3 @@ func is_speaking() -> bool:
 
 func get_sonar_radius() -> float:
 	return current_sonar_radius
-
-func get_wave_radius() -> float:
-	return current_wave_radius
