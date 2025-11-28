@@ -18,7 +18,6 @@ extends CharacterBody3D
 
 @onready var item_audio = $ItemAudioController
 
-
 # ⏸️ Menú de pausa
 @onready var pause_menu = $PauseMenu
 
@@ -33,17 +32,18 @@ var current_health: int = 100
 #FLAGS
 var can_move : bool = true
 var on_debug := false
-var is_crouching : bool = false
+var is_sprinting : bool = false 
 var is_dead: bool = false
 
 #MOVE
-var max_speed = 20
-var crouch_speed = 1.0
+var walk_speed = 7.0
+var sprint_speed = 14.0
+var max_speed = 5.0
 var acceleration = 0.5
 var desaceleration = 0.5
 var gravity = 25
 
-#CROUCH
+#CROUCH - Ya no se usa pero lo dejo por si acaso
 var standing_height = 2.0
 var crouching_height = 1.0
 
@@ -60,7 +60,7 @@ var is_moving: bool = false
 @export_group("Footsteps Settings")
 @export var footstep_sound: AudioStream
 @export var base_footstep_interval: float = 0.45
-@export var crouch_footstep_interval: float = 0.65
+@export var sprint_footstep_interval: float = 0.3  # 🏃 Pasos más rápidos al correr
 @export var footstep_volume_db: float = -10.0
 @export var pitch_variation: float = 0.15
 
@@ -93,7 +93,7 @@ func _ready():
 	# 👟 Configurar sistema de pasos
 	_setup_footsteps()
 	
-	# 💀 NUEVO: Configurar Game Over
+	# 💀 Configurar Game Over
 	_setup_game_over()
 
 func _setup_footsteps():
@@ -156,7 +156,7 @@ func equip_item_from_slot(slot_index: int):
 
 func _physics_process(delta):
 	if is_on_floor(): _last_frame_was_on_floor = Engine.get_physics_frames()
-	crouch()
+	handle_sprint()  # 🏃 Cambio: de crouch() a handle_sprint()
 	move(delta, get_input())
 
 func _input(event):
@@ -298,7 +298,8 @@ func _play_footsteps():
 	footsteps_player.play()
 	can_footstep = false
 	
-	var interval = crouch_footstep_interval if is_crouching else base_footstep_interval
+	# 🏃 Usar intervalo diferente si está corriendo
+	var interval = sprint_footstep_interval if is_sprinting else base_footstep_interval
 	interval = interval / max(speed_factor, 0.5)
 	
 	footsteps_timer.wait_time = interval
@@ -307,17 +308,14 @@ func _play_footsteps():
 func _on_footsteps_timer_timeout():
 	can_footstep = true
 
-func crouch():
-	if Input.is_action_pressed("Crouch"):
-		is_crouching = true
-		max_speed = crouch_speed
-		collision_shape.shape.height = crouching_height
-		Pivote.position.y = lerp(Pivote.position.y, 1.2, 0.1)
+# 🏃 NUEVA FUNCIÓN: Manejo de carrera (reemplaza crouch)
+func handle_sprint():
+	if Input.is_action_pressed("Crouch"):  # Usa la misma acción "Crouch" (Shift)
+		is_sprinting = true
+		max_speed = sprint_speed
 	else:
-		is_crouching = false
-		max_speed = 5
-		collision_shape.shape.height = standing_height
-		Pivote.position.y = lerp(Pivote.position.y, 1.6, 0.1)
+		is_sprinting = false
+		max_speed = walk_speed
 
 func get_input():
 	var input = Vector3()
@@ -453,6 +451,7 @@ func reset_player():
 	Pivote.cameraLock = false
 	update_health_bar()
 	velocity = Vector3.ZERO
+
 # 🔊 Callback cuando se detecta voz
 func _on_voice_detected(is_speaking: bool):
 	if is_speaking:

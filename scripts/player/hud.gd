@@ -193,7 +193,7 @@ var hunger_warning_threshold := 20.0
 var hunger_warning_active := false
 
 # Velocidad de descenso por segundo
-@export var hunger_decay_rate: float = 1.0
+@export var hunger_decay_rate: float = 0.5
 
 func _process(delta: float):
 	_update_hunger(delta)
