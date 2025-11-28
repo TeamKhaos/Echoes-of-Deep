@@ -113,6 +113,7 @@ hud = NodePath("../PlayerHUD/hud")
 [node name="PlayerHUD" type="CanvasLayer" parent="."]
 
 [node name="hud" parent="PlayerHUD" instance=ExtResource("7_0owmy")]
+sanity_restore_rate_light = 3.0
 
 [node name="PauseMenu" parent="." instance=ExtResource("11_pause")]
 
