@@ -32,27 +32,27 @@ var current_health: int = 100
 #FLAGS
 var can_move : bool = true
 var on_debug := false
-var is_sprinting : bool = false 
+var is_sprinting : bool = false  # 🏃 Cambio: de is_crouching a is_sprinting
 var is_dead: bool = false
 
 #MOVE
-var walk_speed = 7.0
-var sprint_speed = 14.0
+var walk_speed = 5.0
+var sprint_speed = 10.0
 var max_speed = 5.0
 var acceleration = 0.5
 var desaceleration = 0.5
 var gravity = 25
 
-#CROUCH - Ya no se usa pero lo dejo por si acaso
-var standing_height = 2.0
-var crouching_height = 1.0
+#JUMP
+var jump_force = 10.0
+var can_jump = true
 
 #STAIRS
 const MAX_STEP_HEIGHT = 0.2
 var _snaped_to_stairs_last_frame := false
 var _last_frame_was_on_floor = -INF
 
-# 👟 Variables de control de pasos
+# Variables de control de pasos
 var can_footstep: bool = true
 var is_moving: bool = false
 
@@ -262,7 +262,14 @@ func move(delta, input):
 		transform.basis.x.z * input.x + transform.basis.z.z * input.z
 	).normalized() * max_speed
 	
-	velocity.y -= gravity * delta
+	# 🦘 Sistema de salto
+	if is_on_floor():
+		can_jump = true
+		if Input.is_action_just_pressed("ui_accept"):  # Space bar
+			velocity.y = jump_force
+			can_jump = false
+	else:
+		velocity.y -= gravity * delta
 	
 	# 👟 Detectar movimiento
 	is_moving = (input.x != 0 or input.z != 0) and is_on_floor()
