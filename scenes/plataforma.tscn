@@ -1,15 +1,16 @@
-[gd_scene load_steps=14 format=3 uid="uid://cr6a6x442hi2r"]
+[gd_scene load_steps=15 format=3 uid="uid://cr6a6x442hi2r"]
 
 [ext_resource type="PackedScene" uid="uid://0n2ppdjdgm7e" path="res://scenes/player/player.tscn" id="1_bc5n3"]
 [ext_resource type="PackedScene" uid="uid://yqa3bql5mth0" path="res://scenes/GameOver.tscn" id="6_dua2e"]
-[ext_resource type="PackedScene" uid="uid://dqdghv1fle6k2" path="res://scenes/cueva.tscn" id="10_g8lxm"]
-[ext_resource type="Script" path="res://scripts/AmbientWindControll.gd" id="10_yqmvt"]
-[ext_resource type="AudioStream" uid="uid://c52fv2m553jn3" path="res://resources/audio/viento_fuerte.mp3" id="11_2kgci"]
-[ext_resource type="AudioStream" uid="uid://c0jno4xp7bac2" path="res://resources/audio/viento_suave.mp3" id="12_mxmwd"]
-[ext_resource type="Script" path="res://scripts/ItemAudioController.gd" id="13_mxmwd"]
-[ext_resource type="AudioStream" uid="uid://5vwrnvf2jbq3" path="res://resources/audio/pickup.mp3" id="14_34t2b"]
-[ext_resource type="AudioStream" uid="uid://ctx14oknswvxe" path="res://resources/audio/drop.mp3" id="15_dua2e"]
-[ext_resource type="AudioStream" uid="uid://bow4dpbp62fiq" path="res://resources/audio/comer.mp3" id="16_vh305"]
+[ext_resource type="PackedScene" path="res://scenes/cueva.tscn" id="10_g8lxm"]
+[ext_resource type="Script" uid="uid://crh7g3k80a01s" path="res://scripts/AmbientWindControll.gd" id="10_yqmvt"]
+[ext_resource type="AudioStream" uid="uid://co0tgnjj4ylil" path="res://resources/audio/viento_fuerte.mp3" id="11_2kgci"]
+[ext_resource type="PackedScene" uid="uid://duds7kjsed602" path="res://scenes/scenary_objects/cartel.tscn" id="11_g8lxm"]
+[ext_resource type="AudioStream" uid="uid://cxpobmpa53gue" path="res://resources/audio/viento_suave.mp3" id="12_mxmwd"]
+[ext_resource type="Script" uid="uid://dsoj5j6phbx5a" path="res://scripts/ItemAudioController.gd" id="13_mxmwd"]
+[ext_resource type="AudioStream" uid="uid://dkisj0jap0h0r" path="res://resources/audio/pickup.mp3" id="14_34t2b"]
+[ext_resource type="AudioStream" uid="uid://bauivodcj556c" path="res://resources/audio/drop.mp3" id="15_dua2e"]
+[ext_resource type="AudioStream" uid="uid://07gs5dl0xh07" path="res://resources/audio/comer.mp3" id="16_vh305"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_bc5n3"]
 sky_top_color = Color(0.7671376, 0.57678294, 0.42839134, 1)
@@ -66,3 +67,47 @@ stream = ExtResource("12_mxmwd")
 max_distance = 50.0
 
 [node name="cueva" parent="." instance=ExtResource("10_g8lxm")]
+
+[node name="Carteles" type="Node3D" parent="."]
+
+[node name="Cartel" parent="Carteles" instance=ExtResource("11_g8lxm")]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 6.362289, 24.402683, -76.99158)
+
+[node name="Cartel2" parent="Carteles" instance=ExtResource("11_g8lxm")]
+transform = Transform3D(-0.34202006, 0.9396927, 0, 4.107527e-08, 1.4950173e-08, -1, -0.9396927, -0.34202006, -4.371139e-08, -7.4512677, 25.056171, -80.10111)
+
+[node name="Cartel3" parent="Carteles" instance=ExtResource("11_g8lxm")]
+transform = Transform3D(-0.99926287, 0.038387805, -4.1075268e-08, 4.047109e-08, -1.6515944e-08, -1, -0.038387805, -0.99926287, 1.4950174e-08, -20.930061, 28.372913, -223.97256)
+
+[node name="Cartel4" parent="Carteles" instance=ExtResource("11_g8lxm")]
+transform = Transform3D(0.26891977, 0.9631625, -4.1500705e-08, -2.437981e-08, -3.6280984e-08, -1, -0.9631625, 0.26891977, 1.3725045e-08, -33.459328, 28.316114, -245.91719)
+
+[node name="Cartel5" parent="Carteles" instance=ExtResource("11_g8lxm")]
+transform = Transform3D(0.26891977, 0.9631625, -4.1500705e-08, -2.437981e-08, -3.6280984e-08, -1, -0.9631625, 0.26891977, 1.3725045e-08, -122.932976, 28.316114, -245.91719)
+
+[node name="Cartel6" parent="Carteles" instance=ExtResource("11_g8lxm")]
+transform = Transform3D(-0.9975639, 0.069756486, -4.210117e-08, 4.281859e-08, 8.789393e-09, -1, -0.069756486, -0.9975639, -1.17548575e-08, -122.28045, 31.442472, -222.2849)
+
+[node name="Cartel7" parent="Carteles" instance=ExtResource("11_g8lxm")]
+transform = Transform3D(-0.05582152, -0.99844074, 0, -4.364323e-08, 2.4400362e-09, -1, 0.99844074, -0.05582152, -4.371139e-08, 61.060577, 24.402683, -65.62655)
+
+[node name="Cartel8" parent="Carteles" instance=ExtResource("11_g8lxm")]
+transform = Transform3D(-0.05582152, -0.99844074, 0, -4.364323e-08, 2.4400362e-09, -1, 0.99844074, -0.05582152, -4.371139e-08, 74.27093, 24.402683, -1.9476452)
+
+[node name="Cartel9" parent="Carteles" instance=ExtResource("11_g8lxm")]
+transform = Transform3D(-0.05582152, -0.99844074, 0, -4.364323e-08, 2.4400362e-09, -1, 0.99844074, -0.05582152, -4.371139e-08, 74.27093, 24.402683, -1.9476452)
+
+[node name="Cartel10" parent="Carteles" instance=ExtResource("11_g8lxm")]
+transform = Transform3D(0.99296546, 0.11840396, 4.364323e-08, 4.304731e-08, 7.590404e-09, -1, -0.11840396, 0.99296546, 2.4400362e-09, 114.79684, 24.402683, 6.652345)
+
+[node name="Cartel11" parent="Carteles" instance=ExtResource("11_g8lxm")]
+transform = Transform3D(0.99296546, 0.11840396, 4.364323e-08, 4.304731e-08, 7.590404e-09, -1, -0.11840396, 0.99296546, 2.4400362e-09, 187.00616, 25.126066, 6.420311)
+
+[node name="Cartel12" parent="Carteles" instance=ExtResource("11_g8lxm")]
+transform = Transform3D(0.42893502, 0.9033353, -3.6906744e-08, 5.327078e-09, -4.3385565e-08, -1, -0.9033353, 0.42893502, -2.342173e-08, 296.34888, 25.126066, 6.420311)
+
+[node name="Cartel14" parent="Carteles" instance=ExtResource("11_g8lxm")]
+transform = Transform3D(0.03664371, -0.99932826, -3.948604e-08, -2.0183673e-08, 3.877247e-08, -1, 0.99932826, 0.03664371, -1.8749352e-08, 296.34888, 25.126066, 11.886389)
+
+[node name="Cartel13" parent="Carteles" instance=ExtResource("11_g8lxm")]
+transform = Transform3D(-0.88941634, 0.45709792, -3.0419315e-08, 1.2706996e-08, -4.182365e-08, -1, -0.45709792, -0.88941634, 3.1390297e-08, 259.49222, 25.699697, -90.84648)
