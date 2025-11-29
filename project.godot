@@ -11,8 +11,11 @@ config_version=5
 [application]
 
 config/name="Echoes of Deep"
+config/version="1.0.0"
 config/features=PackedStringArray("4.5", "Forward Plus")
-config/icon="res://icon.svg"
+boot_splash/bg_color=Color(0.21176471, 0, 0.34901962, 1)
+boot_splash/image="uid://cn7ja2j2kipn7"
+config/icon="uid://d2g4wa8eiofxa"
 
 [audio]
 
