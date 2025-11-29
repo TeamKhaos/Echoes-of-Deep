@@ -192,14 +192,25 @@ var _low_hunger_tween: Tween = null
 var hunger_warning_threshold := 20.0
 var hunger_warning_active := false
 
+# 🚨 Daño por hambre ### NUEVO
+@export var damage_per_second_at_zero_hunger: float = 2.0 
+var is_starving: bool = false # Estado de inanición ### NUEVO
+var _starvation_damage_accumulator: float = 0.0 # Acumulador para el daño por hambre
+
 # Velocidad de descenso por segundo
-@export var hunger_decay_rate: float = 0.5
+@export var hunger_decay_rate: float = 2
 
 func _process(delta: float):
 	_update_hunger(delta)
 	_process_sanity(delta)
+	
+	# 🚨 NUEVA LÓGICA: Aplicar daño por inanición si el hambre está en 0 ### NUEVO
+	if is_starving:
+		apply_starvation_damage(delta)
+
 
 # 🍗 LÓGICA PRINCIPAL: Reducir hambre constantemente y actualizar barra
+# ### MODIFICADO: Se agregó la lógica de 'is_starving'
 func _update_hunger(delta: float):
 	hunger_value -= hunger_decay_rate * delta
 	hunger_value = clamp(hunger_value, hunger_min, hunger_max)
@@ -209,6 +220,9 @@ func _update_hunger(delta: float):
 	
 	# 🔥 Activar overlay de advertencia cuando hambre es baja
 	_update_hunger_warning(hunger_value <= hunger_warning_threshold)
+	
+	# 🚨 NUEVA LÓGICA: Verificar si el hambre ha llegado a cero ### NUEVO
+	is_starving = (hunger_value <= hunger_min)
 
 
 # 🔥 EFECTO VISUAL: Parpadeo rojo cuando hambre < 20
@@ -236,6 +250,17 @@ func _update_hunger_warning(is_low: bool):
 			"modulate:a", 0.0, 0.4)
 
 
+# 🚨 NUEVA FUNCIÓN: Aplica daño al jugador si está en inanición
+func apply_starvation_damage(delta: float):
+	if GLOBAL.PlayerRef and GLOBAL.PlayerRef.has_method("take_damage"):
+		_starvation_damage_accumulator += damage_per_second_at_zero_hunger * delta
+		
+		if _starvation_damage_accumulator >= 1.0:
+			var damage_to_apply = floori(_starvation_damage_accumulator)
+			GLOBAL.PlayerRef.take_damage(damage_to_apply)
+			_starvation_damage_accumulator -= damage_to_apply
+
+
 # 🍎 FUNCIÓN PÚBLICA: Restaurar hambre (llamada desde ítems consumibles)
 func restore_hunger(amount: float):
 	hunger_value = clamp(hunger_value + amount, hunger_min, hunger_max)
@@ -245,6 +270,7 @@ func restore_hunger(amount: float):
 
 
 # ❤️ FUNCIÓN PÚBLICA: Restaurar vida (llamada desde ítems consumibles)
+# NOTA: Esta función se usa ahora también para el daño por inanición.
 func restore_health(amount: float):
 	if not health_bar:
 		return
@@ -257,14 +283,6 @@ func restore_health(amount: float):
 # 🧠 CORDURA / SANIDAD MENTAL - VERSIÓN MEJORADA
 # ===============================
 
-# AGREGAR ESTAS VARIABLES AL INICIO DEL SCRIPT (después de los @onready existentes)
-
-# Nodos de efectos visuales de locura
-
-# ===============================
-# REEMPLAZAR ESTA SECCIÓN COMPLETA EN TU HUD.GD
-# ===============================
-
 @onready var sanity_bar = $CorduraTexture/Cordura
 
 var sanity_value: float = 100.0
@@ -272,7 +290,7 @@ var sanity_min: float = 0.0
 var sanity_max: float = 100.0
 
 # 🔧 Velocidades ajustadas (MÁS LENTAS)
-@export var sanity_decay_rate_dark: float = 0.5     # Pierde 0.5 puntos/seg en oscuridad (era 2.0)
+@export var sanity_decay_rate_dark: float = 0.5      # Pierde 0.5 puntos/seg en oscuridad (era 2.0)
 @export var sanity_restore_rate_light: float = 3.0  # Gana 3 puntos/seg cerca de luz (era 5.0)
 @export var sanity_warning_threshold: float = 20.0  # Umbral de advertencia en 20%
 
@@ -329,7 +347,6 @@ func _setup_sanity_overlay():
 		_update_shader_params(1.0)  # Comenzar con cordura al 100%
 	
 	canvas_layer.add_child(sanity_effects_overlay)
-	print("✅ Sistema de efectos de cordura inicializado")
 
 
 # ===============================
@@ -431,11 +448,11 @@ func _update_sanity_warning(is_low: bool):
 		_sanity_tween.kill()
 	
 	if is_low:
-		print("⚠️ CORDURA CRÍTICA - Efectos visuales activados")
+		print("aw")
 		# Opcional: reproducir sonido de advertencia
 		# $SanityWarningSound.play()
 	else:
-		print("✅ Cordura restaurada - Efectos desactivados")
+		print("aw")
 
 
 # ===============================
@@ -455,7 +472,6 @@ func restore_sanity(amount: float):
 
 
 func damage_sanity(amount: float):
-	"""Reduce cordura por eventos traumáticos"""
 	sanity_value = clamp(sanity_value - amount, sanity_min, sanity_max)
 	if sanity_bar:
 		sanity_bar.value = sanity_value

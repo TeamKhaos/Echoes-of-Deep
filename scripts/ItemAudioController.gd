@@ -22,7 +22,6 @@ class_name ItemAudioController
 
 func _ready():
 	_setup_audio_players()
-	print("🔊 Sistema de audio de ítems iniciado")
 
 func _setup_audio_players():
 	"""Configura y carga los sonidos"""

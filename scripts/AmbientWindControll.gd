@@ -45,7 +45,6 @@ func _ready():
 	wind_strong.play()
 	wind_soft.play()
 	
-	print("🌬️ Sistema de viento ambiental iniciado")
 
 func _setup_audio_players():
 	# Configurar viento fuerte
@@ -125,13 +124,11 @@ func _process(delta):
 
 func _transition_to_soft_wind():
 	"""Transición suave al viento suave (jugador caminando)"""
-	print("🌬️ Transición a viento suave (caminando)")
 	_create_fade_transition(wind_strong, strong_wind_max_volume, min_volume, 
 						   wind_soft, min_volume, soft_wind_max_volume)
 
 func _transition_to_strong_wind():
 	"""Transición suave al viento fuerte (jugador quieto)"""
-	print("🌬️ Transición a viento fuerte (quieto)")
 	_create_fade_transition(wind_soft, soft_wind_max_volume, min_volume,
 						   wind_strong, min_volume, strong_wind_max_volume)
 

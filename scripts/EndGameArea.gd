@@ -20,19 +20,15 @@ func _ready():
 	collision_layer = 0  # No colisiona con nada
 	collision_mask = 1   # Solo detecta capa 1 (jugador)
 	
-	print("✅ Zona final configurada")
 
 func _on_body_entered(body):
-	print("🔍 Cuerpo detectado: ", body.name)
 	
 	# Prevenir activación múltiple
 	if game_ended:
-		print("⚠️ Juego ya terminado, ignorando...")
 		return
 	
 	# Verificar que sea el jugador
 	if body.name == "Player" or body.is_in_group("player"):
-		print("🏁 ¡Jugador ha llegado al final!")
 		game_ended = true
 		_trigger_end_sequence(body)
 	else:
@@ -54,7 +50,6 @@ func _trigger_end_sequence(player):
 
 # ⚡ Destello blanco
 func _show_white_flash():
-	print("⚡ Mostrando destello blanco...")
 	
 	var flash_instance = white_flash_scene.instantiate()
 	get_tree().current_scene.add_child(flash_instance)
@@ -64,12 +59,9 @@ func _show_white_flash():
 
 # 🎬 Reproducir cinemática
 func _play_cinematic():
-	print("🎬 Reproduciendo cinemática final...")
 	
 	# Verificar que el archivo existe
 	if not ResourceLoader.exists(cinematic_video_path):
-		push_error("⚠️ No se encontró el video en: " + cinematic_video_path)
-		print("⚠️ Saltando cinemática...")
 		await get_tree().create_timer(0.5).timeout
 		return
 	
@@ -105,17 +97,14 @@ func _play_cinematic():
 	
 	# Reproducir video
 	video_player.play()
-	print("▶️ Video reproduciéndose...")
 	
 	# Esperar a que termine el video
 	await video_player.finished
 	
-	print("✅ Cinemática finalizada")
 	video_container.queue_free()
 
 # 📜 Mostrar pantalla de créditos
 func _show_end_credits():
-	print("📜 Mostrando créditos finales...")
 	
 	var credits_instance = end_credits_scene.instantiate()
 	get_tree().current_scene.add_child(credits_instance)
@@ -127,7 +116,6 @@ func _show_end_credits():
 
 # 🔙 Volver al menú principal
 func _return_to_main_menu():
-	print("🔙 Volviendo al menú principal...")
 	
 	# Pequeña pausa antes de cambiar escena
 	await get_tree().create_timer(0.5).timeout

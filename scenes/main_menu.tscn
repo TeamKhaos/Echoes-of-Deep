@@ -99,7 +99,7 @@ text = "NEW GAME"
 custom_minimum_size = Vector2(400, 50)
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
-text = "CÓMO JUGAR"
+text = "HOW TO PLAY"
 
 [node name="ButtonOptions" type="Button" parent="CenterContainer/VBoxContainer"]
 custom_minimum_size = Vector2(400, 50)
@@ -203,7 +203,7 @@ theme_override_constants/separation = 20
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 32
-text = "CÓMO JUGAR"
+text = "HOW TO PLAY"
 horizontal_alignment = 1
 
 [node name="ScrollContainer" type="ScrollContainer" parent="TutorialPanel/MarginContainer/VBoxContainer"]
@@ -216,35 +216,39 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_font_sizes/normal_font_size = 20
 bbcode_enabled = true
-text = "[center][b]CONTROLES[/b][/center]
+text = "[center][b]CONTROLS[/b][/center]
 
-[b]MOVIMIENTO[/b]
-[color=#4a9eff]W[/color] - Mover hacia adelante
-[color=#4a9eff]A[/color] - Mover hacia la izquierda
-[color=#4a9eff]S[/color] - Mover hacia atrás
-[color=#4a9eff]D[/color] - Mover hacia la derecha
+[b]MOVEMENT[/b]
 
-[b]ACCIONES[/b]
-[color=#ff6b6b]F[/color] - Activar ecolocalización (ondas)
-[color=#ff6b6b]R[/color] - Consumir alimentos
-[color=#ff6b6b]E[/color] - Interactuar con objetos
+[color=#4a9eff]W[/color] - Move forward
+[color=#4a9eff]A[/color] - Move left
+[color=#4a9eff]S[/color] - Move backward
+[color=#4a9eff]D[/color] - Move right
 
-[center][b]MECÁNICAS DEL JUEGO[/b][/center]
+[b]ACTIONS[/b]
 
-[b]ECOLOCALIZACIÓN[/b]
-Presiona [color=#ff6b6b]F[/color] para emitir ondas que revelan el entorno. 
-Esta habilidad te permite navegar en la oscuridad del océano profundo.
+[color=#ff6b6b]F[/color] - Activate echolocation (waves)
+[color=#ff6b6b]R[/color] - Consume food
+[color=#ff6b6b]E[/color] - Interact with objects
 
-[b]ALIMENTACIÓN[/b]
-Busca y consume alimentos presionando [color=#ff6b6b]R[/color] para mantener 
-tu energía. La supervivencia depende de tu capacidad para encontrar recursos.
+[center][b]GAME MECHANICS[/b][/center]
 
-[b]SISTEMA DE SANIDAD[/b]
-[color=#ffcc00]¡ADVERTENCIA![/color] Si tu barra de sanidad baja demasiado, 
-la pantalla comenzará a distorsionarse con efectos glitch.
-Mantén tu sanidad alta para evitar estos efectos.
+[b]ECHOLOCATION[/b]
+Press [color=#ff6b6b]F[/color] to emit waves that reveal the environment.
+This ability allows you to navigate through the darkness.
 
-[center][b]¡BUENA SUERTE EN LAS PROFUNDIDADES![/b][/center]"
+[b]FEEDING[/b]
+Search for and consume food by pressing [color=#ff6b6b]R[/color] to maintain your energy.
+Your survival depends on your ability to find resources.
+If your hunger reaches 0, your health will start to decrease.
+
+[b]SANITY SYSTEM[/b]
+[color=#ffcc00]WARNING![/color] If your sanity bar gets too low,
+the screen will begin to distort with glitch effects.
+Keep your sanity high to avoid these effects.
+
+[center][b]GOOD LUCK IN THE DEPTHS![/b][/center]
+"
 fit_content = true
 
 [node name="ButtonBackTutorial" type="Button" parent="TutorialPanel/MarginContainer/VBoxContainer"]
@@ -252,7 +256,7 @@ custom_minimum_size = Vector2(200, 50)
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_font_sizes/font_size = 18
-text = "VOLVER"
+text = "RETURN"
 
 [node name="CreditsPanel" type="Panel" parent="."]
 visible = false

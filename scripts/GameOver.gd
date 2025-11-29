@@ -37,10 +37,8 @@ func _ready():
 	if game_scene.is_empty():
 		game_scene = get_tree().current_scene.scene_file_path
 	
-	print("✅ GameOver inicializado correctamente")
 
 func show_game_over():
-	print("🎮 Mostrando pantalla de Game Over")
 	visible = true
 	get_tree().paused = true
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
