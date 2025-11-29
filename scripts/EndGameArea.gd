@@ -42,6 +42,9 @@ func _trigger_end_sequence(player):
 	# Desactivar controles del jugador
 	if player.has_method("desactivate"):
 		player.desactivate()
+		
+	if "hud" in player and player.hud:
+		player.hud.visible = false
 	
 	# Iniciar secuencia: Destello -> Video -> Créditos -> Main Menu
 	await _show_white_flash()
