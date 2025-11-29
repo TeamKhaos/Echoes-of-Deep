@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://c1118cqtdm1xd"]
+[gd_scene load_steps=16 format=3 uid="uid://c1118cqtdm1xd"]
 
 [ext_resource type="Script" uid="uid://ykhba45yyquk" path="res://scripts/player/hud.gd" id="1_rp8h0"]
 [ext_resource type="Texture2D" uid="uid://b1w40iiltg68w" path="res://resources/images/TeclaE.png" id="2_qyxei"]
@@ -14,6 +14,7 @@
 [ext_resource type="Texture2D" uid="uid://bb0e833u0ciql" path="res://resources/images/vida_progress.png" id="10_wnypu"]
 [ext_resource type="Texture2D" uid="uid://clo1pnt8dx7nx" path="res://resources/images/sanidad.png" id="11_n1yms"]
 [ext_resource type="Texture2D" uid="uid://dbjh3fji2udyt" path="res://resources/images/sanidad_progress.png" id="11_qyxei"]
+[ext_resource type="Texture2D" uid="uid://b36atiepu25x2" path="res://resources/images/mochila.png" id="13_kj5w4"]
 
 [node name="hud" type="Control"]
 texture_filter = 1
@@ -189,6 +190,84 @@ grow_vertical = 2
 expand_mode = 3
 metadata/_edit_use_anchors_ = true
 
+[node name="TeclaItem1" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.73359376
+anchor_top = 0.97083336
+anchor_right = 0.76640624
+anchor_bottom = 0.9947917
+grow_horizontal = 2
+grow_vertical = 0
+text = "1"
+horizontal_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="TeclaItem1" type="Label" parent="TeclaItem1"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = -0.3809524
+anchor_top = -6.260869
+anchor_right = 1.3333334
+anchor_bottom = -5.260869
+grow_horizontal = 2
+grow_vertical = 0
+text = "Slot1"
+horizontal_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="TeclaItem2" type="Label" parent="TeclaItem1"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 2.6428573
+anchor_top = -6.260869
+anchor_right = 4.3571424
+anchor_bottom = -5.260869
+grow_horizontal = 2
+grow_vertical = 0
+text = "Slot2"
+horizontal_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="TeclaItem3" type="Label" parent="TeclaItem1"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 5.5
+anchor_top = -6.1739125
+anchor_right = 7.214285
+anchor_bottom = -5.1739125
+grow_horizontal = 2
+grow_vertical = 0
+text = "Inventory"
+horizontal_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="TeclaItem2" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.83125
+anchor_top = 0.96979165
+anchor_right = 0.8640625
+anchor_bottom = 0.99375
+grow_horizontal = 2
+grow_vertical = 0
+text = "2"
+horizontal_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="TeclaItem3" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.925
+anchor_top = 0.96979165
+anchor_right = 0.9578125
+anchor_bottom = 0.99375
+grow_horizontal = 2
+grow_vertical = 0
+text = "I"
+horizontal_alignment = 1
+metadata/_edit_use_anchors_ = true
+
 [node name="Item1" type="TextureRect" parent="."]
 self_modulate = Color(1, 1, 1, 0.6313726)
 texture_filter = 1
@@ -227,6 +306,19 @@ anchor_top = 0.8441358
 anchor_right = 0.9809028
 anchor_bottom = 0.970679
 texture = ExtResource("4_vo6io")
+metadata/_edit_use_anchors_ = true
+
+[node name="Icon" type="TextureRect" parent="Mochila"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.13522682
+anchor_top = 0.13689035
+anchor_right = 0.8624998
+anchor_bottom = 0.8685976
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("13_kj5w4")
+expand_mode = 3
 metadata/_edit_use_anchors_ = true
 
 [node name="Microphone" type="TextureRect" parent="."]

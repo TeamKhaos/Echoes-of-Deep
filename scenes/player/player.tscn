@@ -117,4 +117,6 @@ sanity_restore_rate_light = 3.0
 
 [node name="PauseMenu" parent="." instance=ExtResource("11_pause")]
 
+[node name="VoiceWave" type="Node3D" parent="."]
+
 [connection signal="timeout" from="FootstepsTimer" to="." method="_on_footsteps_timer_timeout"]

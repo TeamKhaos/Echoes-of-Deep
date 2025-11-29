@@ -198,7 +198,7 @@ var is_starving: bool = false # Estado de inanición ### NUEVO
 var _starvation_damage_accumulator: float = 0.0 # Acumulador para el daño por hambre
 
 # Velocidad de descenso por segundo
-@export var hunger_decay_rate: float = 2
+@export var hunger_decay_rate: float = 0.95
 
 func _process(delta: float):
 	_update_hunger(delta)
