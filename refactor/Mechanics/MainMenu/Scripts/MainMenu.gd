@@ -4,9 +4,9 @@ extends Control
 # 🎮 CONFIGURACIÓN DEL MENÚ
 # ===============================
 
-# Rutas de escenas
-@export_file("*.tscn") var game_scene_path: String = "res://scenes/plataforma.tscn"
-@export_file("*.tscn") var demo_scene_path: String = "res://scenes/plataforma.tscn"
+# Rutas de escenas (obtenidas desde el script global PATHS.gd)
+var game_scene_path: String = PATHS.GAME_SCENE
+var demo_scene_path: String = PATHS.DEMO_SCENE
 
 # Rutas de logos (configura estas en el Inspector)
 @export var developer_logo: Texture2D

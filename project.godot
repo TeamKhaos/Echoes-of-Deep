@@ -26,6 +26,7 @@ driver/enable_input=true
 [autoload]
 
 GLOBAL="*res://scripts/GLOBAL.gd"
+PATHS="*res://refactor/Core/Globals/PATHS.gd"
 
 [display]
 

@@ -1,10 +1,10 @@
-[gd_scene load_steps=6 format=3 uid="uid://dahqqm6cbn4yf"]
+[gd_scene load_steps=6 format=3 uid="uid://cecu804wa8u1o"]
 
-[ext_resource type="Script" uid="uid://c77qmqqkawhyt" path="res://scripts/main_menu.gd" id="1_l6cm7"]
-[ext_resource type="Texture2D" uid="uid://cn7ja2j2kipn7" path="res://resources/images/Dev Studio.png" id="2_bqqt6"]
-[ext_resource type="Texture2D" uid="uid://kas00cq0y5l4" path="res://resources/images/Game Off.png" id="3_wu84c"]
-[ext_resource type="AudioStream" uid="uid://dv2q533pp4u6r" path="res://resources/audio/menu_music.ogg" id="4_wu84c"]
-[ext_resource type="VideoStream" uid="uid://cax8qqaplepm8" path="res://resources/video/intro.ogv" id="5_8ln24"]
+[ext_resource type="Script" uid="uid://ba4a5p1q7tyow" path="res://refactor/Mechanics/MainMenu/Scripts/MainMenu.gd" id="1_hlusx"]
+[ext_resource type="Texture2D" uid="uid://bvx7iqdtktqxp" path="res://refactor/Mechanics/MainMenu/Resources/DeveloperLogo.png" id="3_hlusx"]
+[ext_resource type="Texture2D" uid="uid://dvdueakjjdeik" path="res://refactor/Mechanics/MainMenu/Resources/GameJamLogo.png" id="4_e53ug"]
+[ext_resource type="AudioStream" uid="uid://bpngvwjd2s6ku" path="res://refactor/Mechanics/MainMenu/Resources/MenuMusic.ogg" id="5_e53ug"]
+[ext_resource type="VideoStream" uid="uid://we2t7wab7y3l" path="res://refactor/Mechanics/MainMenu/Resources/VideoBackground.ogv" id="5_hlusx"]
 
 [node name="MainMenu" type="Control"]
 layout_mode = 3
@@ -13,10 +13,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_l6cm7")
-developer_logo = ExtResource("2_bqqt6")
-gamejam_logo = ExtResource("3_wu84c")
-menu_music = ExtResource("4_wu84c")
+script = ExtResource("1_hlusx")
 
 [node name="VideoBackground" type="VideoStreamPlayer" parent="."]
 layout_mode = 1
@@ -26,7 +23,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-stream = ExtResource("5_8ln24")
+stream = ExtResource("5_hlusx")
 expand = true
 loop = true
 
@@ -60,7 +57,7 @@ grow_vertical = 2
 expand_mode = 1
 stretch_mode = 6
 
-[node name="CenterContainer" type="CenterContainer" parent="."]
+[node name="ScreenContent" type="CenterContainer" parent="."]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -74,47 +71,47 @@ offset_bottom = 250.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="ScreenContent"]
 layout_mode = 2
 theme_override_constants/separation = 15
 
-[node name="GameTitle" type="Label" parent="CenterContainer/VBoxContainer"]
+[node name="GameTitle" type="Label" parent="ScreenContent/VBoxContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 48
 text = "Echoes of Deep"
 horizontal_alignment = 1
 
-[node name="Spacer1" type="Control" parent="CenterContainer/VBoxContainer"]
+[node name="Spacer1" type="Control" parent="ScreenContent/VBoxContainer"]
 custom_minimum_size = Vector2(0, 30)
 layout_mode = 2
 
-[node name="ButtonNewGame" type="Button" parent="CenterContainer/VBoxContainer"]
+[node name="ButtonNewGame" type="Button" parent="ScreenContent/VBoxContainer"]
 custom_minimum_size = Vector2(400, 50)
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
 text = "NEW GAME"
 
-[node name="ButtonTutorial" type="Button" parent="CenterContainer/VBoxContainer"]
+[node name="ButtonTutorial" type="Button" parent="ScreenContent/VBoxContainer"]
 custom_minimum_size = Vector2(400, 50)
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
 text = "HOW TO PLAY"
 
-[node name="ButtonOptions" type="Button" parent="CenterContainer/VBoxContainer"]
+[node name="ButtonOptions" type="Button" parent="ScreenContent/VBoxContainer"]
 custom_minimum_size = Vector2(400, 50)
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
 text = "OPTIONS
 "
 
-[node name="ButtonCredits" type="Button" parent="CenterContainer/VBoxContainer"]
+[node name="ButtonCredits" type="Button" parent="ScreenContent/VBoxContainer"]
 custom_minimum_size = Vector2(400, 50)
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
 text = "CREDITS"
 
-[node name="ButtonQuit" type="Button" parent="CenterContainer/VBoxContainer"]
+[node name="ButtonQuit" type="Button" parent="ScreenContent/VBoxContainer"]
 custom_minimum_size = Vector2(400, 50)
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
@@ -133,7 +130,7 @@ offset_right = -20.0
 offset_bottom = -20.0
 grow_horizontal = 0
 grow_vertical = 0
-texture = ExtResource("2_bqqt6")
+texture = ExtResource("3_hlusx")
 expand_mode = 1
 stretch_mode = 5
 
@@ -147,7 +144,7 @@ offset_top = -120.0
 offset_right = 220.0
 offset_bottom = -20.0
 grow_vertical = 0
-texture = ExtResource("3_wu84c")
+texture = ExtResource("4_e53ug")
 expand_mode = 1
 stretch_mode = 5
 
@@ -165,7 +162,12 @@ theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
 theme_override_font_sizes/font_size = 12
 text = "v0.1.0"
 
-[node name="TutorialPanel" type="Panel" parent="."]
+[node name="HiddenContent" type="Control" parent="."]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="TutorialPanel" type="Panel" parent="HiddenContent"]
 visible = false
 layout_mode = 1
 anchors_preset = 15
@@ -174,7 +176,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="ColorRect" type="ColorRect" parent="TutorialPanel"]
+[node name="ColorRect" type="ColorRect" parent="HiddenContent/TutorialPanel"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -183,7 +185,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 0.8)
 
-[node name="MarginContainer" type="MarginContainer" parent="TutorialPanel"]
+[node name="MarginContainer" type="MarginContainer" parent="HiddenContent/TutorialPanel"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -195,22 +197,22 @@ theme_override_constants/margin_top = 100
 theme_override_constants/margin_right = 100
 theme_override_constants/margin_bottom = 100
 
-[node name="VBoxContainer" type="VBoxContainer" parent="TutorialPanel/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="HiddenContent/TutorialPanel/MarginContainer"]
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="TutorialTitle" type="Label" parent="TutorialPanel/MarginContainer/VBoxContainer"]
+[node name="TutorialTitle" type="Label" parent="HiddenContent/TutorialPanel/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 32
 text = "HOW TO PLAY"
 horizontal_alignment = 1
 
-[node name="ScrollContainer" type="ScrollContainer" parent="TutorialPanel/MarginContainer/VBoxContainer"]
+[node name="ScrollContainer" type="ScrollContainer" parent="HiddenContent/TutorialPanel/MarginContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="TutorialText" type="RichTextLabel" parent="TutorialPanel/MarginContainer/VBoxContainer/ScrollContainer"]
+[node name="TutorialText" type="RichTextLabel" parent="HiddenContent/TutorialPanel/MarginContainer/VBoxContainer/ScrollContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -251,14 +253,14 @@ Keep your sanity high to avoid these effects.
 "
 fit_content = true
 
-[node name="ButtonBackTutorial" type="Button" parent="TutorialPanel/MarginContainer/VBoxContainer"]
+[node name="ButtonBackTutorial" type="Button" parent="HiddenContent/TutorialPanel/MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(200, 50)
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_font_sizes/font_size = 18
 text = "RETURN"
 
-[node name="CreditsPanel" type="Panel" parent="."]
+[node name="CreditsPanel" type="Panel" parent="HiddenContent"]
 visible = false
 layout_mode = 1
 anchors_preset = 15
@@ -267,7 +269,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="ColorRect" type="ColorRect" parent="CreditsPanel"]
+[node name="ColorRect" type="ColorRect" parent="HiddenContent/CreditsPanel"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -276,7 +278,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 0.8)
 
-[node name="MarginContainer" type="MarginContainer" parent="CreditsPanel"]
+[node name="MarginContainer" type="MarginContainer" parent="HiddenContent/CreditsPanel"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -288,22 +290,22 @@ theme_override_constants/margin_top = 100
 theme_override_constants/margin_right = 100
 theme_override_constants/margin_bottom = 100
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CreditsPanel/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="HiddenContent/CreditsPanel/MarginContainer"]
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="CreditsTitle" type="Label" parent="CreditsPanel/MarginContainer/VBoxContainer"]
+[node name="CreditsTitle" type="Label" parent="HiddenContent/CreditsPanel/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 32
 text = "CREDITS"
 horizontal_alignment = 1
 
-[node name="ScrollContainer" type="ScrollContainer" parent="CreditsPanel/MarginContainer/VBoxContainer"]
+[node name="ScrollContainer" type="ScrollContainer" parent="HiddenContent/CreditsPanel/MarginContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="CreditsText" type="RichTextLabel" parent="CreditsPanel/MarginContainer/VBoxContainer/ScrollContainer"]
+[node name="CreditsText" type="RichTextLabel" parent="HiddenContent/CreditsPanel/MarginContainer/VBoxContainer/ScrollContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -330,14 +332,14 @@ Alejandra \"Queso\" Moreno
 Community[/center]"
 fit_content = true
 
-[node name="ButtonBack" type="Button" parent="CreditsPanel/MarginContainer/VBoxContainer"]
+[node name="ButtonBack" type="Button" parent="HiddenContent/CreditsPanel/MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(200, 50)
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_font_sizes/font_size = 18
 text = "RETURN"
 
-[node name="OptionsPanel" type="Panel" parent="."]
+[node name="OptionsPanel" type="Panel" parent="HiddenContent"]
 visible = false
 layout_mode = 1
 anchors_preset = 15
@@ -346,7 +348,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="ColorRect" type="ColorRect" parent="OptionsPanel"]
+[node name="ColorRect" type="ColorRect" parent="HiddenContent/OptionsPanel"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -355,7 +357,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 0.8)
 
-[node name="CenterContainer" type="CenterContainer" parent="OptionsPanel"]
+[node name="CenterContainer" type="CenterContainer" parent="HiddenContent/OptionsPanel"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -363,88 +365,88 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="OptionsPanel/CenterContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="HiddenContent/OptionsPanel/CenterContainer"]
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="OptionsTitle" type="Label" parent="OptionsPanel/CenterContainer/VBoxContainer"]
+[node name="OptionsTitle" type="Label" parent="HiddenContent/OptionsPanel/CenterContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 32
 text = "OPTIONS"
 horizontal_alignment = 1
 
-[node name="Spacer" type="Control" parent="OptionsPanel/CenterContainer/VBoxContainer"]
+[node name="Spacer" type="Control" parent="HiddenContent/OptionsPanel/CenterContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
 
-[node name="MasterVolumeLabel" type="Label" parent="OptionsPanel/CenterContainer/VBoxContainer"]
+[node name="MasterVolumeLabel" type="Label" parent="HiddenContent/OptionsPanel/CenterContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 18
 text = "General Volume"
 
-[node name="MasterVolumeSlider" type="HSlider" parent="OptionsPanel/CenterContainer/VBoxContainer"]
+[node name="MasterVolumeSlider" type="HSlider" parent="HiddenContent/OptionsPanel/CenterContainer/VBoxContainer"]
 custom_minimum_size = Vector2(400, 30)
 layout_mode = 2
 max_value = 1.0
 step = 0.01
 value = 0.7
 
-[node name="MusicVolumeLabel" type="Label" parent="OptionsPanel/CenterContainer/VBoxContainer"]
+[node name="MusicVolumeLabel" type="Label" parent="HiddenContent/OptionsPanel/CenterContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 18
 text = "Music Volume"
 
-[node name="MusicVolumeSlider" type="HSlider" parent="OptionsPanel/CenterContainer/VBoxContainer"]
+[node name="MusicVolumeSlider" type="HSlider" parent="HiddenContent/OptionsPanel/CenterContainer/VBoxContainer"]
 custom_minimum_size = Vector2(400, 30)
 layout_mode = 2
 max_value = 1.0
 step = 0.01
 value = 0.5
 
-[node name="SFXVolumeLabel" type="Label" parent="OptionsPanel/CenterContainer/VBoxContainer"]
+[node name="SFXVolumeLabel" type="Label" parent="HiddenContent/OptionsPanel/CenterContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 18
 text = "Volume Effects"
 
-[node name="SFXVolumeSlider" type="HSlider" parent="OptionsPanel/CenterContainer/VBoxContainer"]
+[node name="SFXVolumeSlider" type="HSlider" parent="HiddenContent/OptionsPanel/CenterContainer/VBoxContainer"]
 custom_minimum_size = Vector2(400, 30)
 layout_mode = 2
 max_value = 1.0
 step = 0.01
 value = 0.7
 
-[node name="Spacer2" type="Control" parent="OptionsPanel/CenterContainer/VBoxContainer"]
+[node name="Spacer2" type="Control" parent="HiddenContent/OptionsPanel/CenterContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
 
-[node name="FullscreenCheckbox" type="CheckBox" parent="OptionsPanel/CenterContainer/VBoxContainer"]
+[node name="FullscreenCheckbox" type="CheckBox" parent="HiddenContent/OptionsPanel/CenterContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 18
 text = "Full screen"
 
-[node name="Spacer3" type="Control" parent="OptionsPanel/CenterContainer/VBoxContainer"]
+[node name="Spacer3" type="Control" parent="HiddenContent/OptionsPanel/CenterContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
 
-[node name="ButtonBackOptions" type="Button" parent="OptionsPanel/CenterContainer/VBoxContainer"]
+[node name="ButtonBackOptions" type="Button" parent="HiddenContent/OptionsPanel/CenterContainer/VBoxContainer"]
 custom_minimum_size = Vector2(200, 50)
 layout_mode = 2
 theme_override_font_sizes/font_size = 18
 text = "RETURN"
 
-[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("4_wu84c")
+[node name="MenuMusic" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("5_e53ug")
 
-[connection signal="pressed" from="CenterContainer/VBoxContainer/ButtonNewGame" to="." method="_on_button_new_game_pressed"]
-[connection signal="pressed" from="CenterContainer/VBoxContainer/ButtonTutorial" to="." method="_on_button_tutorial_pressed"]
-[connection signal="pressed" from="CenterContainer/VBoxContainer/ButtonOptions" to="." method="_on_button_options_pressed"]
-[connection signal="pressed" from="CenterContainer/VBoxContainer/ButtonCredits" to="." method="_on_button_credits_pressed"]
-[connection signal="pressed" from="CenterContainer/VBoxContainer/ButtonQuit" to="." method="_on_button_quit_pressed"]
-[connection signal="pressed" from="TutorialPanel/MarginContainer/VBoxContainer/ButtonBackTutorial" to="." method="_on_button_back_tutorial_pressed"]
-[connection signal="pressed" from="CreditsPanel/MarginContainer/VBoxContainer/ButtonBack" to="." method="_on_button_back_credits_pressed"]
-[connection signal="value_changed" from="OptionsPanel/CenterContainer/VBoxContainer/MasterVolumeSlider" to="." method="_on_master_volume_changed"]
-[connection signal="value_changed" from="OptionsPanel/CenterContainer/VBoxContainer/MusicVolumeSlider" to="." method="_on_music_volume_changed"]
-[connection signal="value_changed" from="OptionsPanel/CenterContainer/VBoxContainer/SFXVolumeSlider" to="." method="_on_sfx_volume_changed"]
-[connection signal="toggled" from="OptionsPanel/CenterContainer/VBoxContainer/FullscreenCheckbox" to="." method="_on_fullscreen_toggled"]
-[connection signal="pressed" from="OptionsPanel/CenterContainer/VBoxContainer/ButtonBackOptions" to="." method="_on_button_back_options_pressed"]
+[connection signal="pressed" from="ScreenContent/VBoxContainer/ButtonNewGame" to="." method="_on_button_new_game_pressed"]
+[connection signal="pressed" from="ScreenContent/VBoxContainer/ButtonTutorial" to="." method="_on_button_tutorial_pressed"]
+[connection signal="pressed" from="ScreenContent/VBoxContainer/ButtonOptions" to="." method="_on_button_options_pressed"]
+[connection signal="pressed" from="ScreenContent/VBoxContainer/ButtonCredits" to="." method="_on_button_credits_pressed"]
+[connection signal="pressed" from="ScreenContent/VBoxContainer/ButtonQuit" to="." method="_on_button_quit_pressed"]
+[connection signal="pressed" from="HiddenContent/TutorialPanel/MarginContainer/VBoxContainer/ButtonBackTutorial" to="." method="_on_button_back_tutorial_pressed"]
+[connection signal="pressed" from="HiddenContent/CreditsPanel/MarginContainer/VBoxContainer/ButtonBack" to="." method="_on_button_back_credits_pressed"]
+[connection signal="value_changed" from="HiddenContent/OptionsPanel/CenterContainer/VBoxContainer/MasterVolumeSlider" to="." method="_on_master_volume_changed"]
+[connection signal="value_changed" from="HiddenContent/OptionsPanel/CenterContainer/VBoxContainer/MusicVolumeSlider" to="." method="_on_music_volume_changed"]
+[connection signal="value_changed" from="HiddenContent/OptionsPanel/CenterContainer/VBoxContainer/SFXVolumeSlider" to="." method="_on_sfx_volume_changed"]
+[connection signal="toggled" from="HiddenContent/OptionsPanel/CenterContainer/VBoxContainer/FullscreenCheckbox" to="." method="_on_fullscreen_toggled"]
+[connection signal="pressed" from="HiddenContent/OptionsPanel/CenterContainer/VBoxContainer/ButtonBackOptions" to="." method="_on_button_back_options_pressed"]
