@@ -16,7 +16,7 @@ run/main_scene="uid://dahqqm6cbn4yf"
 config/features=PackedStringArray("4.5", "Forward Plus")
 boot_splash/bg_color=Color(0.21176471, 0, 0.34901962, 1)
 boot_splash/image="uid://cn7ja2j2kipn7"
-config/icon="uid://d2g4wa8eiofxa"
+config/icon="res://icon.png"
 boot_splash/minimum_display_time=3500
 
 [audio]

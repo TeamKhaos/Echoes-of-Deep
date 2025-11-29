@@ -2,7 +2,7 @@ extends Control
 
 # 🔹 Retícula (Crosshair)
 @onready var crosshair = $Crosshair
-@export var normal_crosshair: Texture2D = preload("res://resources/images/cruz.png")
+@export var normal_crosshair: Texture2D = preload("res://resources/images/Cruz.png")
 @export var interact_crosshair: Texture2D = preload("res://resources/images/SecObj.png")
 
 # 🔹 Inventario
