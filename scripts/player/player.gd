@@ -36,23 +36,28 @@ var is_sprinting : bool = false  # 🏃 Cambio: de is_crouching a is_sprinting
 var is_dead: bool = false
 
 #MOVE
-var walk_speed = 5.0
-var sprint_speed = 10.0
-var max_speed = 5.0
+var walk_speed = 5.0  # 🏃 Velocidad normal al caminar
+var sprint_speed = 10.0  # 🏃 Velocidad al correr
+var max_speed = 5.0  # Se actualizará dinámicamente
 var acceleration = 0.5
 var desaceleration = 0.5
+var air_acceleration = 0.3  # 🦘 Control en el aire (menor que en tierra)
 var gravity = 25
 
 #JUMP
-var jump_force = 10.0
-var can_jump = true
+var jump_force = 8.0  # 🦘 Fuerza del salto
+var can_jump = true  # Control para evitar saltos múltiples
+
+#CROUCH - Ya no se usa pero lo dejo por si acaso
+var standing_height = 2.0
+var crouching_height = 1.0
 
 #STAIRS
 const MAX_STEP_HEIGHT = 0.2
 var _snaped_to_stairs_last_frame := false
 var _last_frame_was_on_floor = -INF
 
-# Variables de control de pasos
+# 👟 Variables de control de pasos
 var can_footstep: bool = true
 var is_moving: bool = false
 
@@ -271,16 +276,25 @@ func move(delta, input):
 	else:
 		velocity.y -= gravity * delta
 	
-	# 👟 Detectar movimiento
+	# 👟 Detectar movimiento (en tierra o aire)
 	is_moving = (input.x != 0 or input.z != 0) and is_on_floor()
 	
-	if is_moving:
-		_play_footsteps()
-		velocity.x = lerp(velocity.x, impulse.x, acceleration)
-		velocity.z = lerp(velocity.z, impulse.z, acceleration)
+	# 🎮 Control de movimiento horizontal
+	if input.x != 0 or input.z != 0:
+		# Usar diferente aceleración según si está en el suelo o en el aire
+		var current_acceleration = acceleration if is_on_floor() else air_acceleration
+		velocity.x = lerp(velocity.x, impulse.x, current_acceleration)
+		velocity.z = lerp(velocity.z, impulse.z, current_acceleration)
+		
+		# Reproducir pasos solo si está en el suelo
+		if is_on_floor():
+			_play_footsteps()
 	else:
-		velocity.x = lerp(velocity.x, 0.0, desaceleration)
-		velocity.z = lerp(velocity.z, 0.0, desaceleration)
+		# Solo desacelerar si está en el suelo
+		if is_on_floor():
+			velocity.x = lerp(velocity.x, 0.0, desaceleration)
+			velocity.z = lerp(velocity.z, 0.0, desaceleration)
+		# En el aire, mantener la velocidad horizontal
 	
 	move_and_slide()
 
