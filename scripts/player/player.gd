@@ -94,7 +94,8 @@ func _ready():
 	can_move = true
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	GLOBAL.update_hud.emit()
-	
+	if hud:
+		update_health_bar()
 	# 👟 Configurar sistema de pasos
 	_setup_footsteps()
 	
@@ -405,13 +406,11 @@ func take_damage(amount: int):
 	current_health = clamp(current_health, 0, max_health)
 	update_health_bar()
 	
+	
 	if current_health <= 0:
 		die()
 
-func heal(amount: int):
-	current_health += amount
-	current_health = clamp(current_health, 0, max_health)
-	update_health_bar()
+
 
 func update_health_bar():
 	if hud and hud.has_method("set_health"):
@@ -476,11 +475,18 @@ func reset_player():
 # 🔊 Callback cuando se detecta voz
 func _on_voice_detected(is_speaking: bool):
 	if is_speaking:
-		print("🎤 Jugador está hablando")
 		# Aquí puedes hacer que las partículas se activen
 		if voiceparticle:
 			voiceparticle.visible = true
 	else:
-		print("🔇 Jugador dejó de hablar")
 		if voiceparticle:
 			voiceparticle.visible = false
+func heal(amount: int):
+	if is_dead:
+		return
+	
+	current_health += amount
+	current_health = clamp(current_health, 0, max_health)
+	update_health_bar()
+	
+	print("💚 Jugador curado %d puntos. Vida actual: %d/%d" % [amount, current_health, max_health])

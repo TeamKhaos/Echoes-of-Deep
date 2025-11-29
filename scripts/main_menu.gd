@@ -110,15 +110,12 @@ func _setup_video_background():
 			video_overlay.color = Color(0, 0, 0, video_overlay_opacity)
 			video_overlay.visible = true
 		
-		print("🎬 Video de fondo configurado correctamente")
 	else:
 		# Si no hay video asignado, mostrar fondo estático
 		if background_rect:
 			background_rect.visible = true
-		push_warning("⚠️ VideoBackground existe pero no tiene stream asignado")
 
 func _on_video_finished():
-	"""Reinicia el video cuando termina (backup por si loop falla)"""
 	if video_background and video_background.stream:
 		video_background.play()
 

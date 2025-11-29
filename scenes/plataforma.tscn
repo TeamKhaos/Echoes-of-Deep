@@ -6,7 +6,7 @@
 [ext_resource type="Script" uid="uid://crh7g3k80a01s" path="res://scripts/AmbientWindControll.gd" id="10_yqmvt"]
 [ext_resource type="AudioStream" uid="uid://c52fv2m553jn3" path="res://resources/audio/viento_fuerte.mp3" id="11_2kgci"]
 [ext_resource type="PackedScene" uid="uid://duds7kjsed602" path="res://scenes/scenary_objects/cartel.tscn" id="11_g8lxm"]
-[ext_resource type="Script" path="res://scripts/EndGameArea.gd" id="12_2kgci"]
+[ext_resource type="Script" uid="uid://wj4cg0ifrbot" path="res://scripts/EndGameArea.gd" id="12_2kgci"]
 [ext_resource type="AudioStream" uid="uid://c0jno4xp7bac2" path="res://resources/audio/viento_suave.mp3" id="12_mxmwd"]
 [ext_resource type="Script" uid="uid://dsoj5j6phbx5a" path="res://scripts/ItemAudioController.gd" id="13_mxmwd"]
 [ext_resource type="AudioStream" uid="uid://5vwrnvf2jbq3" path="res://resources/audio/pickup.mp3" id="14_34t2b"]
@@ -38,7 +38,6 @@ environment = SubResource("Environment_g8lxm")
 
 [node name="Player" parent="." instance=ExtResource("1_bc5n3")]
 transform = Transform3D(0.009354769, 0, -0.99995625, 0, 1, 0, 0.99995625, 0, 0.009354769, -8.994766, 27.179583, 17.090664)
-visible = false
 
 [node name="ItemAudioController" type="Node3D" parent="Player"]
 transform = Transform3D(0.009354769, 0, 0.99995625, 0, 1, 0, -0.99995625, 0, 0.009354769, -5.8405504, -0.8527156, -0.05463939)

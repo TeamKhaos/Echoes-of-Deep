@@ -100,14 +100,12 @@ func _ready():
 		return
 	
 	var effect_count = AudioServer.get_bus_effect_count(bus_index)
-	print("📊 Efectos en VoiceBus: ", effect_count)
 	
 	for i in range(effect_count):
 		var effect = AudioServer.get_bus_effect(bus_index, i)
 		if effect is AudioEffectCapture:
 			capture_effect = effect
 			AudioServer.set_bus_effect_enabled(bus_index, i, true)
-			print("✅ AudioEffectCapture encontrado")
 			break
 	
 	reverb_area.connect("area_entered", Callable(self, "_on_area_entered"))
@@ -149,16 +147,13 @@ func _setup_projectile_2d_system():
 	var player_hud = player.get_node_or_null("PlayerHUD")
 	if player_hud and player_hud is CanvasLayer:
 		canvas_layer = player_hud
-		print("✅ Usando PlayerHUD existente para proyectiles")
 	else:
 		# Crear nuevo CanvasLayer
 		canvas_layer = CanvasLayer.new()
 		canvas_layer.name = "VoiceProjectilesLayer"
 		canvas_layer.layer = 100  # Encima de todo
 		player.add_child(canvas_layer)
-		print("✅ CanvasLayer creado para proyectiles")
 	
-	print("✅ Sistema de proyectiles 2D inicializado")
 
 func _update_projectile_2d_system(delta):
 	if not canvas_layer:
@@ -214,9 +209,6 @@ func _spawn_projectile_2d():
 	)
 	
 	active_projectiles_2d.append(projectile)
-	
-	if active_projectiles_2d.size() == 1:
-		print("🎯 Primer proyectil 2D lanzado")
 
 func _draw_circle(control: Control):
 	var radius = control.size.x / 2.0
@@ -251,9 +243,6 @@ func _process_voice_detection(delta):
 		sum += sample.length()
 	var average = sum / buffer.size()
 	
-	if Engine.get_frames_drawn() % 30 == 0:
-		print("🎤 Volumen: %.4f | Proyectiles: %d" % [average, active_projectiles_2d.size()])
-	
 	if average > voice_threshold:
 		_set_speaking(true)
 		release_timer = voice_release_time
@@ -270,10 +259,7 @@ func _set_speaking(state: bool):
 	emit_signal("voice_detected", speaking)
 	
 	if speaking:
-		print("🎤 💬 Hablando - Lanzando proyectiles 2D")
 		spawn_timer = spawn_interval
-	else:
-		print("🔇 Silencio")
 
 # =============================================================
 # 🎯 SHADER SONAR

@@ -74,21 +74,21 @@ custom_minimum_size = Vector2(300, 60)
 layout_mode = 2
 theme = SubResource("Theme_gameover")
 theme_override_font_sizes/font_size = 28
-text = "REINTENTAR"
+text = "RETRY"
 
 [node name="BtnMainMenu" type="Button" parent="Control/CenterContainer/VBoxContainer"]
 custom_minimum_size = Vector2(300, 60)
 layout_mode = 2
 theme = SubResource("Theme_gameover")
 theme_override_font_sizes/font_size = 28
-text = "MENÚ PRINCIPAL"
+text = "MAIN MENU"
 
 [node name="BtnQuit" type="Button" parent="Control/CenterContainer/VBoxContainer"]
 custom_minimum_size = Vector2(300, 60)
 layout_mode = 2
 theme = SubResource("Theme_gameover")
 theme_override_font_sizes/font_size = 28
-text = "SALIR"
+text = "EXIT"
 
 [node name="DeathSound" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("2")

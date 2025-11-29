@@ -42,4 +42,3 @@ func _ready():
 	var tween = create_tween()
 	tween.tween_property(self, "modulate:a", 1.0, 1.0)
 	
-	print("📜 Mostrando pantalla de créditos")
