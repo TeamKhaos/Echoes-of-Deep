@@ -333,3 +333,9 @@ func _play_button_sound():
 		audio.play()
 		await audio.finished
 		audio.queue_free()
+		
+func _on_button_tutorial_pressed():
+	$TutorialPanel.show()
+
+func _on_button_back_tutorial_pressed():
+	$TutorialPanel.hide()

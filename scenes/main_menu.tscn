@@ -82,8 +82,7 @@ theme_override_constants/separation = 15
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 48
-text = "Echoes of Deep
-"
+text = "Echoes of Deep"
 horizontal_alignment = 1
 
 [node name="Spacer1" type="Control" parent="CenterContainer/VBoxContainer"]
@@ -95,6 +94,12 @@ custom_minimum_size = Vector2(400, 50)
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
 text = "NUEVA PARTIDA"
+
+[node name="ButtonTutorial" type="Button" parent="CenterContainer/VBoxContainer"]
+custom_minimum_size = Vector2(400, 50)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "CÓMO JUGAR"
 
 [node name="ButtonOptions" type="Button" parent="CenterContainer/VBoxContainer"]
 custom_minimum_size = Vector2(400, 50)
@@ -158,6 +163,95 @@ grow_vertical = 0
 theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
 theme_override_font_sizes/font_size = 12
 text = "v0.1.0"
+
+[node name="TutorialPanel" type="Panel" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="TutorialPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.8)
+
+[node name="MarginContainer" type="MarginContainer" parent="TutorialPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 100
+theme_override_constants/margin_top = 100
+theme_override_constants/margin_right = 100
+theme_override_constants/margin_bottom = 100
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TutorialPanel/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="TutorialTitle" type="Label" parent="TutorialPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 32
+text = "CÓMO JUGAR"
+horizontal_alignment = 1
+
+[node name="ScrollContainer" type="ScrollContainer" parent="TutorialPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="TutorialText" type="RichTextLabel" parent="TutorialPanel/MarginContainer/VBoxContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_font_sizes/normal_font_size = 20
+bbcode_enabled = true
+text = "[center][b]CONTROLES[/b][/center]
+
+[b]MOVIMIENTO[/b]
+[color=#4a9eff]W[/color] - Mover hacia adelante
+[color=#4a9eff]A[/color] - Mover hacia la izquierda
+[color=#4a9eff]S[/color] - Mover hacia atrás
+[color=#4a9eff]D[/color] - Mover hacia la derecha
+
+[b]ACCIONES[/b]
+[color=#ff6b6b]F[/color] - Activar ecolocalización (ondas)
+[color=#ff6b6b]R[/color] - Consumir alimentos
+[color=#ff6b6b]E[/color] - Interactuar con objetos
+
+[center][b]MECÁNICAS DEL JUEGO[/b][/center]
+
+[b]ECOLOCALIZACIÓN[/b]
+Presiona [color=#ff6b6b]F[/color] para emitir ondas que revelan el entorno. 
+Esta habilidad te permite navegar en la oscuridad del océano profundo.
+
+[b]ALIMENTACIÓN[/b]
+Busca y consume alimentos presionando [color=#ff6b6b]R[/color] para mantener 
+tu energía. La supervivencia depende de tu capacidad para encontrar recursos.
+
+[b]SISTEMA DE SANIDAD[/b]
+[color=#ffcc00]¡ADVERTENCIA![/color] Si tu barra de sanidad baja demasiado, 
+la pantalla comenzará a distorsionarse con efectos glitch.
+Mantén tu sanidad alta para evitar estos efectos.
+
+[center][b]¡BUENA SUERTE EN LAS PROFUNDIDADES![/b][/center]"
+fit_content = true
+
+[node name="ButtonBackTutorial" type="Button" parent="TutorialPanel/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(200, 50)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 18
+text = "VOLVER"
 
 [node name="CreditsPanel" type="Panel" parent="."]
 visible = false
@@ -338,9 +432,11 @@ text = "VOLVER"
 stream = ExtResource("4_wu84c")
 
 [connection signal="pressed" from="CenterContainer/VBoxContainer/ButtonNewGame" to="." method="_on_button_new_game_pressed"]
+[connection signal="pressed" from="CenterContainer/VBoxContainer/ButtonTutorial" to="." method="_on_button_tutorial_pressed"]
 [connection signal="pressed" from="CenterContainer/VBoxContainer/ButtonOptions" to="." method="_on_button_options_pressed"]
 [connection signal="pressed" from="CenterContainer/VBoxContainer/ButtonCredits" to="." method="_on_button_credits_pressed"]
 [connection signal="pressed" from="CenterContainer/VBoxContainer/ButtonQuit" to="." method="_on_button_quit_pressed"]
+[connection signal="pressed" from="TutorialPanel/MarginContainer/VBoxContainer/ButtonBackTutorial" to="." method="_on_button_back_tutorial_pressed"]
 [connection signal="pressed" from="CreditsPanel/MarginContainer/VBoxContainer/ButtonBack" to="." method="_on_button_back_credits_pressed"]
 [connection signal="value_changed" from="OptionsPanel/CenterContainer/VBoxContainer/MasterVolumeSlider" to="." method="_on_master_volume_changed"]
 [connection signal="value_changed" from="OptionsPanel/CenterContainer/VBoxContainer/MusicVolumeSlider" to="." method="_on_music_volume_changed"]
