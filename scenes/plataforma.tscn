@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://cr6a6x442hi2r"]
+[gd_scene load_steps=17 format=3 uid="uid://cr6a6x442hi2r"]
 
 [ext_resource type="PackedScene" uid="uid://0n2ppdjdgm7e" path="res://scenes/player/player.tscn" id="1_bc5n3"]
 [ext_resource type="PackedScene" uid="uid://yqa3bql5mth0" path="res://scenes/GameOver.tscn" id="6_dua2e"]
@@ -6,6 +6,7 @@
 [ext_resource type="Script" uid="uid://crh7g3k80a01s" path="res://scripts/AmbientWindControll.gd" id="10_yqmvt"]
 [ext_resource type="AudioStream" uid="uid://co0tgnjj4ylil" path="res://resources/audio/viento_fuerte.mp3" id="11_2kgci"]
 [ext_resource type="PackedScene" uid="uid://duds7kjsed602" path="res://scenes/scenary_objects/cartel.tscn" id="11_g8lxm"]
+[ext_resource type="Script" uid="uid://wj4cg0ifrbot" path="res://scripts/EndGameArea.gd" id="12_2kgci"]
 [ext_resource type="AudioStream" uid="uid://cxpobmpa53gue" path="res://resources/audio/viento_suave.mp3" id="12_mxmwd"]
 [ext_resource type="Script" uid="uid://dsoj5j6phbx5a" path="res://scripts/ItemAudioController.gd" id="13_mxmwd"]
 [ext_resource type="AudioStream" uid="uid://dkisj0jap0h0r" path="res://resources/audio/pickup.mp3" id="14_34t2b"]
@@ -26,6 +27,9 @@ background_mode = 2
 sky = SubResource("Sky_yqmvt")
 tonemap_mode = 2
 glow_enabled = true
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_g8lxm"]
+size = Vector3(1, 0.4979248, 0.86413574)
 
 [node name="Plataforma" type="Node3D"]
 
@@ -111,3 +115,12 @@ transform = Transform3D(0.03664371, -0.99932826, -3.948604e-08, -2.0183673e-08, 
 
 [node name="Cartel13" parent="Carteles" instance=ExtResource("11_g8lxm")]
 transform = Transform3D(-0.88941634, 0.45709792, -3.0419315e-08, 1.2706996e-08, -4.182365e-08, -1, -0.45709792, -0.88941634, 3.1390297e-08, 259.49222, 25.699697, -90.84648)
+
+[node name="EndGameZone" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 512.9104, 45.209732, -316.74496)
+script = ExtResource("12_2kgci")
+cinematic_video_path = "uid://b7fl6teyjh7y"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="EndGameZone"]
+transform = Transform3D(120, 0, 0, 0, 120, 0, 0, 0, 120, -0.8564453, 1.8731918, 63.715485)
+shape = SubResource("BoxShape3D_g8lxm")
