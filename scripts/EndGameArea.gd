@@ -32,7 +32,7 @@ func _on_body_entered(body):
 		game_ended = true
 		_trigger_end_sequence(body)
 	else:
-		print("❌ No es el jugador, es: ", body.name)
+		print("ERROR")
 
 func _trigger_end_sequence(player):
 	# Desactivar controles del jugador

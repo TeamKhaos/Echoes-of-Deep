@@ -229,18 +229,18 @@ func _try_consume_held_item():
 		return
 	
 	if object_marker.get_child_count() == 0:
-		print("⚠️ No tienes nada en la mano para consumir")
+		
 		return
 	
 	var held_item = object_marker.get_child(0)
 	
 	if not held_item.has_method("consume"):
-		print("⚠️ Este ítem NO tiene el método consume()")
+		
 		return
 	
 	if "is_consumable" in held_item:
 		if not held_item.is_consumable:
-			print("⚠️ Este ítem no es consumible")
+			
 			return
 	
 	# 🔊 SONIDO DE CONSUMIR
@@ -254,7 +254,6 @@ func _try_consume_held_item():
 	var success = held_item.consume(self)
 	
 	if success:
-		print("✅ Ítem consumido exitosamente")
 		if "item_id" in held_item:
 			remove_from_inventory(held_item.item_id)
 
@@ -421,7 +420,6 @@ func die():
 	if is_dead:
 		return
 	
-	print("💀 Player ha muerto")
 	is_dead = true
 	
 	# Desactivar controles
@@ -458,10 +456,8 @@ func _setup_game_over():
 		game_over_screen = $GameOver
 		if game_over_screen:
 			game_over_screen.visible = false
-			print("✅ GameOver configurado correctamente")
 	else:
-		push_error("⚠️ No se encontró el nodo GameOver como hijo del Player")
-		push_error("⚠️ Verifica que el nodo se llame exactamente 'GameOver'")
+		push_error("ERROR'")
 		
 func reset_player():
 	"""Resetea el estado del jugador (útil si quieres revivir)"""
@@ -489,4 +485,3 @@ func heal(amount: int):
 	current_health = clamp(current_health, 0, max_health)
 	update_health_bar()
 	
-	print("💚 Jugador curado %d puntos. Vida actual: %d/%d" % [amount, current_health, max_health])
