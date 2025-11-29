@@ -11,7 +11,7 @@
 	"food": {
 		"image": "res://resources/images/barra.png",
 		"size": "Vector2i(1, 1)",
-		"scene": "res://scenes/objets/comida_1.tscn"
+		"scene": "res://scenes/objets/comida_2.tscn"
 	},
 	"palo": {
 		"image": "res://resources/images/palo.png",

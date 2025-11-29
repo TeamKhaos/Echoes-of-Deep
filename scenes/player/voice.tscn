@@ -6,6 +6,15 @@
 
 [node name="Voice" type="Node3D"]
 script = ExtResource("1_46j6e")
+enable_voice_waves = true
+wave_expansion_speed = 8.0
+max_wave_radius = 15.0
+wave_color = Color(0.3, 0.9, 1, 1)
+wave_thickness = 0.4
+wave_intensity = 2.5
+num_waves = 3
+wave_spacing = 3.0
+mouth_offset = Vector3(0, 0, -0.3)
 
 [node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="."]
 

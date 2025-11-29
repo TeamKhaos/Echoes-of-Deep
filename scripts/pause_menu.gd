@@ -34,7 +34,6 @@ func _ready():
 	# Cargar configuración
 	_load_settings()
 	
-	print("⏸️ Menú de pausa listo")
 
 func _input(event):
 	# Detectar tecla de pausa
@@ -69,7 +68,6 @@ func pause_game():
 	confirm_dialog.visible = false
 	options_panel.visible = false
 	
-	print("⏸️ Juego pausado")
 
 func resume_game():
 	if not is_paused:
@@ -88,22 +86,18 @@ func resume_game():
 	# Ocultar cursor
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	
-	print("▶️ Juego reanudado")
 
 # ===============================
 # BOTONES DEL MENÚ PRINCIPAL
 # ===============================
 
 func _on_button_resume_pressed():
-	print("▶️ Continuar...")
 	resume_game()
 
 func _on_button_options_pressed():
-	print("⚙️ Abriendo opciones...")
 	_show_panel(options_panel)
 
 func _on_button_main_menu_pressed():
-	print("🏠 Solicitud de salir al menú principal")
 	_show_confirm_dialog()
 
 # ===============================
@@ -124,11 +118,9 @@ func _hide_confirm_dialog():
 	confirm_dialog.visible = false
 
 func _on_button_cancel_pressed():
-	print("❌ Cancelar salida")
 	_hide_confirm_dialog()
 
 func _on_button_confirm_pressed():
-	print("✅ Confirmado: Salir al menú principal")
 	
 	# Fade out
 	var fade = ColorRect.new()
@@ -152,22 +144,27 @@ func _on_button_confirm_pressed():
 # ===============================
 
 func _on_button_back_options_pressed():
-	print("◀️ Volver del panel de opciones")
 	_hide_panel(options_panel)
 
 func _on_master_volume_changed(value: float):
-	var db = linear_to_db(value)
-	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Master"), db)
+	var bus_index = AudioServer.get_bus_index("Master")
+	if bus_index != -1:
+		var db = linear_to_db(value)
+		AudioServer.set_bus_volume_db(bus_index, db)
 	_save_settings()
 
 func _on_music_volume_changed(value: float):
-	var db = linear_to_db(value)
-	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Music"), db)
+	var bus_index = AudioServer.get_bus_index("Music")
+	if bus_index != -1:
+		var db = linear_to_db(value)
+		AudioServer.set_bus_volume_db(bus_index, db)
 	_save_settings()
 
 func _on_sfx_volume_changed(value: float):
-	var db = linear_to_db(value)
-	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("SFX"), db)
+	var bus_index = AudioServer.get_bus_index("SFX")
+	if bus_index != -1:
+		var db = linear_to_db(value)
+		AudioServer.set_bus_volume_db(bus_index, db)
 	_save_settings()
 
 # ===============================

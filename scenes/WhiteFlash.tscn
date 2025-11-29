@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://cw24bf07wuene"]
+
+[ext_resource type="Script" uid="uid://b7eb5tiw6sf60" path="res://scripts/WhiteFlash.gd" id="1_4osbt"]
+
+[node name="WhiteFlash" type="ColorRect"]
+script = ExtResource("1_4osbt")

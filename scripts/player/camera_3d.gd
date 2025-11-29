@@ -1,6 +1,7 @@
 extends Camera3D
 
 @onready var player = $"../.."
+
 var original_pos : Transform3D
 var is_transitioning : bool = false
 var is_on_destiny : bool = false
@@ -29,7 +30,6 @@ func transition(reference : Transform3D, duration : float = 2,  precallable : Ca
 
 func return_to_original_pos(duration : float = 2):
 	if original_pos == null:
-		printerr("Cannot return to original pos if didnt made any transition")
 		return
 		
 	transition(original_pos, duration, func():pass, func(): player.activate(); set_shake(true))

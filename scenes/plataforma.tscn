@@ -1,65 +1,127 @@
-[gd_scene load_steps=12 format=3 uid="uid://c6fhcls1wqh8"]
+[gd_scene load_steps=17 format=3 uid="uid://cr6a6x442hi2r"]
 
 [ext_resource type="PackedScene" uid="uid://0n2ppdjdgm7e" path="res://scenes/player/player.tscn" id="1_bc5n3"]
-[ext_resource type="PackedScene" uid="uid://b73eyetc8mca0" path="res://scenes/objets/palo.tscn" id="2_4jb62"]
-[ext_resource type="PackedScene" uid="uid://dho25c04rkus1" path="res://scenes/objets/comida_2.tscn" id="2_lxy4y"]
-[ext_resource type="PackedScene" uid="uid://bpaicuppyrwfj" path="res://scenes/objets/antorcha.tscn" id="2_m7nr4"]
-[ext_resource type="PackedScene" uid="uid://n5p1stc4i1qx" path="res://scenes/objets/botella.tscn" id="4_14w5t"]
-[ext_resource type="PackedScene" uid="uid://be5kkjfpgt3sy" path="res://scenes/scenary_objects/fogata.tscn" id="5_sfnd5"]
-[ext_resource type="PackedScene" uid="uid://b0o2h1nf4516m" path="res://scenes/EnemyTest.tscn" id="6_lxy4y"]
-[ext_resource type="PackedScene" uid="uid://cjinoan3rfh77" path="res://scenes/scenary_cave/tunel_1.tscn" id="8_o8nxa"]
+[ext_resource type="PackedScene" uid="uid://yqa3bql5mth0" path="res://scenes/GameOver.tscn" id="6_dua2e"]
+[ext_resource type="PackedScene" uid="uid://htasx0weuv7w" path="res://scenes/cueva.tscn" id="10_g8lxm"]
+[ext_resource type="Script" uid="uid://crh7g3k80a01s" path="res://scripts/AmbientWindControll.gd" id="10_yqmvt"]
+[ext_resource type="AudioStream" uid="uid://c52fv2m553jn3" path="res://resources/audio/viento_fuerte.mp3" id="11_2kgci"]
+[ext_resource type="PackedScene" uid="uid://duds7kjsed602" path="res://scenes/scenary_objects/cartel.tscn" id="11_g8lxm"]
+[ext_resource type="Script" uid="uid://wj4cg0ifrbot" path="res://scripts/EndGameArea.gd" id="12_2kgci"]
+[ext_resource type="AudioStream" uid="uid://c0jno4xp7bac2" path="res://resources/audio/viento_suave.mp3" id="12_mxmwd"]
+[ext_resource type="Script" uid="uid://dsoj5j6phbx5a" path="res://scripts/ItemAudioController.gd" id="13_mxmwd"]
+[ext_resource type="AudioStream" uid="uid://5vwrnvf2jbq3" path="res://resources/audio/pickup.mp3" id="14_34t2b"]
+[ext_resource type="AudioStream" uid="uid://ctx14oknswvxe" path="res://resources/audio/drop.mp3" id="15_dua2e"]
+[ext_resource type="AudioStream" uid="uid://bow4dpbp62fiq" path="res://resources/audio/comer.mp3" id="16_vh305"]
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_ij1v8"]
-size = Vector3(20, 0.5, 20)
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_bc5n3"]
+sky_top_color = Color(0.7671376, 0.57678294, 0.42839134, 1)
+sky_horizon_color = Color(1.2953062, 1.2151971, 1.1723816, 1)
+ground_bottom_color = Color(0.63221425, 0.5021326, 0.4792627, 1)
+ground_horizon_color = Color(1.2953062, 1.2151971, 1.1723816, 1)
 
-[sub_resource type="BoxMesh" id="BoxMesh_ij1v8"]
-size = Vector3(20, 0.5, 20)
+[sub_resource type="Sky" id="Sky_yqmvt"]
+sky_material = SubResource("ProceduralSkyMaterial_bc5n3")
 
-[sub_resource type="SphereShape3D" id="SphereShape3D_bc5n3"]
+[sub_resource type="Environment" id="Environment_g8lxm"]
+background_mode = 2
+sky = SubResource("Sky_yqmvt")
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_g8lxm"]
+size = Vector3(1, 0.4979248, 0.86413574)
 
 [node name="Plataforma" type="Node3D"]
 
-[node name="StaticBody3D" type="StaticBody3D" parent="."]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
-shape = SubResource("BoxShape3D_ij1v8")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D"]
-transform = Transform3D(1, -1.4901161e-08, 0, 1.4901161e-08, 1, 0, 0, 0, 1, 0.14665428, -0.00046317466, -0.057216644)
-mesh = SubResource("BoxMesh_ij1v8")
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_g8lxm")
 
 [node name="Player" parent="." instance=ExtResource("1_bc5n3")]
-transform = Transform3D(0.009354769, 0, -0.99995625, 0, 1, 0, 0.99995625, 0, 0.009354769, 0, 0.8527156, 5.840806)
+transform = Transform3D(0.009354769, 0, -0.99995625, 0, 1, 0, 0.99995625, 0, 0.009354769, -8.994766, 27.179583, 17.090664)
 
-[node name="Area3D" type="Area3D" parent="." groups=["reverb_zone"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.35051894, -6.5081606)
+[node name="ItemAudioController" type="Node3D" parent="Player"]
+transform = Transform3D(0.009354769, 0, 0.99995625, 0, 1, 0, -0.99995625, 0, 0.009354769, -5.8405504, -0.8527156, -0.05463939)
+script = ExtResource("13_mxmwd")
+volume = 1.0
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
-transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0, 0)
-shape = SubResource("SphereShape3D_bc5n3")
+[node name="PickupSound" type="AudioStreamPlayer3D" parent="Player/ItemAudioController"]
+stream = ExtResource("14_34t2b")
 
-[node name="fogata" parent="." instance=ExtResource("5_sfnd5")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.0296555, 0.86422074, 0)
+[node name="DropSound" type="AudioStreamPlayer3D" parent="Player/ItemAudioController"]
+stream = ExtResource("15_dua2e")
 
-[node name="EnemyTest" parent="." instance=ExtResource("6_lxy4y")]
-transform = Transform3D(1, 0, 0, 0, 0.98556197, 0.1693151, 0, -0.1693151, 0.98556197, -8.094083, 1.5874519, -8.729082)
+[node name="EatSound" type="AudioStreamPlayer3D" parent="Player/ItemAudioController"]
+stream = ExtResource("16_vh305")
 
-[node name="Objetos" type="Node" parent="."]
+[node name="DrinkSound" type="AudioStreamPlayer3D" parent="Player/ItemAudioController"]
 
-[node name="Antorcha" parent="Objetos" groups=["interactable"] instance=ExtResource("2_m7nr4")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.6971633, 0)
+[node name="GameOver" parent="Player" instance=ExtResource("6_dua2e")]
 
-[node name="Agua2" parent="Objetos" instance=ExtResource("4_14w5t")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.094047666, 1.6902466, 0.6015465)
+[node name="AmbientWindController" type="Node3D" parent="." node_paths=PackedStringArray("player")]
+script = ExtResource("10_yqmvt")
+player = NodePath("../Player")
 
-[node name="Agua" parent="Objetos" instance=ExtResource("4_14w5t")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.9869989, 1.6902466, 0.6015465)
+[node name="WindStrong" type="AudioStreamPlayer3D" parent="AmbientWindController"]
+stream = ExtResource("11_2kgci")
+max_distance = 50.0
 
-[node name="Palo" parent="Objetos" instance=ExtResource("2_4jb62")]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 1.0716718, 1.621802, 0)
+[node name="WindSoft" type="AudioStreamPlayer3D" parent="AmbientWindController"]
+stream = ExtResource("12_mxmwd")
+max_distance = 50.0
 
-[node name="Comida2" parent="Objetos" groups=["interactable"] instance=ExtResource("2_lxy4y")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.35051894, -6.5081606)
+[node name="cueva" parent="." instance=ExtResource("10_g8lxm")]
 
-[node name="Tunel1" parent="." instance=ExtResource("8_o8nxa")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.936312, 2.975579, -0.4726367)
+[node name="Carteles" type="Node3D" parent="."]
+
+[node name="Cartel" parent="Carteles" instance=ExtResource("11_g8lxm")]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 6.362289, 24.402683, -76.99158)
+
+[node name="Cartel2" parent="Carteles" instance=ExtResource("11_g8lxm")]
+transform = Transform3D(-0.34202006, 0.9396927, 0, 4.107527e-08, 1.4950173e-08, -1, -0.9396927, -0.34202006, -4.371139e-08, -7.4512677, 25.056171, -80.10111)
+
+[node name="Cartel3" parent="Carteles" instance=ExtResource("11_g8lxm")]
+transform = Transform3D(-0.99926287, 0.038387805, -4.1075268e-08, 4.047109e-08, -1.6515944e-08, -1, -0.038387805, -0.99926287, 1.4950174e-08, -20.930061, 28.372913, -223.97256)
+
+[node name="Cartel4" parent="Carteles" instance=ExtResource("11_g8lxm")]
+transform = Transform3D(0.26891977, 0.9631625, -4.1500705e-08, -2.437981e-08, -3.6280984e-08, -1, -0.9631625, 0.26891977, 1.3725045e-08, -33.459328, 28.316114, -245.91719)
+
+[node name="Cartel5" parent="Carteles" instance=ExtResource("11_g8lxm")]
+transform = Transform3D(0.26891977, 0.9631625, -4.1500705e-08, -2.437981e-08, -3.6280984e-08, -1, -0.9631625, 0.26891977, 1.3725045e-08, -122.932976, 28.316114, -245.91719)
+
+[node name="Cartel6" parent="Carteles" instance=ExtResource("11_g8lxm")]
+transform = Transform3D(-0.9975639, 0.069756486, -4.210117e-08, 4.281859e-08, 8.789393e-09, -1, -0.069756486, -0.9975639, -1.17548575e-08, -122.28045, 31.442472, -222.2849)
+
+[node name="Cartel7" parent="Carteles" instance=ExtResource("11_g8lxm")]
+transform = Transform3D(-0.05582152, -0.99844074, 0, -4.364323e-08, 2.4400362e-09, -1, 0.99844074, -0.05582152, -4.371139e-08, 61.060577, 24.402683, -65.62655)
+
+[node name="Cartel8" parent="Carteles" instance=ExtResource("11_g8lxm")]
+transform = Transform3D(-0.05582152, -0.99844074, 0, -4.364323e-08, 2.4400362e-09, -1, 0.99844074, -0.05582152, -4.371139e-08, 74.27093, 24.402683, -1.9476452)
+
+[node name="Cartel9" parent="Carteles" instance=ExtResource("11_g8lxm")]
+transform = Transform3D(-0.05582152, -0.99844074, 0, -4.364323e-08, 2.4400362e-09, -1, 0.99844074, -0.05582152, -4.371139e-08, 74.27093, 24.402683, -1.9476452)
+
+[node name="Cartel10" parent="Carteles" instance=ExtResource("11_g8lxm")]
+transform = Transform3D(0.99296546, 0.11840396, 4.364323e-08, 4.304731e-08, 7.590404e-09, -1, -0.11840396, 0.99296546, 2.4400362e-09, 114.79684, 24.402683, 6.652345)
+
+[node name="Cartel11" parent="Carteles" instance=ExtResource("11_g8lxm")]
+transform = Transform3D(0.99296546, 0.11840396, 4.364323e-08, 4.304731e-08, 7.590404e-09, -1, -0.11840396, 0.99296546, 2.4400362e-09, 187.00616, 25.126066, 6.420311)
+
+[node name="Cartel12" parent="Carteles" instance=ExtResource("11_g8lxm")]
+transform = Transform3D(0.42893502, 0.9033353, -3.6906744e-08, 5.327078e-09, -4.3385565e-08, -1, -0.9033353, 0.42893502, -2.342173e-08, 296.34888, 25.126066, 6.420311)
+
+[node name="Cartel14" parent="Carteles" instance=ExtResource("11_g8lxm")]
+transform = Transform3D(0.03664371, -0.99932826, -3.948604e-08, -2.0183673e-08, 3.877247e-08, -1, 0.99932826, 0.03664371, -1.8749352e-08, 296.34888, 25.126066, 11.886389)
+
+[node name="Cartel13" parent="Carteles" instance=ExtResource("11_g8lxm")]
+transform = Transform3D(-0.88941634, 0.45709792, -3.0419315e-08, 1.2706996e-08, -4.182365e-08, -1, -0.45709792, -0.88941634, 3.1390297e-08, 259.49222, 25.699697, -90.84648)
+
+[node name="EndGameZone" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 524.28217, 30.842564, -349.6775)
+script = ExtResource("12_2kgci")
+cinematic_video_path = "uid://b7fl6teyjh7y"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="EndGameZone"]
+transform = Transform3D(120, 0, 0, 0, 120, 0, 0, 0, 120, -0.8564453, 1.8731918, 63.715485)
+shape = SubResource("BoxShape3D_g8lxm")
+
+[node name="Node3D" type="Node3D" parent="."]

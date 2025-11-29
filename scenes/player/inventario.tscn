@@ -1,13 +1,11 @@
-[gd_scene load_steps=12 format=3 uid="uid://qalas2xm418v"]
+[gd_scene load_steps=9 format=3 uid="uid://qalas2xm418v"]
 
-[ext_resource type="Script" uid="uid://c6wangdtwc4m7" path="res://addons/gloot/core/item_slot.gd" id="1_8v3xu"]
 [ext_resource type="Script" uid="uid://d0pfc3q6sof8y" path="res://addons/gloot/ui/ctrl_inventory_grid.gd" id="1_t2sse"]
 [ext_resource type="JSON" path="res://resources/json/inventario.json" id="2_ai134"]
 [ext_resource type="Script" uid="uid://5hfig5q3x8it" path="res://addons/gloot/core/inventory.gd" id="4_t2sse"]
 [ext_resource type="Script" uid="uid://b8hbvp4kl88cn" path="res://addons/gloot/core/constraints/grid_constraint.gd" id="5_6qtn5"]
 [ext_resource type="StyleBox" uid="uid://14752m8jytng" path="res://texturacaja.tres" id="6_8v3xu"]
 [ext_resource type="StyleBox" uid="uid://dfh6cbak5nb5b" path="res://texturasombra.tres" id="7_8fb8u"]
-[ext_resource type="Script" uid="uid://trghhrgo3fax" path="res://addons/gloot/ui/ctrl_item_slot.gd" id="7_la582"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_8v3xu"]
 font_size = 64
@@ -20,9 +18,6 @@ border_width_right = 1
 border_width_bottom = 1
 border_color = Color(1, 1, 1, 1)
 
-[sub_resource type="LabelSettings" id="LabelSettings_plus_sign"]
-font_size = 64
-
 [node name="Inventario" type="Control"]
 layout_mode = 3
 anchors_preset = 15
@@ -30,21 +25,6 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-
-[node name="item1" type="Node" parent="."]
-script = ExtResource("1_8v3xu")
-protoset = ExtResource("2_ai134")
-metadata/_custom_type_script = "uid://c6wangdtwc4m7"
-
-[node name="item2" type="Node" parent="."]
-script = ExtResource("1_8v3xu")
-protoset = ExtResource("2_ai134")
-metadata/_custom_type_script = "uid://c6wangdtwc4m7"
-
-[node name="item3" type="Node" parent="."]
-script = ExtResource("1_8v3xu")
-protoset = ExtResource("2_ai134")
-metadata/_custom_type_script = "uid://c6wangdtwc4m7"
 
 [node name="Inventory" type="Node" parent="."]
 script = ExtResource("4_t2sse")
@@ -95,7 +75,7 @@ layout_mode = 2
 
 [node name="Label" type="Label" parent="Panel/MarginContainer/VBox/GridBox/VBoxContainer/VBoxContainer"]
 layout_mode = 2
-text = "Inventario"
+text = "Inventory"
 label_settings = SubResource("LabelSettings_8v3xu")
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -117,65 +97,9 @@ metadata/_custom_type_script = "uid://d0pfc3q6sof8y"
 custom_minimum_size = Vector2(0, 25)
 layout_mode = 2
 
-[node name="SlotsBox" type="HBoxContainer" parent="Panel/MarginContainer/VBox/GridBox/VBoxContainer/VBoxContainer"]
-layout_mode = 2
-theme_override_constants/separation = 20
-alignment = 1
-
-[node name="CtrlItemSlot1" type="Control" parent="Panel/MarginContainer/VBox/GridBox/VBoxContainer/VBoxContainer/SlotsBox" node_paths=PackedStringArray("item_slot")]
-texture_filter = 1
-custom_minimum_size = Vector2(128, 128)
-layout_mode = 2
-script = ExtResource("7_la582")
-item_slot = NodePath("../../../../../../../../item1")
-icon_stretch_mode = 6
-slot_style = ExtResource("6_8v3xu")
-slot_highlighted_style = ExtResource("7_8fb8u")
-metadata/_custom_type_script = "uid://trghhrgo3fax"
-
-[node name="PlusLabel1" type="Label" parent="Panel/MarginContainer/VBox/GridBox/VBoxContainer/VBoxContainer/SlotsBox"]
-layout_mode = 2
-text = "+"
-label_settings = SubResource("LabelSettings_plus_sign")
-vertical_alignment = 1
-
-[node name="CtrlItemSlot2" type="Control" parent="Panel/MarginContainer/VBox/GridBox/VBoxContainer/VBoxContainer/SlotsBox" node_paths=PackedStringArray("item_slot")]
-texture_filter = 1
-custom_minimum_size = Vector2(128, 128)
-layout_mode = 2
-script = ExtResource("7_la582")
-item_slot = NodePath("../../../../../../../../item2")
-icon_stretch_mode = 5
-slot_style = ExtResource("6_8v3xu")
-slot_highlighted_style = ExtResource("7_8fb8u")
-metadata/_custom_type_script = "uid://trghhrgo3fax"
-
-[node name="PlusLabel2" type="Label" parent="Panel/MarginContainer/VBox/GridBox/VBoxContainer/VBoxContainer/SlotsBox"]
-layout_mode = 2
-text = "+"
-label_settings = SubResource("LabelSettings_plus_sign")
-vertical_alignment = 1
-
-[node name="CtrlItemSlot3" type="Control" parent="Panel/MarginContainer/VBox/GridBox/VBoxContainer/VBoxContainer/SlotsBox" node_paths=PackedStringArray("item_slot")]
-texture_filter = 1
-custom_minimum_size = Vector2(128, 128)
-layout_mode = 2
-script = ExtResource("7_la582")
-item_slot = NodePath("../../../../../../../../item3")
-icon_stretch_mode = 6
-slot_style = ExtResource("6_8v3xu")
-slot_highlighted_style = ExtResource("7_8fb8u")
-metadata/_custom_type_script = "uid://trghhrgo3fax"
-
 [node name="VSeparator2" type="Control" parent="Panel/MarginContainer/VBox/GridBox/VBoxContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 25)
 layout_mode = 2
-
-[node name="CraftsButton" type="Button" parent="Panel/MarginContainer/VBox/GridBox/VBoxContainer/VBoxContainer"]
-custom_minimum_size = Vector2(0, 80)
-layout_mode = 2
-text = "Craft
-"
 
 [node name="VSeparator3" type="Control" parent="Panel/MarginContainer/VBox/GridBox/VBoxContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 25)

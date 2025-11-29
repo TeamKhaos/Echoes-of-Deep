@@ -7,14 +7,16 @@ extends CharacterBody3D
 @onready var player_hud = $PlayerHUD
 @onready var voice_controller = $Voice
 @onready var voiceparticle = $VoiceWave
-
+@onready var game_over_screen = $GameOver
+@onready var sonar = $SonarMesh
 @onready var hud = $PlayerHUD/hud
 @onready var object_marker = $Pivot/Camera3D/ObjectMarker
 
 # 👟 Sistema de pasos
 @onready var footsteps_player = $FootstepsPlayer
 @onready var footsteps_timer = $FootstepsTimer
-@onready var check_floor_ray = $CheckFloorMaterialRay
+
+@onready var item_audio = $ItemAudioController
 
 # ⏸️ Menú de pausa
 @onready var pause_menu = $PauseMenu
@@ -30,16 +32,23 @@ var current_health: int = 100
 #FLAGS
 var can_move : bool = true
 var on_debug := false
-var is_crouching : bool = false
+var is_sprinting : bool = false  # 🏃 Cambio: de is_crouching a is_sprinting
+var is_dead: bool = false
 
 #MOVE
-var max_speed = 5
-var crouch_speed = 1.0
+var walk_speed = 5.0  # 🏃 Velocidad normal al caminar
+var sprint_speed = 10.0  # 🏃 Velocidad al correr
+var max_speed = 5.0  # Se actualizará dinámicamente
 var acceleration = 0.5
 var desaceleration = 0.5
+var air_acceleration = 0.3  # 🦘 Control en el aire (menor que en tierra)
 var gravity = 25
 
-#CROUCH
+#JUMP
+var jump_force = 8.0  # 🦘 Fuerza del salto
+var can_jump = true  # Control para evitar saltos múltiples
+
+#CROUCH - Ya no se usa pero lo dejo por si acaso
 var standing_height = 2.0
 var crouching_height = 1.0
 
@@ -56,7 +65,7 @@ var is_moving: bool = false
 @export_group("Footsteps Settings")
 @export var footstep_sound: AudioStream
 @export var base_footstep_interval: float = 0.45
-@export var crouch_footstep_interval: float = 0.65
+@export var sprint_footstep_interval: float = 0.3  # 🏃 Pasos más rápidos al correr
 @export var footstep_volume_db: float = -10.0
 @export var pitch_variation: float = 0.15
 
@@ -70,11 +79,14 @@ func _ready():
 		call_deferred("add_child", inventory_instance)
 	
 	var inv_node = inventory_instance.get_node_or_null("Inventory") 
-	var items = inv_node.get_items()
-	print("🔹 Total de ítems en inventario: funcion de player ", items)
 	
 	hud.set_inventory(inv_node)
+	
+	# ✅ Conectar señal del micrófono (para el HUD)
 	voice_controller.microphone_toggled.connect(hud._on_microphone_toggled)
+
+	# ✅ Conectar señal de detección de voz (para las partículas)
+	voice_controller.voice_detected.connect(_on_voice_detected)
 	
 	# --- Resto de tu configuración ---
 	GLOBAL.PlayerRef = self
@@ -82,9 +94,13 @@ func _ready():
 	can_move = true
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	GLOBAL.update_hud.emit()
-	
+	if hud:
+		update_health_bar()
 	# 👟 Configurar sistema de pasos
 	_setup_footsteps()
+	
+	# 💀 Configurar Game Over
+	_setup_game_over()
 
 func _setup_footsteps():
 	if footsteps_player:
@@ -98,65 +114,41 @@ func _setup_footsteps():
 		footsteps_timer.wait_time = base_footstep_interval
 		if not footsteps_timer.is_connected("timeout", Callable(self, "_on_footsteps_timer_timeout")):
 			footsteps_timer.connect("timeout", Callable(self, "_on_footsteps_timer_timeout"))
-	
-	if check_floor_ray:
-		check_floor_ray.target_position = Vector3(0, -1.5, 0)
-		check_floor_ray.enabled = true
-		check_floor_ray.collision_mask = 1
 
 func equip_item_from_slot(slot_index: int):
-	print("--- equip_item_from_slot called for slot: ", slot_index, " ---")
 	var inv_node = inventory_instance.get_node_or_null("Inventory")
 	if not inv_node:
-		print("DEBUG: ⚠️ Inventory node not found.")
 		return
-	print("DEBUG: Inventory node found.")
 
 	var items = inv_node.get_items()
 	if slot_index >= items.size():
-		print("DEBUG: ⚠️ Slot ", slot_index, " is empty or out of bounds. Items in inventory: ", items.size())
 		return
-	print("DEBUG: Item found in slot ", slot_index, ". Total items: ", items.size())
 
 	var item_to_equip_from_inventory = items[slot_index]
 	var item_id_to_equip = ""
 	if item_to_equip_from_inventory and item_to_equip_from_inventory.has_method("get_prototype"):
 		item_id_to_equip = item_to_equip_from_inventory.get_prototype().get("_id")
-	print("DEBUG: Item to equip ID: ", item_id_to_equip)
 
 	if object_marker.get_child_count() > 0:
-		print("DEBUG: Object marker has children. Clearing held item.")
 		for child in object_marker.get_children():
 			child.queue_free()
-	else:
-		print("DEBUG: Object marker is empty. No item in hand.")
 
 	var proto = item_to_equip_from_inventory.get_prototype()
 	if not proto or not proto.has_method("get"):
-		print("DEBUG: ⚠️ Item prototype not found or missing 'get' method.")
 		return
-	print("DEBUG: Item prototype found.")
 
 	var props = proto.get("_properties")
 	if typeof(props) != TYPE_DICTIONARY or not props.has("scene"):
-		print("DEBUG: ⚠️ Item prototype is missing 'scene' property for item: ", item_id_to_equip)
 		return
-	print("DEBUG: Item properties and 'scene' property found.")
 
 	var scene_path = props["scene"]
-	print("DEBUG: Scene path for item: ", scene_path)
 	var item_scene = load(scene_path)
 	if not item_scene:
-		print("DEBUG: ⚠️ Failed to load item scene: ", scene_path)
 		return
-	print("DEBUG: Item scene loaded successfully.")
 
-	print("DEBUG: Instantiating new item.")
 	var new_item_instance = item_scene.instantiate()
 	object_marker.add_child(new_item_instance)
-	print("DEBUG: New item instantiated and added to object marker.")
 
-	print("DEBUG: Configuring new item's state.")
 	if new_item_instance.has_method("set_held_transform"):
 		new_item_instance.set_held_transform()
 	else:
@@ -167,13 +159,10 @@ func equip_item_from_slot(slot_index: int):
 		new_item_instance.freeze = true
 		new_item_instance.set_collision_layer_value(1, false)
 		new_item_instance.set_collision_mask_value(1, false)
-		print("DEBUG: Item is RigidBody3D. Freeze set and collision disabled.")
-	
-	print("DEBUG: New item state configured. --- End equip_item_from_slot ---")
 
 func _physics_process(delta):
 	if is_on_floor(): _last_frame_was_on_floor = Engine.get_physics_frames()
-	crouch()
+	handle_sprint()  # 🏃 Cambio: de crouch() a handle_sprint()
 	move(delta, get_input())
 
 func _input(event):
@@ -201,9 +190,9 @@ func _process(_delta):
 		voice_controller.toggle_microphone()
 	
 	if voice_controller.is_active():
-		voiceparticle.visible = true
+		sonar.visible = true
 	else:
-		voiceparticle.visible = false
+		sonar.visible = false
 	
 	if Input.is_key_pressed(KEY_R):
 		_try_consume_held_item()
@@ -212,6 +201,10 @@ func _process(_delta):
 		if object_marker.get_child_count() > 0:
 			var held_item = object_marker.get_child(0)
 			if held_item.has_method("drop"):
+				# 🔊 SONIDO DE SOLTAR
+				if item_audio:
+					item_audio.play_drop_sound()
+				
 				if "item_id" in held_item:
 					remove_from_inventory(held_item.item_id)
 				held_item.drop(object_marker.global_transform)
@@ -236,61 +229,33 @@ func _try_consume_held_item():
 		return
 	
 	if object_marker.get_child_count() == 0:
-		print("⚠️ No tienes nada en la mano para consumir")
+		
 		return
 	
 	var held_item = object_marker.get_child(0)
 	
 	if not held_item.has_method("consume"):
-		print("⚠️ Este ítem NO tiene el método consume()")
+		
 		return
 	
 	if "is_consumable" in held_item:
 		if not held_item.is_consumable:
-			print("⚠️ Este ítem no es consumible")
+			
 			return
+	
+	# 🔊 SONIDO DE CONSUMIR
+	if item_audio and "item_id" in held_item:
+		var item_id = held_item.item_id.to_lower()
+		if item_id.contains("agua") or item_id.contains("water"):
+			item_audio.play_drink_sound()
+		else:
+			item_audio.play_eat_sound()
 	
 	var success = held_item.consume(self)
 	
 	if success:
-		print("✅ Ítem consumido exitosamente")
 		if "item_id" in held_item:
 			remove_from_inventory(held_item.item_id)
-
-func _snap_down_to_stairs_check() -> void:
-	var did_snap := false
-	%StairsBelowRaycast.force_raycast_update()
-	var floor_below : bool = %StairsBelowRaycast.is_colliding() and not is_surface_too_step(%StairsBelowRaycast.get_collision_normal())
-	var was_on_floor_last_frame = Engine.get_physics_frames() == _last_frame_was_on_floor
-	if not is_on_floor() and velocity.y <= 0 and (was_on_floor_last_frame or _snaped_to_stairs_last_frame) and floor_below:
-		var body_test_result = KinematicCollision3D.new()
-		if self.test_move(self.global_transform, Vector3(0,-MAX_STEP_HEIGHT,0), body_test_result):
-			var translate_y = body_test_result.get_travel().y
-			var tween : Tween = get_tree().create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
-			tween.tween_property(self, "position", position + Vector3(0, translate_y, 0), 0.05)
-			apply_floor_snap()
-			did_snap = true
-	_snaped_to_stairs_last_frame = did_snap
-
-func _snap_up_stairs_check(delta) -> bool:
-	if not is_on_floor() and not _snaped_to_stairs_last_frame: return false
-	if self.velocity.y > 0 or (self.velocity * Vector3(1,0,1)).length() == 0: return false
-	var expected_move_motion = self.velocity * Vector3(1,0,1) * delta
-	var step_pos_with_clearance = self.global_transform.translated(expected_move_motion + Vector3(0, MAX_STEP_HEIGHT * 2, 0))
-	var down_check_result = KinematicCollision3D.new()
-	if (self.test_move(step_pos_with_clearance, Vector3(0,-MAX_STEP_HEIGHT*2,0), down_check_result)
-	and (down_check_result.get_collider().is_class("StaticBody3D") and down_check_result.get_collider().is_in_group("climbeable"))):
-		var step_height = ((step_pos_with_clearance.origin + down_check_result.get_travel()) - self.global_position).y
-		if step_height > MAX_STEP_HEIGHT or step_height <= 0.01 or (down_check_result.get_position() - self.global_position).y > MAX_STEP_HEIGHT: return false
-		%StairsRaycast.global_position = down_check_result.get_position() + Vector3(0,MAX_STEP_HEIGHT,0) + expected_move_motion.normalized() * 0.1
-		%StairsRaycast.force_raycast_update()
-		if %StairsRaycast.is_colliding() and not is_surface_too_step(%StairsRaycast.get_collision_normal()):
-			var tween : Tween = get_tree().create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
-			tween.tween_property(self, "global_position", step_pos_with_clearance.origin + down_check_result.get_travel(), 0.1)
-			apply_floor_snap()
-			_snaped_to_stairs_last_frame = true
-			return true
-	return false
 
 func is_surface_too_step(normal : Vector3):
 	return normal.angle_to(Vector3.UP) > self.floor_max_angle
@@ -302,22 +267,36 @@ func move(delta, input):
 		transform.basis.x.z * input.x + transform.basis.z.z * input.z
 	).normalized() * max_speed
 	
-	velocity.y -= gravity * delta
+	# 🦘 Sistema de salto
+	if is_on_floor():
+		can_jump = true
+		if Input.is_action_just_pressed("ui_accept"):  # Space bar
+			velocity.y = jump_force
+			can_jump = false
+	else:
+		velocity.y -= gravity * delta
 	
-	# 👟 Detectar movimiento
+	# 👟 Detectar movimiento (en tierra o aire)
 	is_moving = (input.x != 0 or input.z != 0) and is_on_floor()
 	
-	if is_moving:
-		_play_footsteps()
-		velocity.x = lerp(velocity.x, impulse.x, acceleration)
-		velocity.z = lerp(velocity.z, impulse.z, acceleration)
+	# 🎮 Control de movimiento horizontal
+	if input.x != 0 or input.z != 0:
+		# Usar diferente aceleración según si está en el suelo o en el aire
+		var current_acceleration = acceleration if is_on_floor() else air_acceleration
+		velocity.x = lerp(velocity.x, impulse.x, current_acceleration)
+		velocity.z = lerp(velocity.z, impulse.z, current_acceleration)
+		
+		# Reproducir pasos solo si está en el suelo
+		if is_on_floor():
+			_play_footsteps()
 	else:
-		velocity.x = lerp(velocity.x, 0.0, desaceleration)
-		velocity.z = lerp(velocity.z, 0.0, desaceleration)
+		# Solo desacelerar si está en el suelo
+		if is_on_floor():
+			velocity.x = lerp(velocity.x, 0.0, desaceleration)
+			velocity.z = lerp(velocity.z, 0.0, desaceleration)
+		# En el aire, mantener la velocidad horizontal
 	
-	if not _snap_up_stairs_check(delta):
-		move_and_slide()
-		_snap_down_to_stairs_check()
+	move_and_slide()
 
 func _play_footsteps():
 	if not can_footstep or not footsteps_player:
@@ -340,7 +319,8 @@ func _play_footsteps():
 	footsteps_player.play()
 	can_footstep = false
 	
-	var interval = crouch_footstep_interval if is_crouching else base_footstep_interval
+	# 🏃 Usar intervalo diferente si está corriendo
+	var interval = sprint_footstep_interval if is_sprinting else base_footstep_interval
 	interval = interval / max(speed_factor, 0.5)
 	
 	footsteps_timer.wait_time = interval
@@ -349,17 +329,14 @@ func _play_footsteps():
 func _on_footsteps_timer_timeout():
 	can_footstep = true
 
-func crouch():
-	if Input.is_action_pressed("Crouch"):
-		is_crouching = true
-		max_speed = crouch_speed
-		collision_shape.shape.height = crouching_height
-		Pivote.position.y = lerp(Pivote.position.y, 1.2, 0.1)
+# 🏃 NUEVA FUNCIÓN: Manejo de carrera (reemplaza crouch)
+func handle_sprint():
+	if Input.is_action_pressed("Crouch"):  # Usa la misma acción "Crouch" (Shift)
+		is_sprinting = true
+		max_speed = sprint_speed
 	else:
-		is_crouching = false
-		max_speed = 2
-		collision_shape.shape.height = standing_height
-		Pivote.position.y = lerp(Pivote.position.y, 1.6, 0.1)
+		is_sprinting = false
+		max_speed = walk_speed
 
 func get_input():
 	var input = Vector3()
@@ -384,17 +361,14 @@ func activate():
 
 func add_to_inventory(item_id: String):
 	if not inventory_instance:
-		print("⚠️ Inventario no instanciado")
 		return
 
 	var inv_node = inventory_instance.get_node_or_null("Inventory")
 	if not inv_node:
-		print("⚠️ No se encontró el nodo InventoryPlayer dentro del inventario")
 		return
 
 	var protoset = load("res://resources/json/inventario.json")
 	if not protoset:
-		print("⚠️ No se pudo cargar el protoset de ítems")
 		return
 
 	var new_item := InventoryItem.new(protoset, item_id)
@@ -402,23 +376,15 @@ func add_to_inventory(item_id: String):
 	if inv_node.has_method("add_item"):
 		var success = inv_node.add_item(new_item)
 		if success:
-			print("📦 Añadido al inventario:", item_id)
 			if hud:
 				hud.set_inventory(inv_node)
-				print("🖼️ HUD actualizado tras añadir:", item_id)
-		else:
-			print("⚠️ No se pudo añadir el ítem (inventario lleno o inválido)")
-	else:
-		print("⚠️ El nodo InventoryPlayer no tiene el método add_item()")
 
 func remove_from_inventory(item_id: String):
 	if not inventory_instance:
-		print("⚠️ Inventario no instanciado")
 		return
 
 	var inv_node = inventory_instance.get_node_or_null("Inventory")
 	if not inv_node:
-		print("⚠️ No se encontró el nodo InventoryPlayer dentro del inventario")
 		return
 
 	if inv_node.has_method("get_items") and inv_node.has_method("remove_item"):
@@ -426,30 +392,96 @@ func remove_from_inventory(item_id: String):
 		for item in items:
 			if "_prototype" in item and item._prototype != null and "_id" in item._prototype and item._prototype._id == item_id:
 				inv_node.remove_item(item)
-				print("📦 Removido del inventario:", item_id)
 				if hud:
 					hud.set_inventory(inv_node)
-					print("🖼️ HUD actualizado tras remover:", item_id)
 				return
-		print("⚠️ No se encontró el ítem con id:", item_id, " en el inventario")
-	else:
-		print("⚠️ El nodo InventoryPlayer no tiene los métodos get_items() o remove_item()")
 
 func take_damage(amount: int):
+	# No recibir daño si ya está muerto
+	if is_dead:
+		return
+	
 	current_health -= amount
 	current_health = clamp(current_health, 0, max_health)
 	update_health_bar()
+	
+	
 	if current_health <= 0:
 		die()
 
-func heal(amount: int):
-	current_health += amount
-	current_health = clamp(current_health, 0, max_health)
-	update_health_bar()
+
 
 func update_health_bar():
 	if hud and hud.has_method("set_health"):
 		hud.set_health(current_health)
 
 func die():
-	print("💀 El jugador ha muerto")
+	# Prevenir múltiples llamadas
+	if is_dead:
+		return
+	
+	is_dead = true
+	
+	# Desactivar controles
+	can_move = false
+	Pivote.cameraLock = true
+	
+	# Detener sonidos
+	if footsteps_player:
+		footsteps_player.stop()
+	
+	if voice_controller and voice_controller.is_active():
+		voice_controller.toggle_microphone()
+	
+	# Detener el timer de pasos
+	if footsteps_timer:
+		footsteps_timer.stop()
+	
+	# Ocultar partículas de voz
+	if voiceparticle:
+		voiceparticle.visible = false
+	
+	# Mostrar pantalla de Game Over
+	if game_over_screen:
+		game_over_screen.show_game_over()
+	else:
+		push_error("⚠️ No se encontró GameOverScreen")
+		# Fallback: recargar la escena
+		await get_tree().create_timer(2.0).timeout
+		get_tree().reload_current_scene()
+
+func _setup_game_over():
+	# El GameOver ya está en la escena como hijo del Player
+	if has_node("GameOver"):
+		game_over_screen = $GameOver
+		if game_over_screen:
+			game_over_screen.visible = false
+	else:
+		push_error("ERROR'")
+		
+func reset_player():
+	"""Resetea el estado del jugador (útil si quieres revivir)"""
+	is_dead = false
+	current_health = max_health
+	can_move = true
+	Pivote.cameraLock = false
+	update_health_bar()
+	velocity = Vector3.ZERO
+
+# 🔊 Callback cuando se detecta voz
+func _on_voice_detected(is_speaking: bool):
+	if is_speaking:
+		# Aquí puedes hacer que las partículas se activen
+		if voiceparticle:
+			voiceparticle.visible = true
+	else:
+		if voiceparticle:
+			voiceparticle.visible = false
+func heal(amount: int):
+	if is_dead:
+		return
+	
+	current_health += amount
+	current_health = clamp(current_health, 0, max_health)
+	update_health_bar()
+	

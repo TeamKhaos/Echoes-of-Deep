@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://dahqqm6cbn4yf"]
+[gd_scene load_steps=6 format=3 uid="uid://dahqqm6cbn4yf"]
 
 [ext_resource type="Script" uid="uid://c77qmqqkawhyt" path="res://scripts/main_menu.gd" id="1_l6cm7"]
 [ext_resource type="Texture2D" uid="uid://cn7ja2j2kipn7" path="res://resources/images/Dev Studio.png" id="2_bqqt6"]
-[ext_resource type="Texture2D" uid="uid://bs4jfcy8fupf4" path="res://resources/images/Game Off.png" id="3_wu84c"]
+[ext_resource type="Texture2D" uid="uid://kas00cq0y5l4" path="res://resources/images/Game Off.png" id="3_wu84c"]
 [ext_resource type="AudioStream" uid="uid://dv2q533pp4u6r" path="res://resources/audio/menu_music.ogg" id="4_wu84c"]
+[ext_resource type="VideoStream" uid="uid://cax8qqaplepm8" path="res://resources/video/intro.ogv" id="5_8ln24"]
 
 [node name="MainMenu" type="Control"]
 layout_mode = 3
@@ -16,6 +17,28 @@ script = ExtResource("1_l6cm7")
 developer_logo = ExtResource("2_bqqt6")
 gamejam_logo = ExtResource("3_wu84c")
 menu_music = ExtResource("4_wu84c")
+
+[node name="VideoBackground" type="VideoStreamPlayer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+stream = ExtResource("5_8ln24")
+expand = true
+loop = true
+
+[node name="VideoOverlay" type="ColorRect" parent="VideoBackground"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0.15686275)
 
 [node name="Background" type="ColorRect" parent="."]
 layout_mode = 1
@@ -59,8 +82,7 @@ theme_override_constants/separation = 15
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 48
-text = "Echoes of Deep
-"
+text = "Echoes of Deep"
 horizontal_alignment = 1
 
 [node name="Spacer1" type="Control" parent="CenterContainer/VBoxContainer"]
@@ -71,31 +93,32 @@ layout_mode = 2
 custom_minimum_size = Vector2(400, 50)
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
-text = "NUEVA PARTIDA"
+text = "NEW GAME"
 
-[node name="ButtonLoadGame" type="Button" parent="CenterContainer/VBoxContainer"]
+[node name="ButtonTutorial" type="Button" parent="CenterContainer/VBoxContainer"]
 custom_minimum_size = Vector2(400, 50)
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
-text = "CARGAR PARTIDA"
+text = "HOW TO PLAY"
 
 [node name="ButtonOptions" type="Button" parent="CenterContainer/VBoxContainer"]
 custom_minimum_size = Vector2(400, 50)
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
-text = "OPCIONES"
+text = "OPTIONS
+"
 
 [node name="ButtonCredits" type="Button" parent="CenterContainer/VBoxContainer"]
 custom_minimum_size = Vector2(400, 50)
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
-text = "CRÉDITOS"
+text = "CREDITS"
 
 [node name="ButtonQuit" type="Button" parent="CenterContainer/VBoxContainer"]
 custom_minimum_size = Vector2(400, 50)
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
-text = "SALIR"
+text = "EXIT"
 
 [node name="DeveloperLogo" type="TextureRect" parent="."]
 layout_mode = 1
@@ -142,6 +165,99 @@ theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
 theme_override_font_sizes/font_size = 12
 text = "v0.1.0"
 
+[node name="TutorialPanel" type="Panel" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="TutorialPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.8)
+
+[node name="MarginContainer" type="MarginContainer" parent="TutorialPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 100
+theme_override_constants/margin_top = 100
+theme_override_constants/margin_right = 100
+theme_override_constants/margin_bottom = 100
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TutorialPanel/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="TutorialTitle" type="Label" parent="TutorialPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 32
+text = "HOW TO PLAY"
+horizontal_alignment = 1
+
+[node name="ScrollContainer" type="ScrollContainer" parent="TutorialPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="TutorialText" type="RichTextLabel" parent="TutorialPanel/MarginContainer/VBoxContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_font_sizes/normal_font_size = 20
+bbcode_enabled = true
+text = "[center][b]CONTROLS[/b][/center]
+
+[b]MOVEMENT[/b]
+
+[color=#4a9eff]W[/color] - Move forward
+[color=#4a9eff]A[/color] - Move left
+[color=#4a9eff]S[/color] - Move backward
+[color=#4a9eff]D[/color] - Move right
+
+[b]ACTIONS[/b]
+
+[color=#ff6b6b]F[/color] - Activate echolocation (waves)
+[color=#ff6b6b]R[/color] - Consume food
+[color=#ff6b6b]E[/color] - Interact with objects
+
+[center][b]GAME MECHANICS[/b][/center]
+
+[b]ECHOLOCATION[/b]
+Press [color=#ff6b6b]F[/color] to emit waves that reveal the environment.
+This ability allows you to navigate through the darkness.
+
+[b]FEEDING[/b]
+Search for and consume food by pressing [color=#ff6b6b]R[/color] to maintain your energy.
+Your survival depends on your ability to find resources.
+If your hunger reaches 0, your health will start to decrease.
+
+[b]SANITY SYSTEM[/b]
+[color=#ffcc00]WARNING![/color] If your sanity bar gets too low,
+the screen will begin to distort with glitch effects.
+Keep your sanity high to avoid these effects.
+
+[center][b]GOOD LUCK IN THE DEPTHS![/b][/center]
+"
+fit_content = true
+
+[node name="ButtonBackTutorial" type="Button" parent="TutorialPanel/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(200, 50)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 18
+text = "RETURN"
+
 [node name="CreditsPanel" type="Panel" parent="."]
 visible = false
 layout_mode = 1
@@ -180,7 +296,7 @@ theme_override_constants/separation = 20
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 32
-text = "CRÉDITOS"
+text = "CREDITS"
 horizontal_alignment = 1
 
 [node name="ScrollContainer" type="ScrollContainer" parent="CreditsPanel/MarginContainer/VBoxContainer"]
@@ -193,25 +309,25 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_font_sizes/normal_font_size = 18
 bbcode_enabled = true
-text = "[center][b]DESARROLLO[/b]
+text = "[center][b]DEVELOPMENT[/b]
 Team Khaos
 
-[b]ARTE Y MODELADOS[/b]
+[b]ART & MODELING[/b]
 Eduardo \"Wacko\" Casa
 Luis \"Kairos\" Guaygua
 
-[b]MÚSICA Y SONIDO[/b]
+[b]MUSIC & SOUND[/b]
 Henry \"Hanly\" Tonato
 
-[b]PROGRAMACIÓN[/b]
-Mateo \"Wesitos\" Garzon
+[b]PROGRAMMING[/b]
+Mateo \"Wesitos\" Garzón
 Yuverly \"Hidokun\" Verdezoto
 
-[b]AGRADECIMIENTOS ESPECIALES[/b]
+[b]SPECIAL THANKS[/b]
 Game Jam \"Game Off\"
 Damara \"Mara\" Izurieta
 Alejandra \"Queso\" Moreno
-Comunidad[/center]"
+Community[/center]"
 fit_content = true
 
 [node name="ButtonBack" type="Button" parent="CreditsPanel/MarginContainer/VBoxContainer"]
@@ -219,7 +335,7 @@ custom_minimum_size = Vector2(200, 50)
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_font_sizes/font_size = 18
-text = "VOLVER"
+text = "RETURN"
 
 [node name="OptionsPanel" type="Panel" parent="."]
 visible = false
@@ -255,7 +371,7 @@ theme_override_constants/separation = 20
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 32
-text = "OPCIONES"
+text = "OPTIONS"
 horizontal_alignment = 1
 
 [node name="Spacer" type="Control" parent="OptionsPanel/CenterContainer/VBoxContainer"]
@@ -265,7 +381,7 @@ layout_mode = 2
 [node name="MasterVolumeLabel" type="Label" parent="OptionsPanel/CenterContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 18
-text = "Volumen General"
+text = "General Volume"
 
 [node name="MasterVolumeSlider" type="HSlider" parent="OptionsPanel/CenterContainer/VBoxContainer"]
 custom_minimum_size = Vector2(400, 30)
@@ -277,7 +393,7 @@ value = 0.7
 [node name="MusicVolumeLabel" type="Label" parent="OptionsPanel/CenterContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 18
-text = "Volumen Música"
+text = "Music Volume"
 
 [node name="MusicVolumeSlider" type="HSlider" parent="OptionsPanel/CenterContainer/VBoxContainer"]
 custom_minimum_size = Vector2(400, 30)
@@ -289,7 +405,7 @@ value = 0.5
 [node name="SFXVolumeLabel" type="Label" parent="OptionsPanel/CenterContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 18
-text = "Volumen Efectos"
+text = "Volume Effects"
 
 [node name="SFXVolumeSlider" type="HSlider" parent="OptionsPanel/CenterContainer/VBoxContainer"]
 custom_minimum_size = Vector2(400, 30)
@@ -305,7 +421,7 @@ layout_mode = 2
 [node name="FullscreenCheckbox" type="CheckBox" parent="OptionsPanel/CenterContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 18
-text = "Pantalla Completa"
+text = "Full screen"
 
 [node name="Spacer3" type="Control" parent="OptionsPanel/CenterContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 20)
@@ -315,16 +431,17 @@ layout_mode = 2
 custom_minimum_size = Vector2(200, 50)
 layout_mode = 2
 theme_override_font_sizes/font_size = 18
-text = "VOLVER"
+text = "RETURN"
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("4_wu84c")
 
 [connection signal="pressed" from="CenterContainer/VBoxContainer/ButtonNewGame" to="." method="_on_button_new_game_pressed"]
-[connection signal="pressed" from="CenterContainer/VBoxContainer/ButtonLoadGame" to="." method="_on_button_load_game_pressed"]
+[connection signal="pressed" from="CenterContainer/VBoxContainer/ButtonTutorial" to="." method="_on_button_tutorial_pressed"]
 [connection signal="pressed" from="CenterContainer/VBoxContainer/ButtonOptions" to="." method="_on_button_options_pressed"]
 [connection signal="pressed" from="CenterContainer/VBoxContainer/ButtonCredits" to="." method="_on_button_credits_pressed"]
 [connection signal="pressed" from="CenterContainer/VBoxContainer/ButtonQuit" to="." method="_on_button_quit_pressed"]
+[connection signal="pressed" from="TutorialPanel/MarginContainer/VBoxContainer/ButtonBackTutorial" to="." method="_on_button_back_tutorial_pressed"]
 [connection signal="pressed" from="CreditsPanel/MarginContainer/VBoxContainer/ButtonBack" to="." method="_on_button_back_credits_pressed"]
 [connection signal="value_changed" from="OptionsPanel/CenterContainer/VBoxContainer/MasterVolumeSlider" to="." method="_on_master_volume_changed"]
 [connection signal="value_changed" from="OptionsPanel/CenterContainer/VBoxContainer/MusicVolumeSlider" to="." method="_on_music_volume_changed"]
