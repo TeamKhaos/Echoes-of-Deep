@@ -20,7 +20,7 @@ func _ready():
 	
 	# Crear texto "Gracias por jugar"
 	var label = Label.new()
-	label.text = "Gracias por jugar"
+	label.text = "Thanks for playing"
 	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	label.anchor_left = 0

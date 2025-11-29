@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://c77qmqqkawhyt" path="res://scripts/main_menu.gd" id="1_l6cm7"]
 [ext_resource type="Texture2D" uid="uid://cn7ja2j2kipn7" path="res://resources/images/Dev Studio.png" id="2_bqqt6"]
-[ext_resource type="Texture2D" uid="uid://bs4jfcy8fupf4" path="res://resources/images/Game Off.png" id="3_wu84c"]
+[ext_resource type="Texture2D" uid="uid://kas00cq0y5l4" path="res://resources/images/Game Off.png" id="3_wu84c"]
 [ext_resource type="AudioStream" uid="uid://dv2q533pp4u6r" path="res://resources/audio/menu_music.ogg" id="4_wu84c"]
 [ext_resource type="VideoStream" uid="uid://cax8qqaplepm8" path="res://resources/video/intro.ogv" id="5_8ln24"]
 
@@ -94,25 +94,26 @@ layout_mode = 2
 custom_minimum_size = Vector2(400, 50)
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
-text = "NUEVA PARTIDA"
+text = "NEW GAME"
 
 [node name="ButtonOptions" type="Button" parent="CenterContainer/VBoxContainer"]
 custom_minimum_size = Vector2(400, 50)
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
-text = "OPCIONES"
+text = "OPTIONS
+"
 
 [node name="ButtonCredits" type="Button" parent="CenterContainer/VBoxContainer"]
 custom_minimum_size = Vector2(400, 50)
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
-text = "CRÉDITOS"
+text = "CREDITS"
 
 [node name="ButtonQuit" type="Button" parent="CenterContainer/VBoxContainer"]
 custom_minimum_size = Vector2(400, 50)
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
-text = "SALIR"
+text = "EXIT"
 
 [node name="DeveloperLogo" type="TextureRect" parent="."]
 layout_mode = 1
@@ -197,7 +198,7 @@ theme_override_constants/separation = 20
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 32
-text = "CRÉDITOS"
+text = "CREDITS"
 horizontal_alignment = 1
 
 [node name="ScrollContainer" type="ScrollContainer" parent="CreditsPanel/MarginContainer/VBoxContainer"]
@@ -210,25 +211,25 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_font_sizes/normal_font_size = 18
 bbcode_enabled = true
-text = "[center][b]DESARROLLO[/b]
+text = "[center][b]DEVELOPMENT[/b]
 Team Khaos
 
-[b]ARTE Y MODELADOS[/b]
+[b]ART & MODELING[/b]
 Eduardo \"Wacko\" Casa
 Luis \"Kairos\" Guaygua
 
-[b]MÚSICA Y SONIDO[/b]
+[b]MUSIC & SOUND[/b]
 Henry \"Hanly\" Tonato
 
-[b]PROGRAMACIÓN[/b]
-Mateo \"Wesitos\" Garzon
+[b]PROGRAMMING[/b]
+Mateo \"Wesitos\" Garzón
 Yuverly \"Hidokun\" Verdezoto
 
-[b]AGRADECIMIENTOS ESPECIALES[/b]
+[b]SPECIAL THANKS[/b]
 Game Jam \"Game Off\"
 Damara \"Mara\" Izurieta
 Alejandra \"Queso\" Moreno
-Comunidad[/center]"
+Community[/center]"
 fit_content = true
 
 [node name="ButtonBack" type="Button" parent="CreditsPanel/MarginContainer/VBoxContainer"]
@@ -236,7 +237,7 @@ custom_minimum_size = Vector2(200, 50)
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_font_sizes/font_size = 18
-text = "VOLVER"
+text = "RETURN"
 
 [node name="OptionsPanel" type="Panel" parent="."]
 visible = false
@@ -272,7 +273,7 @@ theme_override_constants/separation = 20
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 32
-text = "OPCIONES"
+text = "OPTIONS"
 horizontal_alignment = 1
 
 [node name="Spacer" type="Control" parent="OptionsPanel/CenterContainer/VBoxContainer"]
@@ -282,7 +283,7 @@ layout_mode = 2
 [node name="MasterVolumeLabel" type="Label" parent="OptionsPanel/CenterContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 18
-text = "Volumen General"
+text = "General Volume"
 
 [node name="MasterVolumeSlider" type="HSlider" parent="OptionsPanel/CenterContainer/VBoxContainer"]
 custom_minimum_size = Vector2(400, 30)
@@ -294,7 +295,7 @@ value = 0.7
 [node name="MusicVolumeLabel" type="Label" parent="OptionsPanel/CenterContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 18
-text = "Volumen Música"
+text = "Music Volume"
 
 [node name="MusicVolumeSlider" type="HSlider" parent="OptionsPanel/CenterContainer/VBoxContainer"]
 custom_minimum_size = Vector2(400, 30)
@@ -306,7 +307,7 @@ value = 0.5
 [node name="SFXVolumeLabel" type="Label" parent="OptionsPanel/CenterContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 18
-text = "Volumen Efectos"
+text = "Volume Effects"
 
 [node name="SFXVolumeSlider" type="HSlider" parent="OptionsPanel/CenterContainer/VBoxContainer"]
 custom_minimum_size = Vector2(400, 30)
@@ -322,7 +323,7 @@ layout_mode = 2
 [node name="FullscreenCheckbox" type="CheckBox" parent="OptionsPanel/CenterContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 18
-text = "Pantalla Completa"
+text = "Full screen"
 
 [node name="Spacer3" type="Control" parent="OptionsPanel/CenterContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 20)
@@ -332,7 +333,7 @@ layout_mode = 2
 custom_minimum_size = Vector2(200, 50)
 layout_mode = 2
 theme_override_font_sizes/font_size = 18
-text = "VOLVER"
+text = "RETURN"
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("4_wu84c")

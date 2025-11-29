@@ -3,15 +3,15 @@
 [ext_resource type="PackedScene" uid="uid://0n2ppdjdgm7e" path="res://scenes/player/player.tscn" id="1_bc5n3"]
 [ext_resource type="PackedScene" uid="uid://yqa3bql5mth0" path="res://scenes/GameOver.tscn" id="6_dua2e"]
 [ext_resource type="PackedScene" uid="uid://htasx0weuv7w" path="res://scenes/cueva.tscn" id="10_g8lxm"]
-[ext_resource type="Script" path="res://scripts/AmbientWindControll.gd" id="10_yqmvt"]
-[ext_resource type="AudioStream" uid="uid://co0tgnjj4ylil" path="res://resources/audio/viento_fuerte.mp3" id="11_2kgci"]
+[ext_resource type="Script" uid="uid://crh7g3k80a01s" path="res://scripts/AmbientWindControll.gd" id="10_yqmvt"]
+[ext_resource type="AudioStream" uid="uid://c52fv2m553jn3" path="res://resources/audio/viento_fuerte.mp3" id="11_2kgci"]
 [ext_resource type="PackedScene" uid="uid://duds7kjsed602" path="res://scenes/scenary_objects/cartel.tscn" id="11_g8lxm"]
-[ext_resource type="Script" uid="uid://wj4cg0ifrbot" path="res://scripts/EndGameArea.gd" id="12_2kgci"]
-[ext_resource type="AudioStream" uid="uid://cxpobmpa53gue" path="res://resources/audio/viento_suave.mp3" id="12_mxmwd"]
-[ext_resource type="Script" path="res://scripts/ItemAudioController.gd" id="13_mxmwd"]
-[ext_resource type="AudioStream" uid="uid://dkisj0jap0h0r" path="res://resources/audio/pickup.mp3" id="14_34t2b"]
-[ext_resource type="AudioStream" uid="uid://bauivodcj556c" path="res://resources/audio/drop.mp3" id="15_dua2e"]
-[ext_resource type="AudioStream" uid="uid://07gs5dl0xh07" path="res://resources/audio/comer.mp3" id="16_vh305"]
+[ext_resource type="Script" path="res://scripts/EndGameArea.gd" id="12_2kgci"]
+[ext_resource type="AudioStream" uid="uid://c0jno4xp7bac2" path="res://resources/audio/viento_suave.mp3" id="12_mxmwd"]
+[ext_resource type="Script" uid="uid://dsoj5j6phbx5a" path="res://scripts/ItemAudioController.gd" id="13_mxmwd"]
+[ext_resource type="AudioStream" uid="uid://5vwrnvf2jbq3" path="res://resources/audio/pickup.mp3" id="14_34t2b"]
+[ext_resource type="AudioStream" uid="uid://ctx14oknswvxe" path="res://resources/audio/drop.mp3" id="15_dua2e"]
+[ext_resource type="AudioStream" uid="uid://bow4dpbp62fiq" path="res://resources/audio/comer.mp3" id="16_vh305"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_bc5n3"]
 sky_top_color = Color(0.7671376, 0.57678294, 0.42839134, 1)
@@ -124,3 +124,5 @@ cinematic_video_path = "uid://b7fl6teyjh7y"
 [node name="CollisionShape3D" type="CollisionShape3D" parent="EndGameZone"]
 transform = Transform3D(120, 0, 0, 0, 120, 0, 0, 0, 120, -0.8564453, 1.8731918, 63.715485)
 shape = SubResource("BoxShape3D_g8lxm")
+
+[node name="Node3D" type="Node3D" parent="."]
